@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "YtpysEH3O5okyxo4x+5ZXhwoGMA7xThslZrGT8QnChg=",
+  "Source": "KLM.APIService",
+  "BasePath": "_content/KLM.APIService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -1,0 +1,461 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\controllers\\labcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\controllers\\labcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\controllers\\productcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\services\\firebasestorageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\services\\firebasestorageservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\repositories\\labtblrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\repositories\\labtblrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\repositories\\productkittblrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\repositories\\productkittblrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\productkittbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\productkittbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\modelview\\labdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\modelview\\labdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\ltypetbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\ltypetbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\ktypetbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\ktypetbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\labtbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\labtbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\modelview\\productdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\modelview\\productdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\orderdetailtbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\orderdetailtbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\requestmodifier\\addproductrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\requestmodifier\\addproductrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\swp391context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\swp391context.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\questiontbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\questiontbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\answertbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\answertbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\availablelabtbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\availablelabtbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\accounttbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\accounttbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.apiservice\\config\\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3FA25AD2-E969-471A-89E7-5E97CAC3F324}|KLM.APIService\\KLM.APIService.csproj|solutionrelative:klm.apiservice\\config\\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\base\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\base\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\models\\ordertbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\models\\ordertbl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|c:\\users\\admin\\desktop\\backend\\swp391.kitandlabmanagement\\klm.repository\\efpt.config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{15947366-A952-4772-ACBB-726D2113D30E}|KLM.Repository\\KLM.Repository.csproj|solutionrelative:klm.repository\\efpt.config.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ProductKitTblRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Repositories\\ProductKitTblRepository.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Repositories\\ProductKitTblRepository.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Repositories\\ProductKitTblRepository.cs",
+              "RelativeToolTip": "KLM.Repository\\Repositories\\ProductKitTblRepository.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAxwBQAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:05:12.633Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProductController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Controllers\\ProductController.cs",
+              "RelativeDocumentMoniker": "KLM.APIService\\Controllers\\ProductController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Controllers\\ProductController.cs",
+              "RelativeToolTip": "KLM.APIService\\Controllers\\ProductController.cs",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAowKQAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-01T15:34:18.769Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "LabController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Controllers\\LabController.cs",
+              "RelativeDocumentMoniker": "KLM.APIService\\Controllers\\LabController.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Controllers\\LabController.cs",
+              "RelativeToolTip": "KLM.APIService\\Controllers\\LabController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T02:48:11.109Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\UnitOfWork.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\UnitOfWork.cs",
+              "RelativeToolTip": "KLM.Repository\\UnitOfWork.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwBwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-01T01:54:03.408Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ProductKitTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\ProductKitTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\ProductKitTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\ProductKitTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\ProductKitTbl.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAA2wCsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:26:30.493Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LtypeTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\LtypeTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\LtypeTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\LtypeTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\LtypeTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T04:05:05.607Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "KtypeTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\KtypeTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\KtypeTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\KtypeTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\KtypeTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:26:42.904Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FirebaseStorageService.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Services\\FirebaseStorageService.cs",
+              "RelativeDocumentMoniker": "KLM.APIService\\Services\\FirebaseStorageService.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Services\\FirebaseStorageService.cs",
+              "RelativeToolTip": "KLM.APIService\\Services\\FirebaseStorageService.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAQwGMAAABoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T01:55:07.858Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LabTblRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Repositories\\LabTblRepository.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Repositories\\LabTblRepository.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Repositories\\LabTblRepository.cs",
+              "RelativeToolTip": "KLM.Repository\\Repositories\\LabTblRepository.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAAwDkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T00:03:34.862Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LabDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\ModelView\\LabDTO.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\ModelView\\LabDTO.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\ModelView\\LabDTO.cs",
+              "RelativeToolTip": "KLM.Repository\\ModelView\\LabDTO.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAmwBsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T00:12:04.195Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "LabTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\LabTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\LabTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\LabTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\LabTbl.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAgwBsAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T06:53:15.889Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ProductDTO.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\ModelView\\ProductDTO.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\ModelView\\ProductDTO.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\ModelView\\ProductDTO.cs",
+              "RelativeToolTip": "KLM.Repository\\ModelView\\ProductDTO.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAkwAoAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-05T00:12:07.755Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "OrderDetailTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\OrderDetailTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\OrderDetailTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\OrderDetailTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\OrderDetailTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T07:27:09.096Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\appsettings.json",
+              "RelativeDocumentMoniker": "KLM.APIService\\appsettings.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\appsettings.json",
+              "RelativeToolTip": "KLM.APIService\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-30T01:58:15.614Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Program.cs",
+              "RelativeDocumentMoniker": "KLM.APIService\\Program.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Program.cs",
+              "RelativeToolTip": "KLM.APIService\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:44:35.622Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AddProductRequest.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\RequestModifier\\AddProductRequest.cs",
+              "RelativeDocumentMoniker": "KLM.APIService\\RequestModifier\\AddProductRequest.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\RequestModifier\\AddProductRequest.cs",
+              "RelativeToolTip": "KLM.APIService\\RequestModifier\\AddProductRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-02T00:42:45.752Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Swp391Context.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\Swp391Context.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\Swp391Context.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\Swp391Context.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\Swp391Context.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T05:03:27.884Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "KLM.APIService\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\appsettings.Development.json",
+              "RelativeToolTip": "KLM.APIService\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-02T03:02:11.101Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "KLM.APIService\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Properties\\launchSettings.json",
+              "RelativeToolTip": "KLM.APIService\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-02T00:49:54.196Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "QuestionTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\QuestionTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\QuestionTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\QuestionTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\QuestionTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T05:03:21.32Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "AnswerTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\AnswerTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\AnswerTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\AnswerTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\AnswerTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:26:40.092Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "AvailableLabTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\AvailableLabTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\AvailableLabTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\AvailableLabTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\AvailableLabTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:26:42.296Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "AccountTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\AccountTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\AccountTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\AccountTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\AccountTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T03:26:38.594Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Config\\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json",
+              "RelativeDocumentMoniker": "KLM.APIService\\Config\\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.APIService\\Config\\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json",
+              "RelativeToolTip": "KLM.APIService\\Config\\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-01T01:36:01.672Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "GenericRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Base\\GenericRepository.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Base\\GenericRepository.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Base\\GenericRepository.cs",
+              "RelativeToolTip": "KLM.Repository\\Base\\GenericRepository.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T06:24:15.471Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "OrderTbl.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\OrderTbl.cs",
+              "RelativeDocumentMoniker": "KLM.Repository\\Models\\OrderTbl.cs",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\Models\\OrderTbl.cs",
+              "RelativeToolTip": "KLM.Repository\\Models\\OrderTbl.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-30T04:05:08.641Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "efpt.config.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\efpt.config.json",
+              "RelativeDocumentMoniker": "KLM.Repository\\efpt.config.json",
+              "ToolTip": "C:\\Users\\Admin\\Desktop\\Backend\\SWP391.KitAndLabManagement\\KLM.Repository\\efpt.config.json",
+              "RelativeToolTip": "KLM.Repository\\efpt.config.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-09-30T03:10:25.023Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

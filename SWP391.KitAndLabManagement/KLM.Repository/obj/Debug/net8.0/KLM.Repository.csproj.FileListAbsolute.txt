@@ -1,0 +1,14 @@
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\bin\Debug\net8.0\KLM.Repository.deps.json
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\bin\Debug\net8.0\KLM.Repository.runtimeconfig.json
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\bin\Debug\net8.0\KLM.Repository.dll
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\bin\Debug\net8.0\KLM.Repository.pdb
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.AssemblyInfo.cs
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.dll
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\refint\KLM.Repository.dll
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.pdb
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\KLM.Repository.genruntimeconfig.cache
+C:\Users\Admin\Desktop\Backend\SWP391.KitAndLabManagement\KLM.Repository\obj\Debug\net8.0\ref\KLM.Repository.dll
