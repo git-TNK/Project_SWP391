@@ -111,7 +111,38 @@ namespace KLM.APIService
         }
 
         //Delete file
+        public async Task DeleteDocumentAsync(string documentUrl)
+        {
+            try
+            {
+                var uri = new Uri(documentUrl);
 
+                string path = HttpUtility.UrlDecode(uri.AbsolutePath);
+
+                // xoa "/v0/b/[bucket-name]/o/"
+                string[] pathParts = path.Split(new[] { "/o/" }, StringSplitOptions.None);
+
+                string fileName = pathParts[1];
+
+                // xoa parameters
+                int indexOfQueryParam = fileName.IndexOf('?');
+                if (indexOfQueryParam != -1)
+                {
+                    fileName = fileName.Substring(0, indexOfQueryParam);
+                }
+
+                //lay path : Labs/Doucment.pdf
+                string objectPath = fileName;
+
+                //delete
+                await _storageClient.DeleteObjectAsync(_bucketName, objectPath);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"An error occurred while deleting the image: {ex.Message}", ex);
+            }
+        }
 
 
 

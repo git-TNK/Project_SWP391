@@ -1,4 +1,5 @@
-﻿using KLM.Repository;
+﻿using KLM.APIService.RequestModifier;
+using KLM.Repository;
 using KLM.Repository.ModelView;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,8 +53,40 @@ namespace KLM.APIService.Controllers
 
 
         //create lab(them kit)
-        //[HttpPost("AddLab")]
+        [HttpPost("AddLab")]
+        public async Task<IActionResult> UploadLab(AddLabRequest request)
+        {
+            string documentUrl;
 
+            using (var stream = request.document.OpenReadStream())
+            {
+                var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.document.FileName, request.document.ContentType);
+                documentUrl = uploadUrl;
+            }
+
+            if(documentUrl == null || documentUrl.Length == 0)
+            {
+                return BadRequest("No document uploaded");
+            }
+
+            string labName = request.labName;
+            string description = request.description;
+            List<string> types = request.labTypes;
+            DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
+
+            string result = await _unitOfWork.LabTblRepository.CreateLab(labName, description,documentUrl, types, DateOfCreation);
+
+            if (result != null)
+            {
+                return Ok("Added lab");
+            }
+            else
+            {
+                //neu fail thi delete lab trong firebase
+                await _firebaseStorageService.DeleteImageAsync(documentUrl);
+                return BadRequest($"{result}");
+            }
+        }
 
 
         //delete lab (xoa cac kit lien quan)

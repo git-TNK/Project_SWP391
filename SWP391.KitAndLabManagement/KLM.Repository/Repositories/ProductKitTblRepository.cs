@@ -192,6 +192,7 @@ namespace KLM.Repository.Repositories
             //Filter cac lab voi type co trong type cua product
             var labLists = await _context.Set<LabTbl>()
                 .Where(l => l.Ltypes.Any(ltype => labTypes.Contains(ltype)))
+                .Where(k => k.Status != "Deleted") //add them vao ngay 10/05
                 .ToListAsync();
 
             //associate product voi kit
@@ -353,6 +354,7 @@ namespace KLM.Repository.Repositories
             //Filter cac lab voi type co trong type cua product
             var labLists = await _context.Set<LabTbl>()
                 .Where(l => l.Ltypes.Any(ltype => labTypes.Contains(ltype)))
+                .Where(k => k.Status != "Deleted") //add them vao ngay 10/05
                 .ToListAsync();
 
             //associate product voi kit
