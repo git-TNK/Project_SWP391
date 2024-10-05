@@ -36,7 +36,7 @@ namespace KLM.APIService.Controllers
 
 
         //testing upload pdf len firebase
-        [HttpPost("UploadPDF")]
+        [HttpPost("UploadPDF(testing)")]
         public async Task<ActionResult> UploadPdfTest(IFormFile file)
         {
             if (file == null || file.Length == 0)
