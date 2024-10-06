@@ -76,14 +76,14 @@ namespace KLM.APIService.Controllers
 
             string result = await _unitOfWork.LabTblRepository.CreateLab(labName, description,documentUrl, types, DateOfCreation);
 
-            if (result != null)
+            if (string.IsNullOrWhiteSpace(result))
             {
                 return Ok("Added lab");
             }
             else
             {
                 //neu fail thi delete lab trong firebase
-                await _firebaseStorageService.DeleteImageAsync(documentUrl);
+                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
                 return BadRequest($"{result}");
             }
         }
@@ -108,6 +108,48 @@ namespace KLM.APIService.Controllers
             }
         }
 
+
+
+
         //update lab(them xoa kit neu can)
+        [HttpPut("{id}/UpdateLab")]
+
+        public async Task<IActionResult> UpdateLabInfo(string id, AddLabRequest request)
+        {
+
+            string documentUrl;
+
+            //qua trinh upload file gap van de
+            using (var stream = request.document.OpenReadStream())
+            {
+                var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.document.FileName, request.document.ContentType);
+                documentUrl = uploadUrl;
+            }
+
+            if (documentUrl == null || documentUrl.Length == 0)
+                return BadRequest("No file uploaded");
+
+
+            string labName = request.labName;
+            string description = request.description;
+            List<string> labTypes = request.labTypes;
+            DateOnly dateOfChange = DateOnly.FromDateTime(DateTime.Today.Date);
+
+            //return (errors, oldImageUrl);
+            var (errors, oldDocumentUrl) = await _unitOfWork.LabTblRepository.UpdateLab(id, labName, description, documentUrl, labTypes, dateOfChange);
+
+            if (string.IsNullOrWhiteSpace(errors))
+            {
+                //neu thanh cong thi xoa url cu them url moi
+                await _firebaseStorageService.DeleteDocumentAsync(oldDocumentUrl);
+                return Ok("Success");
+            }
+            else
+            {
+                //neu fail can delete url tren firebase
+                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                return BadRequest($"{errors}");
+            }
+        }
     }
 }

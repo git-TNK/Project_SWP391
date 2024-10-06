@@ -96,7 +96,7 @@ namespace KLM.APIService.Controllers
 
 
         //Delete product, de status thanh deleted
-        [HttpDelete("DeleteProduct/{id}")]
+        [HttpDelete("DeleteProduct")]
 
         public async Task<IActionResult> DeleteProductKit(string id)
         {
@@ -119,7 +119,7 @@ namespace KLM.APIService.Controllers
 
 
         //Update product
-        [HttpPut("UpadteProduct/{id}")]
+        [HttpPut("{id}/UpadteProduct")]
 
         public async Task<IActionResult> UpdateProductKit(string id, AddProductRequest request)
         {
