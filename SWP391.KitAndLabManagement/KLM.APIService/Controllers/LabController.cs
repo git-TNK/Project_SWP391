@@ -90,6 +90,23 @@ namespace KLM.APIService.Controllers
 
 
         //delete lab (xoa cac kit lien quan)
+        [HttpDelete("DeleteLab")]
+        public async Task<IActionResult> DeleteLab(string id)
+        {
+            bool result = false;
+
+            result = await _unitOfWork.LabTblRepository.DeleteLabs(id);
+
+
+            if (result)
+            {
+                return Ok("Deleted");
+            }
+            else
+            {
+                return NotFound($"No product with {id} exist");
+            }
+        }
 
         //update lab(them xoa kit neu can)
     }

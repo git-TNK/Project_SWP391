@@ -134,5 +134,28 @@ namespace KLM.Repository.Repositories
 
             return error;
         }
+
+
+        //delete lab
+        public async Task<bool> DeleteLabs(string labId)
+        {
+            var lab = await _context.Set<LabTbl>()
+                .Include(l => l.Kits)
+                .FirstOrDefaultAsync(p => p.LabId == $"{labId}");
+
+            if (lab == null)
+            {
+                return false;
+            }
+
+            lab.Status = "Deleted";
+            lab.DateOfDeletion = DateOnly.FromDateTime(DateTime.Today.Date);
+
+            lab.Kits.Clear();
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
