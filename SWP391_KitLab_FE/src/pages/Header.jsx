@@ -41,13 +41,20 @@ function Header() {
               placeholder="Tìm kiếm sản phẩm"
               style={{
                 padding: "8px",
+<<<<<<< HEAD
+=======
+                borderBlockColor: "black",
+>>>>>>> a69df4a975ba52df774d317f28c188b4a8642803
                 borderRadius: "10px",
                 marginRight: "10px",
                 width: "600px",
                 height: "35px",
+<<<<<<< HEAD
                 borderColor: "black",
                 borderStyle: "solid",
                 borderWidth: "2px",
+=======
+>>>>>>> a69df4a975ba52df774d317f28c188b4a8642803
               }}
             />
             <button
