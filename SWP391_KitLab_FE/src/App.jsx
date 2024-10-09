@@ -6,6 +6,7 @@ import ContactPage from "./pages/contact/ContactPage";
 import ServicePage from "./pages/services/ServicePage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 import CartPage from "./pages/cart/CartPage";
+import AdminProduct from "./pages/admin/admin-product";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
         <Route path="service" element={<ServicePage />}></Route>
         <Route path="checkout" element={<CheckoutPage />}></Route>
         <Route path="cart" element={<CartPage />}></Route>
+        {/* <Route path="login/homepage" element={<HomePage />}></Route> */}
+        <Route path="admin/product" element={<AdminProduct />}></Route>
       </Routes>
     </>
   );
