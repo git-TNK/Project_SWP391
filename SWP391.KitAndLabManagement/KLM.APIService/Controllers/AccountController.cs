@@ -15,7 +15,7 @@ namespace KLM.APIService.Controllers
         [HttpGet("{userName},{password}")]
         public async Task<AccountTbl> CheckExistAccount(string userName, string password)
         {
-            List<AccountTbl> account = _unitOfWork.AccountTblRepository.GetAll();
+            List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
             {
                 if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
