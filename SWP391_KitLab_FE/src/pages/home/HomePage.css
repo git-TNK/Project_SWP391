@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.auth-buttons a {
+    color: white;
+    margin-right: 5px;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #444;
+    padding: 10px 0;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 15px;
+}
+
+.cart {
+    margin-left: auto;
+}
+
+main {
+    padding: 20px;
+}
+
+.product-section h2 {
+    margin-bottom: 10px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0;
+    list-style-type: none;  /* Remove default list style */
+    margin: 20px 0;
+}
+
+.product-item {
+    width: 23%;  /* Allow 4 items per row */
+    margin-bottom: 20px;  /* Space between rows */
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    background-color: white;
+}
+
+.img-style {
+    width: 100%;       /* Make the image take up full width of its container */
+    height: 200px;     /* Set a fixed height */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    border-radius: 8px;
+}
+
+.product-name {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.price {
+    color: red;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.buy-button {
+    padding: 8px 15px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.buy-button:hover {
+    background-color: #004599;
+}
+
+/* Adjust layout for smaller screens */
+@media (max-width: 768px) {
+    .product-item {
+        width: 48%;  /* Two items per row on tablet screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .product-item {
+        width: 100%;  /* Full width for mobile */
+    }
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+}
