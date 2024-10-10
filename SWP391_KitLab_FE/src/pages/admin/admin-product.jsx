@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, ShoppingCart, Trash2, Wrench } from "lucide-react";
 import "../../tailwindstyle.css";
 import axios from "axios";
 import Sidebar from "./sidebar";
+import PropTypes from "prop-types";
 
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
@@ -33,6 +34,57 @@ const AdminProduct = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const ProductItem = ({ item }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div
+          className={`w-full h-full object-contain transition-transform duration-300 ease-out ${
+            isHovered ? "scale-110" : "scale-95"
+          }`}
+        >
+          <div className="bg-white p-4 rounded-md shadow flex flex-col h-[300px] relative overflow-hidden">
+            <div className="h-[200px] overflow-hidden rounded-md mb-2">
+              <img
+                className="object-contain h-48 w-96"
+                src={item.picture}
+                alt={item.name}
+              />
+            </div>
+            <h3 className="text-lg font-semibold truncate">{item.name}</h3>
+            <p className="text-gray-600 mt-auto">
+              {item.price.toLocaleString()} VND
+            </p>
+            <div
+              className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center space-x-4 transition-opacity duration-300 ${
+                isHovered ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+                <Wrench className="w-6 h-6 text-gray-800" />
+              </button>
+              <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+                <Trash2 className="w-6 h-6 text-gray-800" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  ProductItem.propTypes = {
+    item: PropTypes.shape({
+      picture: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+    }).isRequired,
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <AdminHeader />
@@ -54,24 +106,7 @@ const AdminProduct = () => {
             {/* Product grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentProducts.map((item, index) => (
-                <div
-                  key={item.kitId || index}
-                  className="bg-white p-4 rounded-md shadow flex flex-col h-[300px]"
-                >
-                  <div className="h-[200px] overflow-hidden rounded-md mb-2">
-                    <img
-                      src={item.picture}
-                      alt={item.name}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <h3 className="text-lg font-semibold truncate">
-                    {item.name}
-                  </h3>
-                  <p className="text-gray-600 mt-auto">
-                    {item.price.toLocaleString()} VND
-                  </p>
-                </div>
+                <ProductItem key={item.kitId || index} item={item} />
               ))}
             </div>
             {/* Pagination */}
