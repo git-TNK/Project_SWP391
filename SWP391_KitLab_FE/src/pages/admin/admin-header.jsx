@@ -35,7 +35,7 @@ function AdminHeader() {
             </span>
           </h1>
 
-          <div style={{ display: "flex", alignItems: "center" }}>
+          {/* <div style={{ display: "flex", alignItems: "center" }}>
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm"
@@ -63,7 +63,7 @@ function AdminHeader() {
             >
               Tìm Kiếm
             </button>
-          </div>
+          </div> */}
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <NavLink

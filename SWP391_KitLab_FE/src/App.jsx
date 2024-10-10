@@ -12,6 +12,8 @@ import AdminLab from "./pages/admin/admin-lab";
 import AdminAccount from "./pages/admin/admin-account";
 import AdminDashboard from "./pages/admin/admin-dashboard";
 import AdminOrder from "./pages/admin/admin-order";
+import AddProduct from "./pages/admin/admin-add-product";
+import AdminViewProduct from "./pages/admin/admin-product-view";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="admin/account" element={<AdminAccount />}></Route>
         <Route path="admin/dashboard" element={<AdminDashboard />}></Route>
         <Route path="admin/order" element={<AdminOrder />}></Route>
+        <Route path="admin/addProduct" element={<AddProduct />}></Route>
+        <Route path="/admin/product/:id" element={<AdminViewProduct />} />
       </Routes>
     </>
   );
