@@ -41,8 +41,6 @@ function Header() {
               placeholder="Tìm kiếm sản phẩm"
               style={{
                 padding: "8px",
-
-                borderBlockColor: "black",
                 borderRadius: "10px",
                 marginRight: "10px",
                 width: "600px",
@@ -50,8 +48,7 @@ function Header() {
                 borderColor: "black",
                 borderStyle: "solid",
                 borderWidth: "2px",
-                color: "black", // Set the text color
-                backgroundColor: "white", // Set the background color
+                color: "black",
               }}
             />
             <button
@@ -178,10 +175,12 @@ function Header() {
               to="/cart"
               style={({ isActive }) => ({
                 color: isActive ? "yellow" : "white", // Change color when active
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "#333",
+                padding: "10px 15px",
+                borderRadius: "5px",
                 textDecoration: "none",
-                margin: "0 15px",
-                fontSize: "16px",
-                fontWeight: "500",
               })}
             >
               Giỏ Hàng

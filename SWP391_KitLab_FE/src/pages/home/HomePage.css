@@ -1,9 +1,3 @@
-.container {
-  width: 90%;
-  height: 100vh; /* Chiều cao 100% màn hình */
-  overflow: scroll; /* Hiển thị thanh cuộn khi cần */
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -123,7 +117,6 @@ main {
 }
 
 /* Adjust layout for smaller screens */
-
 @media (max-width: 768px) {
   .product-item {
     width: 48%; /* Two items per row on tablet screens */

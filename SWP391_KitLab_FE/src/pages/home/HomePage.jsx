@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./HomePage.css";
 import Header from "../Header";
 import Footer from "../../Footer";
 import axios from "axios";
+
 function HomePage() {
   const [listProduct, setListProduct] = useState([]);
 
@@ -15,34 +15,41 @@ function HomePage() {
     }
   }
 
-  useEffect(function () {
+  useEffect(() => {
     fetchProduct();
   }, []);
 
   return (
-    <div className="container">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      <section className="product-section">
-        <h2>Sản Phẩm Mới</h2>
-        <ul className="product-list">
-          {listProduct.map((item, index) => {
-            return (
-              <li key={index} className="product-item">
-                <div className="product-card">
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <section>
+          <h2 className="text-2xl font-bold mb-6">Sản Phẩm Mới</h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {listProduct.map((item, index) => (
+              <li
+                key={index}
+                className="border border-gray-200 rounded-lg overflow-hidden shadow-md"
+              >
+                <div className="flex flex-col h-full">
                   <img
-                    className="img-style"
+                    className="w-full h-48 object-cover"
                     src={item.picture}
                     alt={item.name}
                   />
-                  <p className="product-name">{item.name}</p>
-                  <p className="price">{item.price}</p>
-                  <button className="buy-button">MUA HÀNG</button>
+                  <div className="p-4 flex flex-col flex-grow">
+                    <p className="text-lg font-semibold mb-2">{item.name}</p>
+                    <p className="text-red-600 font-bold mb-4">{item.price}</p>
+                    <button className="mt-auto w-full bg-white text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
+                      MUA HÀNG
+                    </button>
+                  </div>
                 </div>
               </li>
-            );
-          })}
-        </ul>
-      </section>
+            ))}
+          </ul>
+        </section>
+      </main>
       <Footer />
     </div>
   );

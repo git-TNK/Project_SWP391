@@ -3,30 +3,16 @@ import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
 import { Filter, PlusCircle, Wrench, Trash2, Eye } from "lucide-react";
 import "../../tailwindstyle.css";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./sidebar";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
-
-const menuItems = [
-  { name: "Quản Lý Sản Phẩm" },
-  { name: "Quản Lý Lab" },
-  { name: "Quản Lý Tài Khoản" },
-  { name: "Lịch Sử Đơn Hàng" },
-  { name: "Thống Kê" },
-];
 
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const productsPerPage = 8;
-  const [activeItem, setActiveItem] = useState("Quản Lý Kit");
-  const location = useLocation();
-  const account = location.state?.account; // Use optional chaining in case state is undefined
-
-  console.log(account); // Now you can use the account object
 
   async function fetchProduct() {
     try {
