@@ -1,4 +1,9 @@
-﻿namespace KLM.APIService.Controllers
+﻿using KLM.APIService.RequestModifier;
+using KLM.Repository;
+using KLM.Repository.ModelView;
+using Microsoft.AspNetCore.Mvc;
+
+namespace KLM.APIService.Controllers
 {
 
     [Route("/[controller]")]
