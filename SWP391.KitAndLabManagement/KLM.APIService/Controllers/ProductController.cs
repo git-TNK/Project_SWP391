@@ -78,9 +78,9 @@ namespace KLM.APIService.Controllers
             List<string> types = request.types;
             DateOnly dateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
 
-            bool result = await _unitOfWork.ProductKitTblRepository.CreateProduct(kitName, brand, description, imageUrl, price, quantity, types, dateOfCreation);
+            string result = await _unitOfWork.ProductKitTblRepository.CreateProduct(kitName, brand, description, imageUrl, price, quantity, types, dateOfCreation);
 
-            if (result)
+            if (string.IsNullOrWhiteSpace(result))
             {
                 return Ok("Success");
             }
@@ -88,7 +88,7 @@ namespace KLM.APIService.Controllers
             {
                 //neu fail can delete anh tren firebase
                 await _firebaseStorageService.DeleteImageAsync(imageUrl);
-                return BadRequest("Fail");
+                return BadRequest(result);
             }
         }
 

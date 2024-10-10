@@ -131,11 +131,13 @@ namespace KLM.Repository.Repositories
 
 
         //Create Product (TO CREATE PRODUCT DO NOT MODIFY FOR NOW)
-        public async Task<bool> CreateProduct(string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateOnly dateOfCreation)
+        public async Task<string> CreateProduct(string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateOnly dateOfCreation)
         {
             string? nameCheck = _context.Set<ProductKitTbl>().Where(e => e.Name == $"{kitName}").Select(e => e.Name).FirstOrDefault()?.ToString();
             string kitId;
             string? idCheck;
+
+            string? error="";
 
             //cheking existed ID
             do
@@ -150,7 +152,8 @@ namespace KLM.Repository.Repositories
             if (!string.IsNullOrWhiteSpace(nameCheck))
             {
                 Console.WriteLine("Existed name");
-                return false;
+                error = "Existed name";
+                return error;
             }
 
 
@@ -178,7 +181,8 @@ namespace KLM.Repository.Repositories
             if (kitTypes.Count != types.Count)
             {
                 Console.WriteLine("Messed up here 161");
-                return false;
+                error = "Messed up here 161";
+                return error;
             }
 
             //associate kit voi product
@@ -204,7 +208,7 @@ namespace KLM.Repository.Repositories
 
             await _context.SaveChangesAsync();
 
-            return true;
+            return error;
         }
 
 
