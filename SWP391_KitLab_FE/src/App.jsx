@@ -6,7 +6,12 @@ import ContactPage from "./pages/contact/ContactPage";
 import ServicePage from "./pages/services/ServicePage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 import CartPage from "./pages/cart/CartPage";
+//admin
 import AdminProduct from "./pages/admin/admin-product";
+import AdminLab from "./pages/admin/admin-lab";
+import AdminAccount from "./pages/admin/admin-account";
+import AdminDashboard from "./pages/admin/admin-dashboard";
+import AdminOrder from "./pages/admin/admin-order";
 
 function App() {
   return (
@@ -21,6 +26,10 @@ function App() {
         <Route path="cart" element={<CartPage />}></Route>
         {/* <Route path="login/homepage" element={<HomePage />}></Route> */}
         <Route path="admin/product" element={<AdminProduct />}></Route>
+        <Route path="admin/lab" element={<AdminLab />}></Route>
+        <Route path="admin/account" element={<AdminAccount />}></Route>
+        <Route path="admin/dashboard" element={<AdminDashboard />}></Route>
+        <Route path="admin/order" element={<AdminOrder />}></Route>
       </Routes>
     </>
   );

@@ -48,6 +48,7 @@ function AdminHeader() {
                 borderColor: "black",
                 borderStyle: "solid",
                 borderWidth: "2px",
+                color: "black",
               }}
             />
             <button
@@ -92,11 +93,6 @@ function AdminHeader() {
           </div>
         </div>
       </header>
-      <hr
-        style={{
-          borderRadius: "9px",
-        }}
-      ></hr>
     </div>
   );
 }

@@ -1,80 +1,97 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
-import { ChevronRight, PlusCircle, Settings } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import "../../tailwindstyle.css";
-
-const menuItems = [
-  { name: "Quản Lý Sản Phẩm" },
-  { name: "Quản Lý Lab" },
-  { name: "Quản Lý Tài Khoản" },
-  { name: "Lịch Sử Đơn Hàng" },
-  { name: "Thống Kê" },
-];
+import axios from "axios";
+import Sidebar from "./sidebar";
 
 const AdminProduct = () => {
-  const [activeItem, setActiveItem] = useState("Quản Lý Kit");
+  const [listProduct, setListProduct] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
+
+  async function fetchProduct() {
+    try {
+      const response = await axios.get("http://localhost:5056/Product");
+      setListProduct(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = listProduct.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <AdminHeader />
-      <hr className="h-px border-0 bg-[#0a0a0a]"></hr>
-      <div className="flex h-screen bg-gray-100">
-        {/* Sidebar */}
-        <div className="w-64 h-96 bg-white shadow-md mt-[50px]">
-          <div className="p-4">
-            {menuItems.map((item, index) => (
-              <div
-                key={index}
-                className="relative overflow-hidden mb-2 group"
-                onClick={() => setActiveItem(item.name)}
-              >
+      <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
+      <div className="flex-grow flex overflow-hidden">
+        <div className="flex flex-grow bg-gray-100 overflow-hidden">
+          <Sidebar />
+
+          {/* Main content */}
+          <div className="flex-1 p-8 overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold">Quản lý sản phẩm</h1>
+              <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
+                <PlusCircle size={20} className="mr-2" />
+                Thêm Sản Phẩm
+              </button>
+            </div>
+
+            {/* Product grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {currentProducts.map((item, index) => (
                 <div
-                  className={`
-                  p-4 z-10 relative transition-colors duration-300
-                  ${
-                    activeItem === item.name
-                      ? "text-white"
-                      : "text-black group-hover:text-white"
-                  }
-                `}
+                  key={item.kitId || index}
+                  className="bg-white p-4 rounded-md shadow flex flex-col h-[300px]"
                 >
-                  <span className="text-lg">{item.name}</span>
+                  <div className="h-[200px] overflow-hidden rounded-md mb-2">
+                    <img
+                      src={item.picture}
+                      alt={item.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <h3 className="text-lg font-semibold truncate">
+                    {item.name}
+                  </h3>
+                  <p className="text-gray-600 mt-auto">
+                    {item.price.toLocaleString()} VND
+                  </p>
                 </div>
-                <div
-                  className={`
-                  absolute inset-0 bg-black
-                  transform transition-transform duration-300 ease-out
-                  ${
-                    activeItem === item.name
-                      ? "translate-x-0"
-                      : "-translate-x-full group-hover:translate-x-0"
-                  }
-                `}
-                ></div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Main content */}
-        <div className="flex-1 p-8">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">{activeItem}</h1>
-            <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
-              <PlusCircle size={20} className="mr-2" />
-              Thêm Sản Phẩm
-            </button>
-          </div>
-
-          {/* Placeholder for product grid */}
-          <div className="grid grid-cols-5 gap-4">
-            {[...Array(10)].map((_, index) => (
-              <div
-                key={index}
-                className="bg-white p-4 rounded-md shadow h-48"
-              ></div>
-            ))}
+              ))}
+            </div>
+            {/* Pagination */}
+            <div className="flex justify-center mt-8">
+              {[...Array(Math.ceil(listProduct.length / productsPerPage))].map(
+                (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => paginate(index + 1)}
+                    className={`mx-1 px-3 py-1 rounded ${
+                      currentPage === index + 1
+                        ? "bg-black text-white"
+                        : "bg-white text-black"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>
