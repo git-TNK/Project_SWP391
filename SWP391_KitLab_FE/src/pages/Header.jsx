@@ -41,20 +41,16 @@ function Header() {
               placeholder="Tìm kiếm sản phẩm"
               style={{
                 padding: "8px",
-<<<<<<< HEAD
-=======
                 borderBlockColor: "black",
->>>>>>> a69df4a975ba52df774d317f28c188b4a8642803
                 borderRadius: "10px",
                 marginRight: "10px",
                 width: "600px",
                 height: "35px",
-<<<<<<< HEAD
                 borderColor: "black",
                 borderStyle: "solid",
                 borderWidth: "2px",
-=======
->>>>>>> a69df4a975ba52df774d317f28c188b4a8642803
+                color: "black", // Set the text color
+                backgroundColor: "white", // Set the background color
               }}
             />
             <button
@@ -117,61 +113,61 @@ function Header() {
         >
           <NavLink
             to="/"
-            style={{
-              color: "white",
+            style={({ isActive }) => ({
+              color: isActive ? "yellow" : "white", // Change color when active
               textDecoration: "none",
               margin: "0 15px",
               fontSize: "16px",
               fontWeight: "500",
-            }}
+            })}
           >
             Trang chủ
           </NavLink>
           <NavLink
             to="/products"
-            style={{
-              color: "white",
+            style={({ isActive }) => ({
+              color: isActive ? "yellow" : "white", // Change color when active
               textDecoration: "none",
               margin: "0 15px",
               fontSize: "16px",
               fontWeight: "500",
-            }}
+            })}
           >
             Sản Phẩm
           </NavLink>
           <NavLink
             to="/contact"
-            style={{
-              color: "white",
+            style={({ isActive }) => ({
+              color: isActive ? "yellow" : "white", // Change color when active
               textDecoration: "none",
               margin: "0 15px",
               fontSize: "16px",
               fontWeight: "500",
-            }}
+            })}
           >
             Liên Hệ
           </NavLink>
           <NavLink
             to="/service"
-            style={{
-              color: "white",
+            style={({ isActive }) => ({
+              color: isActive ? "yellow" : "white", // Change color when active
               textDecoration: "none",
               margin: "0 15px",
               fontSize: "16px",
               fontWeight: "500",
-            }}
+            })}
           >
             Yêu Cầu Hỗ Trợ
           </NavLink>
           <NavLink
             to="/checkout"
-            style={{
-              color: "white",
+            style={({ isActive }) => ({
+              color: isActive ? "yellow" : "white", // Change color when active
               textDecoration: "none",
               margin: "0 15px",
               fontSize: "16px",
               fontWeight: "500",
-            }}
+            })}
           >
             Thanh Toán
           </NavLink>
@@ -179,15 +175,13 @@ function Header() {
           <div style={{ marginLeft: "auto" }}>
             <NavLink
               to="/cart"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: "#333",
-                padding: "10px 15px",
-                borderRadius: "5px",
-                color: "white",
+              style={({ isActive }) => ({
+                color: isActive ? "yellow" : "white", // Change color when active
                 textDecoration: "none",
-              }}
+                margin: "0 15px",
+                fontSize: "16px",
+                fontWeight: "500",
+              })}
             >
               Giỏ Hàng
             </NavLink>

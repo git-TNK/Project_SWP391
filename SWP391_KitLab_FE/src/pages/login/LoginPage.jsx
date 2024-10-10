@@ -1,18 +1,26 @@
 import { Button, Form, Input } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import "./LoginPage.css";
+import { Navigate, useNavigate } from "react-router-dom";
+import AdminProduct from "../admin/admin-product";
+import HomePage from "../home/HomePage";
 
 function LoginPage() {
-  const [dataSource, setDataSource] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
+  const [account, setAccount] = useState(null);
+  const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
-    const userName = values.username;
-    const password = values.password;
-
+  const onFinish = (e) => {
+    e.preventDefault(); // Prevent the form from reloading
     console.log("Username: ", userName);
     console.log("Password: ", password);
     fetchAccount(userName, password);
+    if (userName == "" || password == "") {
+      alert("Điền đẩy đủ tên đăng nhập và mật khẩu");
+    }
   };
 
   async function fetchAccount(userName, password) {
@@ -20,9 +28,11 @@ function LoginPage() {
       const response = await axios.get(
         `http://localhost:5056/api/Account/${userName},${password}`
       );
-      setDataSource(response.data);
+      setAccount(response.data);
+      setRole(response.data.role);
     } catch (err) {
       console.log(err);
+      alert("Sai tài khoản hoặc mật khẩu");
     }
   }
 
@@ -30,59 +40,56 @@ function LoginPage() {
     fetchAccount("userName", "password");
   }, []);
 
-  console.log(dataSource);
+  console.log(account);
+
+  // Check role and navigate accordingly
+  useEffect(() => {
+    if (account) {
+      if (role === "Admin") {
+        navigate("/adminProduct", { state: { account } }); // Pass the account object
+      } else if (role === "Staff") {
+        navigate("/", { state: { account } }); // Pass the account object
+      } else {
+        alert("Hello");
+      }
+    }
+  }, [account, role, navigate]); // Add account, role, and navigate as dependencies
 
   return (
     <div>
-      <Form
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
-        style={{
-          maxWidth: 600,
-        }}
-        onFinish={onFinish}
-      >
-        <Form.Item
-          label="Ten Dang Nhap"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: "Please input your username!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Mat Khau"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
-          }}
-        >
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+      <div className="login-box">
+        <h2>Đăng Nhập</h2>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <div className="user-box">
+            <label htmlFor="Tên đăng nhập">Tên đăng nhập</label>
+            <input
+              type="text"
+              id="userName"
+              placeholder="Tên đăng nhập"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+            />
+          </div>
+          <div className="user-box">
+            <label htmlFor="password">Mật Khẩu</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Nhập mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <a href="#" className="forgot-password">
+            Quên mật khẩu
+          </a>
+          <button type="submit" className="login-button" onClick={onFinish}>
+            Đăng Nhập
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

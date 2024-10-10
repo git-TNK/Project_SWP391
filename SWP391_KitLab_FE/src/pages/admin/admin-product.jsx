@@ -3,6 +3,7 @@ import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
 import { ChevronRight, PlusCircle, Settings } from "lucide-react";
 import "../../tailwindstyle.css";
+import { useLocation } from "react-router-dom";
 
 const menuItems = [
   { name: "Quản Lý Sản Phẩm" },
@@ -14,6 +15,10 @@ const menuItems = [
 
 const AdminProduct = () => {
   const [activeItem, setActiveItem] = useState("Quản Lý Kit");
+  const location = useLocation();
+  const account = location.state?.account; // Use optional chaining in case state is undefined
+
+  console.log(account); // Now you can use the account object
 
   return (
     <div>

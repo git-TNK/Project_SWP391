@@ -20,7 +20,7 @@ function HomePage() {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <Header />
       <section className="product-section">
         <h2>Sản Phẩm Mới</h2>
