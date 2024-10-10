@@ -36,17 +36,13 @@ function LoginPage() {
     }
   }
 
-  useEffect(function () {
-    fetchAccount("userName", "password");
-  }, []);
-
   console.log(account);
 
   // Check role and navigate accordingly
   useEffect(() => {
     if (account) {
       if (role === "Admin") {
-        navigate("/adminProduct", { state: { account } }); // Pass the account object
+        navigate("admin/product", { state: { account } }); // Pass the account object
       } else if (role === "Staff") {
         navigate("/", { state: { account } }); // Pass the account object
       } else {

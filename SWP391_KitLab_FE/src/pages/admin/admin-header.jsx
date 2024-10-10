@@ -35,7 +35,7 @@ function AdminHeader() {
             </span>
           </h1>
 
-          <div style={{ display: "flex", alignItems: "center" }}>
+          {/* <div style={{ display: "flex", alignItems: "center" }}>
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm"
@@ -48,6 +48,7 @@ function AdminHeader() {
                 borderColor: "black",
                 borderStyle: "solid",
                 borderWidth: "2px",
+                color: "black",
               }}
             />
             <button
@@ -62,7 +63,7 @@ function AdminHeader() {
             >
               Tìm Kiếm
             </button>
-          </div>
+          </div> */}
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <NavLink
@@ -92,11 +93,6 @@ function AdminHeader() {
           </div>
         </div>
       </header>
-      <hr
-        style={{
-          borderRadius: "9px",
-        }}
-      ></hr>
     </div>
   );
 }

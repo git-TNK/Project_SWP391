@@ -41,6 +41,7 @@ function Header() {
               placeholder="Tìm kiếm sản phẩm"
               style={{
                 padding: "8px",
+
                 borderBlockColor: "black",
                 borderRadius: "10px",
                 marginRight: "10px",

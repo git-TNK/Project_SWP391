@@ -1,7 +1,7 @@
 .container {
   width: 90%;
   height: 100vh; /* Chiều cao 100% màn hình */
-  overflow: auto; /* Hiển thị thanh cuộn khi cần */
+  overflow: scroll; /* Hiển thị thanh cuộn khi cần */
 }
 
 * {
