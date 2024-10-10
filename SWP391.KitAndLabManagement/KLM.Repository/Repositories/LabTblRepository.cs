@@ -2,16 +2,10 @@
 using KLM.Repository.Models;
 using KLM.Repository.ModelView;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KLM.Repository.Repositories
 {
-    public class LabTblRepository : GenericRepository<LabTbl>   
+    public class LabTblRepository : GenericRepository<LabTbl>
     {
         public LabTblRepository(Swp391Context context) => _context ??= context;
 
@@ -74,11 +68,11 @@ namespace KLM.Repository.Repositories
 
             do
             {
-                labId = "LAB" + (new Random()).Next(000,999);
+                labId = "LAB" + (new Random()).Next(000, 999);
                 idCheck = _context.Set<LabTbl>().Where(e => e.LabId == $"{labId}").Select(e => e.LabId).FirstOrDefault()?.ToString();
             } while (!string.IsNullOrWhiteSpace(idCheck));
 
-            if (!string.IsNullOrWhiteSpace(nameCheck)) 
+            if (!string.IsNullOrWhiteSpace(nameCheck))
             {
                 error = "Name existed";
                 return error;

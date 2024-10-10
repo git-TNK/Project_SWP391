@@ -13,17 +13,17 @@ namespace KLM.APIService.Controllers
         public AccountController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet("{userName},{password}")]
-        public async Task<bool> CheckExistAccount(string userName, string password)
+        public async Task<IActionResult> CheckExistAccount(string userName, string password)
         {
-            List<AccountTbl> account = _unitOfWork.AccountTblRepository.GetAll();
+            List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
             {
                 if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
                 {
-                    return true;
+                    return Ok(account[i]);
                 }
             }
-            return false;
+            return NotFound();
         }
 
         [HttpPost("{userName},{fullName} ,{password},{email}")]
@@ -38,7 +38,7 @@ namespace KLM.APIService.Controllers
                 }
             }
             string accountId = "ACC" + (new Random().Next(000, 999));
-            if (await CheckExistAccount(userName, password))
+            if (await CheckExistAccount(userName, password) != null)
             {
                 return false;
             }

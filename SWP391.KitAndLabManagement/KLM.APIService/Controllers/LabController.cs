@@ -67,7 +67,7 @@ namespace KLM.APIService.Controllers
                 documentUrl = uploadUrl;
             }
 
-            if(documentUrl == null || documentUrl.Length == 0)
+            if (documentUrl == null || documentUrl.Length == 0)
             {
                 return BadRequest("No document uploaded");
             }
@@ -77,7 +77,7 @@ namespace KLM.APIService.Controllers
             List<string> types = request.labTypes;
             DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
 
-            string result = await _unitOfWork.LabTblRepository.CreateLab(labName, description,documentUrl, types, DateOfCreation);
+            string result = await _unitOfWork.LabTblRepository.CreateLab(labName, description, documentUrl, types, DateOfCreation);
 
             if (string.IsNullOrWhiteSpace(result))
             {
