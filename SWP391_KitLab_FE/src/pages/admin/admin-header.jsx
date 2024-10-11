@@ -67,7 +67,7 @@ function AdminHeader() {
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <NavLink
-              to="/register"
+              to="/"
               style={{
                 padding: "8px 16px",
                 backgroundColor: "black",

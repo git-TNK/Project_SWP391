@@ -1,21 +1,36 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
-import { Filter, PlusCircle, Wrench, Trash2, Eye } from "lucide-react";
+import {
+  Filter,
+  PlusCircle,
+  Wrench,
+  Trash2,
+  Eye,
+  ChevronDown,
+} from "lucide-react";
 import "../../tailwindstyle.css";
 import axios from "axios";
 import Sidebar from "./sidebar";
 import PropTypes from "prop-types";
+
 import { NavLink, useLocation } from "react-router-dom";
+
+import Notification from "./notification";
 
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const productsPerPage = 8;
+
   //
   const location = useLocation();
   const account = location.state?.account;
+
+  const [notification, setNotification] = useState(null);
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const productsPerPage = 12;
 
   async function fetchProduct() {
     try {
@@ -27,15 +42,40 @@ const AdminProduct = () => {
     }
   }
 
+  const handleDelete = async (kitId, name) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5056/Product/DeleteProduct?id=${kitId}`
+      );
+      if (response.status === 200) {
+        fetchProduct(); // Refresh the product list
+        setNotification({ message: `Đã xóa ${name}`, type: "success" });
+      } else {
+        throw new Error("Unexpected response status");
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      setNotification({
+        message: "Xóa thất bại",
+        type: "error",
+      });
+    }
+  };
+
   useEffect(() => {
     fetchProduct();
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return listProduct.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [listProduct, searchTerm]);
+    return listProduct.filter((product) => {
+      const nameMatch = product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const statusMatch =
+        filterStatus === "All" || product.status === filterStatus;
+      return nameMatch && statusMatch;
+    });
+  }, [listProduct, searchTerm, filterStatus]);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -44,11 +84,24 @@ const AdminProduct = () => {
     indexOfLastProduct
   );
 
+  const closeNotification = () => {
+    setNotification(null);
+  };
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleFilterClick = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleFilterSelect = (status) => {
+    setFilterStatus(status);
+    setIsFilterOpen(false);
+    setCurrentPage(1);
   };
 
   const ProductItem = ({ item }) => {
@@ -82,14 +135,28 @@ const AdminProduct = () => {
               }`}
             >
               <NavLink to={`/admin/product/${item.kitId}`}>
-                <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+                <button
+                  className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
+                  title="Xem"
+                >
                   <Eye className="w-6 h-6 text-gray-800" />
                 </button>
               </NavLink>
-              <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
-                <Wrench className="w-6 h-6 text-gray-800" />
-              </button>
-              <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+
+              <NavLink to={`/admin/product/${item.kitId}/update`}>
+                <button
+                  className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
+                  title="Sửa"
+                >
+                  <Wrench className="w-6 h-6 text-gray-800" />
+                </button>
+              </NavLink>
+
+              <button
+                title="Xóa"
+                onClick={() => handleDelete(item.kitId, item.name)}
+                className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
+              >
                 <Trash2 className="w-6 h-6 text-gray-800" />
               </button>
             </div>
@@ -105,7 +172,22 @@ const AdminProduct = () => {
       picture: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
+      status: PropTypes.string.isRequired,
     }).isRequired,
+  };
+  const handleStatusTranslate = (status) => {
+    switch (status.toLowerCase()) {
+      case "all":
+        return "Tất cả";
+      case "new":
+        return "Mới";
+      case "changed":
+        return "Đã sửa";
+      case "deleted":
+        return "Đã xóa";
+      default:
+        return status;
+    }
   };
 
   return (
@@ -129,10 +211,37 @@ const AdminProduct = () => {
                 className="py-2 px-3 rounded-lg mr-[30px]  h-[35px] border-2 border-black text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
               />
 
-              <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
-                <Filter size={20} className="mr-2" />
-                Sort
-              </button>
+              <div className="relative z-50">
+                <button
+                  onClick={handleFilterClick}
+                  className="bg-black text-white px-4 py-2 rounded-md flex items-center"
+                >
+                  <Filter size={20} className="mr-2" />
+                  Lọc
+                  <ChevronDown size={20} className="ml-2" />
+                </button>
+                {isFilterOpen && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      {["All", "New", "Changed", "Deleted"].map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => handleFilterSelect(status)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
+                          role="menuitem"
+                        >
+                          {handleStatusTranslate(status)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
               <NavLink to="/admin/addProduct">
                 <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
                   <PlusCircle size={20} className="mr-2" />
@@ -165,6 +274,13 @@ const AdminProduct = () => {
                 </button>
               ))}
             </div>
+            {notification && (
+              <Notification
+                message={notification.message}
+                type={notification.type}
+                onClose={closeNotification}
+              />
+            )}
           </div>
         </div>
       </div>

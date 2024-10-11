@@ -2,7 +2,6 @@ import { Link, Route, Router, Routes } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/register/RegisterPage";
-import ContactPage from "./pages/contact/ContactPage";
 import ServicePage from "./pages/services/ServicePage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 import CartPage from "./pages/cart/CartPage";
@@ -14,9 +13,12 @@ import AdminDashboard from "./pages/admin/admin-dashboard";
 import AdminOrder from "./pages/admin/admin-order";
 import AddProduct from "./pages/admin/admin-add-product";
 import AdminViewProduct from "./pages/admin/admin-product-view";
+
 import ProductViewPage from "./pages/products/ProductViewPage";
 import ProductDetails from "./pages/products/ProductDetails";
 import NotFound404 from "./NotFound404";
+
+import UpdateProduct from "./pages/admin/admin-update-product";
 
 function App() {
   return (
@@ -40,7 +42,12 @@ function App() {
         <Route path="admin/order" element={<AdminOrder />}></Route>
         <Route path="admin/addProduct" element={<AddProduct />}></Route>
         <Route path="/admin/product/:id" element={<AdminViewProduct />} />
+
         <Route path="*" element={<NotFound404 />}></Route>
+        <Route
+          path="/admin/product/:kitId/update"
+          element={<UpdateProduct />}
+        />
       </Routes>
     </>
   );
