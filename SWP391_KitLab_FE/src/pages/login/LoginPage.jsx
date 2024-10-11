@@ -36,7 +36,7 @@ function LoginPage() {
   useEffect(() => {
     if (account) {
       if (role === "Admin") {
-        navigate("admin/product", { state: { account } });
+        navigate("/admin/product", { state: { account } });
       } else if (role === "Staff") {
         navigate("/", { state: { account } });
       } else {

@@ -100,15 +100,15 @@ function AddProduct() {
       const responseText = await response.text();
       if (response.ok) {
         setIsLoading(false);
-        setModalMessage("Product added successfully!");
+        setModalMessage("Thành công!");
         setIsSuccess(true);
       } else if (responseText === "Existed name") {
         setIsLoading(false);
-        setModalMessage(`Failed to add product. ${responseText}`);
+        setModalMessage(`Thất bại. Tên đã tồn tại!`);
         setIsSuccess(false);
       } else {
         setIsLoading(false);
-        setModalMessage("Failed to add product. Please try again.");
+        setModalMessage("Thất bại,hãy thử lại.");
         setIsSuccess(false);
       }
     } catch (error) {

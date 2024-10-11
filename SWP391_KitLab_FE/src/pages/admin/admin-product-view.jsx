@@ -8,13 +8,14 @@ import axios from "axios";
 function AdminViewProduct() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { id } = useParams(); // This will get the id from the URL
+  const { id } = useParams();
 
   useEffect(() => {
     async function fetchProduct() {
       try {
         const response = await axios.get(`http://localhost:5056/Product/${id}`);
         setProduct(response.data);
+        console.log(response.data);
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -24,6 +25,17 @@ function AdminViewProduct() {
 
     fetchProduct();
   }, [id]);
+
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "changed":
+        return "bg-yellow-500";
+      case "deleted":
+        return "bg-red-500";
+      default:
+        return "bg-green-500";
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -41,18 +53,79 @@ function AdminViewProduct() {
             {loading ? (
               <p>Loading...</p>
             ) : product ? (
-              <div className="bg-white shadow-lg rounded-lg p-6">
-                <img
-                  src={product.picture}
-                  alt={product.name}
-                  className="w-full h-64 object-contain mb-4"
-                />
-                <h2 className="text-xl font-bold mb-2">{product.name}</h2>
-                <p className="text-gray-600 mb-4">{product.description}</p>
-                <p className="text-lg font-semibold">
-                  {product.price.toLocaleString()} VND
-                </p>
-                {/* Add more product details as needed */}
+              <div className="bg-white shadow-lg rounded-lg overflow-hidden flex">
+                <div className="w-1/2">
+                  <img
+                    src={product.picture}
+                    alt={product.name}
+                    className="object-fill w-full h-full"
+                  />
+                </div>
+                <div className="w-2/3 p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold">{product.name}</h2>
+                    <span
+                      className={`${getStatusColor(
+                        product.status
+                      )} text-white px-3 py-1 rounded text-sm`}
+                    >
+                      {product.status}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold mb-2">Hãng:</h3>
+                  <p className="text-gray-600 mb-2">{product.brand}</p>
+                  <h3 className="font-semibold mb-2">Mô tả:</h3>
+                  <p className="text-gray-700 mb-4">{product.description}</p>
+                  <h3 className="font-semibold mb-2">Giá:</h3>
+                  <p className="text-2xl font-bold text-indigo-600 mb-4">
+                    {product.price.toLocaleString()} VND
+                  </p>
+                  <div className="mb-4">
+                    <p className="text-sm text-gray-600">
+                      Số lượng: {product.quantity}
+                    </p>
+                    <p className="mt-5 text-sm text-gray-600">
+                      Ngày tạo: {product.dateOfCreation}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Ngày sửa: {product.dateOfChange}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Ngày xóa: {product.dateOfDeletion}
+                    </p>
+                  </div>
+                  {product.typeNames && (
+                    <div className="mb-4">
+                      <h3 className="font-semibold mb-2">Loại:</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {product.typeNames.map((type, index) => (
+                          <span
+                            key={index}
+                            className="bg-gray-200 px-2 py-1 rounded text-sm"
+                          >
+                            {type}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {product.labNames && (
+                    <div>
+                      <h3 className="font-semibold mb-2">Lab kèm theo:</h3>
+                      {product.labNames && product.labNames.length > 0 ? (
+                        <ul className="list-disc list-inside text-sm text-gray-700">
+                          {product.labNames.map((lab, index) => (
+                            <li key={index}>{lab}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-gray-600">
+                          No labs associated with this product.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             ) : (
               <p>Product not found</p>
