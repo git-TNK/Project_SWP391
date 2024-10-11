@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import Header from "../Header";
-import Footer from "../../Footer";
 import axios from "axios";
+import Header from "../Header";
 
-function HomePage() {
+function ProductViewPage() {
   const [listProduct, setListProduct] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8;
+  const [selectedBrand, setSelectedBrand] = useState(""); // Track the selected brand
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const productsPerPage = 8; // Limit to 8 products per page
 
   // Fetch products from the API
   async function fetchProduct() {
@@ -23,14 +23,22 @@ function HomePage() {
     fetchProduct();
   }, []);
 
-  // Filter the products with status "New"
-  const newProducts = listProduct.filter((item) => item.status === "New");
+  // Function to handle brand selection
+  const handleBrandClick = (brand) => {
+    setSelectedBrand(brand); // Update the selected brand
+    setCurrentPage(1); // Reset to the first page when a brand is selected
+  };
 
-  // Calculate total pages
-  const totalPages = Math.ceil(newProducts.length / productsPerPage);
+  // Filter products based on the selected brand
+  const filteredProducts = selectedBrand
+    ? listProduct.filter((item) => item.brand === selectedBrand)
+    : listProduct;
 
-  // Get products for the current page
-  const currentProducts = newProducts.slice(
+  // Calculate the total pages based on the filtered products
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  // Get the products for the current page
+  const currentProducts = filteredProducts.slice(
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
   );
@@ -40,23 +48,43 @@ function HomePage() {
     setCurrentPage(pageNumber);
   };
 
-  console.log(listProduct);
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Sản Phẩm Mới</h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="flex p-4">
+        {/* Sidebar */}
+        <aside className="w-64 p-4 bg-white shadow-lg rounded-lg mr-6">
+          <p className="w-full bg-black text-white p-3 mb-4 hover:bg-gray-800 transition-colors duration-200 text-center font-bold rounded-lg">
+            Danh mục sản phẩm
+          </p>
+          <ul className="space-y-2">
+            {[...new Set(listProduct.map((item) => item.brand))].map(
+              (brand, index) => (
+                <li
+                  key={index}
+                  className={`cursor-pointer hover:bg-gray-100 p-3 rounded-lg transition-colors duration-200 font-medium border border-gray-200 ${
+                    brand === selectedBrand ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => handleBrandClick(brand)}
+                >
+                  {brand}
+                </li>
+              )
+            )}
+          </ul>
+        </aside>
+
+        {/* Product list */}
+        <div className="flex-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentProducts.map((item, index) => (
-              <li
+              <div
                 key={index}
-                className="border border-gray-200 rounded-lg overflow-hidden shadow-md"
+                className="border border-gray-300 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
               >
                 <Link to={`/product/${item.kitId}`}>
                   {" "}
-                  {/* Link to product details */}
+                  {/* Link to ProductDetails with kitId */}
                   <div className="flex flex-col h-full">
                     <img
                       className="w-full h-48 object-cover"
@@ -68,15 +96,15 @@ function HomePage() {
                       <p className="text-red-600 font-bold mb-4">
                         {item.price}
                       </p>
-                      <button className="mt-auto w-full bg-white text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
+                      <button className="mt-auto w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-900 transition duration-300 font-medium">
                         MUA HÀNG
                       </button>
                     </div>
                   </div>
                 </Link>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
 
           {/* Pagination controls */}
           <div className="mt-8 flex justify-center space-x-2">
@@ -121,11 +149,10 @@ function HomePage() {
               Next
             </button>
           </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
 
-export default HomePage;
+export default ProductViewPage;

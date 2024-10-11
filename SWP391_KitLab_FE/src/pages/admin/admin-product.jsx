@@ -6,13 +6,16 @@ import "../../tailwindstyle.css";
 import axios from "axios";
 import Sidebar from "./sidebar";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const productsPerPage = 8;
+  //
+  const location = useLocation();
+  const account = location.state?.account;
 
   async function fetchProduct() {
     try {

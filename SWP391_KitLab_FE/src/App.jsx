@@ -14,6 +14,9 @@ import AdminDashboard from "./pages/admin/admin-dashboard";
 import AdminOrder from "./pages/admin/admin-order";
 import AddProduct from "./pages/admin/admin-add-product";
 import AdminViewProduct from "./pages/admin/admin-product-view";
+import ProductViewPage from "./pages/products/ProductViewPage";
+import ProductDetails from "./pages/products/ProductDetails";
+import NotFound404 from "./NotFound404";
 
 function App() {
   return (
@@ -22,10 +25,11 @@ function App() {
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
-        <Route path="/contact" element={<ContactPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
         <Route path="/checkout" element={<CheckoutPage />}></Route>
         <Route path="/cart" element={<CartPage />}></Route>
+        <Route path="/products-view" element={<ProductViewPage />}></Route>
+        <Route path="/product/:id" element={<ProductDetails />} />
         {/* <Route path="login/homepage" element={<HomePage />}></Route> */}
 
         <Route path="admin/product" element={<AdminProduct />}></Route>
@@ -36,6 +40,7 @@ function App() {
         <Route path="admin/order" element={<AdminOrder />}></Route>
         <Route path="admin/addProduct" element={<AddProduct />}></Route>
         <Route path="/admin/product/:id" element={<AdminViewProduct />} />
+        <Route path="*" element={<NotFound404 />}></Route>
       </Routes>
     </>
   );

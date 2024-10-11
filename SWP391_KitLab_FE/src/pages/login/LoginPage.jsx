@@ -15,9 +15,6 @@ function LoginPage() {
     console.log("Username: ", userName);
     console.log("Password: ", password);
     fetchAccount(userName, password);
-    if (userName === "" || password === "") {
-      alert("Điền đầy đủ tên đăng nhập và mật khẩu");
-    }
   };
 
   async function fetchAccount(userName, password) {
@@ -36,7 +33,7 @@ function LoginPage() {
   useEffect(() => {
     if (account) {
       if (role === "Admin") {
-        navigate("admin/product", { state: { account } });
+        navigate("/admin/product", { state: { account } });
       } else if (role === "Staff") {
         navigate("/", { state: { account } });
       } else {
