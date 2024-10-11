@@ -132,9 +132,12 @@ const AdminProduct = () => {
                   <Eye className="w-6 h-6 text-gray-800" />
                 </button>
               </NavLink>
-              <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
-                <Wrench className="w-6 h-6 text-gray-800" />
-              </button>
+
+              <NavLink to={`/admin/product/${item.kitId}/update`}>
+                <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+                  <Wrench className="w-6 h-6 text-gray-800" />
+                </button>
+              </NavLink>
 
               <button
                 onClick={() => handleDelete(item.kitId, item.name)}
