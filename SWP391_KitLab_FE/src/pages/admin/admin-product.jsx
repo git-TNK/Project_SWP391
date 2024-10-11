@@ -128,18 +128,25 @@ const AdminProduct = () => {
               }`}
             >
               <NavLink to={`/admin/product/${item.kitId}`}>
-                <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+                <button
+                  className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
+                  title="Xem"
+                >
                   <Eye className="w-6 h-6 text-gray-800" />
                 </button>
               </NavLink>
 
               <NavLink to={`/admin/product/${item.kitId}/update`}>
-                <button className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200">
+                <button
+                  className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
+                  title="Sửa"
+                >
                   <Wrench className="w-6 h-6 text-gray-800" />
                 </button>
               </NavLink>
 
               <button
+                title="Xóa"
                 onClick={() => handleDelete(item.kitId, item.name)}
                 className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
               >
@@ -160,6 +167,20 @@ const AdminProduct = () => {
       price: PropTypes.number.isRequired,
       status: PropTypes.string.isRequired,
     }).isRequired,
+  };
+  const handleStatusTranslate = (status) => {
+    switch (status.toLowerCase()) {
+      case "all":
+        return "Tất cả";
+      case "new":
+        return "Mới";
+      case "changed":
+        return "Đã sửa";
+      case "deleted":
+        return "Đã xóa";
+      default:
+        return status;
+    }
   };
 
   return (
@@ -189,7 +210,7 @@ const AdminProduct = () => {
                   className="bg-black text-white px-4 py-2 rounded-md flex items-center"
                 >
                   <Filter size={20} className="mr-2" />
-                  Filter
+                  Lọc
                   <ChevronDown size={20} className="ml-2" />
                 </button>
                 {isFilterOpen && (
@@ -207,7 +228,7 @@ const AdminProduct = () => {
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
                           role="menuitem"
                         >
-                          {status}
+                          {handleStatusTranslate(status)}
                         </button>
                       ))}
                     </div>

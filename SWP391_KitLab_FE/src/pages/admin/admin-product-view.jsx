@@ -120,7 +120,7 @@ function AdminViewProduct() {
                         </ul>
                       ) : (
                         <p className="text-sm text-gray-600">
-                          No labs associated with this product.
+                          Không có lab hợp với kit.
                         </p>
                       )}
                     </div>
@@ -128,7 +128,7 @@ function AdminViewProduct() {
                 </div>
               </div>
             ) : (
-              <p>Product not found</p>
+              <p>Không tìm thấy kit</p>
             )}
           </div>
         </div>
