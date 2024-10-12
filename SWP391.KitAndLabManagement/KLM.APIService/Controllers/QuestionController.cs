@@ -1,4 +1,5 @@
-﻿using KLM.Repository;
+﻿using KLM.APIService.RequestModifier;
+using KLM.Repository;
 using KLM.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +12,87 @@ namespace KLM.APIService.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly FirebaseStorageService _firebaseStorageService;
 
-        public QuestionController(UnitOfWork unitOfWork) => _unitOfWork ??= unitOfWork;
+        public QuestionController(UnitOfWork unitOfWork, FirebaseStorageService firebaseStorageService)
+        {
+            _unitOfWork ??= unitOfWork;
+            _firebaseStorageService ??= firebaseStorageService;
+        }
 
         [HttpGet]
         public async Task<List<QuestionTbl>> GetAllQuestions()
         {
             return await _unitOfWork.QuestionTblRepository.GetAllQuestions();
+        }
+
+        [HttpPost("AddQuestion")]
+        public async Task<IActionResult> CreateQuestion(AddQuestionRequest request)
+        {
+            string accountId = request.accounId;
+            string question = request.question;
+            string labName = request.labName;
+            DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
+            string? documentUrl = null;
+            if (request.File != null && request.File.Length > 0)
+            {
+                using (var stream = request.File.OpenReadStream())
+                {
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.File.FileName, request.File.ContentType);
+                    documentUrl = uploadUrl;
+                }
+            }
+
+            Task<List<QuestionTbl>> listQuestions = _unitOfWork.QuestionTblRepository.GetAllQuestions();
+            List<QuestionTbl> listCheckTurn = new();
+            foreach (var x in await listQuestions)
+            {
+                if (x.AccountId.Equals(accountId))
+                {
+                    listCheckTurn.Add(x);
+                }
+            }
+            //Check turn con lai
+
+
+            int min = 100;
+            int checkTurn = 0;
+            foreach (var x in listCheckTurn)
+            {
+                if (x.Turn <= min)
+                {
+                    min = x.Turn;
+                    checkTurn = min;
+                }
+            }
+            if (checkTurn > 0)
+            {
+                var result = new QuestionTbl();
+                result.QuestionId = "Q" + (new Random().Next(0, 999));
+                result.AccountId = accountId;
+                result.Question = question;
+                result.LabName = labName;
+                result.AttachedFile = documentUrl;
+                result.Status = "Active";
+                result.Turn = min - 1;
+                _unitOfWork.QuestionTblRepository.Create(result);
+                return Ok(result);
+            }
+            else if (checkTurn == 0)
+            {
+                return BadRequest("You end of turn to ask");
+            }
+            else
+            {
+                if (documentUrl != null)
+                {
+                    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                }
+
+                return BadRequest("Err");
+            }
+
+
         }
 
     }
