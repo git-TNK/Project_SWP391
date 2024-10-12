@@ -233,139 +233,86 @@ namespace KLM.Repository.Repositories
 
 
         //Update Product (NOT CREATE PRODUCT PAY ATTENTION)
-        public async Task<ValueTuple<string, string>> UpdateProduct(string idToChange,string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateOnly dateOfChange)
+        public async Task<ValueTuple<string, string>> UpdateProduct(string idToChange, string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateOnly dateOfChange, bool isNewImageUploaded)
         {
-            //get name in database base on request's sent name
-            string? nameCheck = _context.Set<ProductKitTbl>().Where(e => e.Name == $"{kitName}").Select(e => e.Name).FirstOrDefault()?.ToString();
-
-            //string kitId; (keep old id so not needed)
-            //string? idCheck; (not needed)
+            string? nameCheck = _context.Set<ProductKitTbl>().Where(e => e.Name == kitName && e.KitId != idToChange).Select(e => e.Name).FirstOrDefault();
 
             string oldImageUrl = "";
-
             string errors = "";
 
-            //getting old kit
-            /*var searchedProducts = await _context.Set<ProductKitTbl>()
-                .Select(p => new ProductDTO
-                {
-                    KitId = p.KitId,
-                    Name = p.Name,
-                    Brand = p.Brand,
-                    Description = p.Description,
-                    Picture = p.Picture,
-                    Price = p.Price,
-                    Quantity = p.Quantity,
-                    DateOfCreation = p.DateOfCreation,
-                    DateOfDeletion = p.DateOfDeletion,
-                    Status = p.Status,
-                    DateOfChange = p.DateOfChange,
-                    //TypeNames = p.Ktypes.Select(k => k.TypeName).ToList()
-                    //LabNames = p.Labs.Select(l => l.Name).ToList()
-                })
-                .FirstOrDefaultAsync(search => search.KitId == $"{idToChange}");
-            */
-
-
             var searchedProducts = await _context.Set<ProductKitTbl>()
-            .Include(p => p.Ktypes)
-            .Include(p => p.Labs)
-            .FirstOrDefaultAsync(p => p.KitId == $"{idToChange}");
+                .Include(p => p.Ktypes)
+                .Include(p => p.Labs)
+                .FirstOrDefaultAsync(p => p.KitId == idToChange);
 
-
-            //check if no product found or deleted
             if (searchedProducts == null)
             {
-                Console.WriteLine("No existing kit found to change");
                 errors = $"No existing kit with input {idToChange} found to change";
                 return (errors, oldImageUrl);
-            } 
+            }
             else if (string.Equals(searchedProducts.Status, "Deleted", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("Product is deleted");
                 errors = "Product is deleted";
                 return (errors, oldImageUrl);
             }
 
-            //cheking existed ID (keep old ID)
-            /*do
-            //{
-            //    kitId = "KIT" + (new Random().Next(000, 999));
-            //    idCheck = _context.Set<ProductKitTbl>().Where(e => e.KitId == $"{kitId}").Select(e => e.KitId).FirstOrDefault()?.ToString();
-            //}
-            //while (!string.IsNullOrWhiteSpace(idCheck));*/
-
-            string oldName = searchedProducts.Name;
-
-            //check existed kit name
-            if (!string.IsNullOrWhiteSpace(nameCheck) && !string.Equals(nameCheck, oldName, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(nameCheck))
             {
-                Console.WriteLine("Existed name");
                 errors = "Existed name";
                 return (errors, oldImageUrl);
             }
 
-
-            //mapping du lieu
-            /*var product = new ProductKitTbl
+            // Handle image update
+            if (isNewImageUploaded)
             {
-                KitId = searchedProducts.KitId,
-                Name = kitName,
-                Brand = brand,
-                Description = description,
-                Picture = pictureUrl,
-                Price = price,
-                Quantity = quantity,
-                DateOfChange = dateOfChange,
-                Status = "Changed"
-            };*/
+                oldImageUrl = searchedProducts.Picture;
+                searchedProducts.Picture = pictureUrl;
+            }
 
-
-            oldImageUrl = searchedProducts.Picture;
-
+            // Update other fields
             searchedProducts.Name = kitName;
             searchedProducts.Brand = brand;
             searchedProducts.Description = description;
-            searchedProducts.Picture = pictureUrl;
             searchedProducts.Price = price;
             searchedProducts.Quantity = quantity;
             searchedProducts.DateOfChange = dateOfChange;
             searchedProducts.Status = "Changed";
 
-
-            //Filter cac type trong Ktype dua tren List<string> types
+            // Update types
             var kitTypes = await _context.KtypeTbls
                 .Where(t => types.Contains(t.TypeName))
                 .ToListAsync();
 
-
-            //check truong hop kitType ko trung voi so luong type gui den (not important here)
             if (kitTypes.Count != types.Count)
             {
-                Console.WriteLine("Messed up here 161");
+                errors = "Invalid types provided";
                 return (errors, oldImageUrl);
             }
 
-            //associate kit voi product
             searchedProducts.Ktypes.Clear();
             searchedProducts.Ktypes = kitTypes;
 
-            //Tim cac LType trung voi list types
+            // Update labs
             var labTypes = await _context.LtypeTbls
                 .Where(l => types.Contains(l.TypeName))
                 .ToListAsync();
 
-            //Filter cac lab voi type co trong type cua product
             var labLists = await _context.Set<LabTbl>()
                 .Where(l => l.Ltypes.Any(ltype => labTypes.Contains(ltype)))
-                .Where(k => k.Status != "Deleted") //add them vao ngay 10/05
+                .Where(k => k.Status != "Deleted")
                 .ToListAsync();
 
-            //associate product voi kit
             searchedProducts.Labs.Clear();
             searchedProducts.Labs = labLists;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                errors = $"Error saving changes: {ex.Message}";
+            }
 
             return (errors, oldImageUrl);
         }

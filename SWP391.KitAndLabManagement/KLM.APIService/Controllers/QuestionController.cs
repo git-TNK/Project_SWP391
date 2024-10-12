@@ -72,6 +72,7 @@ namespace KLM.APIService.Controllers
                     if (checkTurn > 0)
                     {
                         result.QuestionId = "Q" + (new Random().Next(0, 999));
+
                         if (result.QuestionId.Equals(item.QuestionId))
                         {
                             result.QuestionId = "Q" + (new Random().Next(0, 999));
@@ -100,6 +101,7 @@ namespace KLM.APIService.Controllers
 
             result = new QuestionTbl();
             result.QuestionId = "Q" + (new Random().Next(0, 999));
+
             foreach (var item in await listQuestions)
             {
                 if (result.QuestionId.Equals(item.QuestionId))

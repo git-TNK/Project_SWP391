@@ -1,11 +1,7 @@
 ﻿using KLM.APIService.RequestModifier;
 using KLM.Repository;
-using KLM.Repository.Models;
 using KLM.Repository.ModelView;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Azure.Core;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KLM.APIService.Controllers
 {
@@ -51,7 +47,7 @@ namespace KLM.APIService.Controllers
         }
 
 
-        
+
 
 
         //Add product
@@ -119,21 +115,20 @@ namespace KLM.APIService.Controllers
 
 
         //Update product
-        [HttpPut("{id}/UpadteProduct")]
-
+        [HttpPut("{id}/UpdateProduct")]
         public async Task<IActionResult> UpdateProductKit(string id, AddProductRequest request)
         {
+            string? imageUrl = null;
+            bool isNewImageUploaded = false;
 
-            string imageUrl;
-
-            using (var stream = request.picture.OpenReadStream())
+            if (request.picture != null && request.picture.Length > 0)
             {
-                var uploadUrl = await _firebaseStorageService.UploadImageAsync(stream, request.picture.FileName, request.picture.ContentType);
-                imageUrl = uploadUrl;
+                using (var stream = request.picture.OpenReadStream())
+                {
+                    imageUrl = await _firebaseStorageService.UploadImageAsync(stream, request.picture.FileName, request.picture.ContentType);
+                }
+                isNewImageUploaded = true;
             }
-
-            if (imageUrl == null || imageUrl.Length == 0)
-                return BadRequest("No file uploaded");
 
             string kitName = request.kitName.Trim();
             string brand = request.brand.Trim();
@@ -143,19 +138,27 @@ namespace KLM.APIService.Controllers
             List<string> types = request.types;
             DateOnly dateOfChange = DateOnly.FromDateTime(DateTime.Today.Date);
 
-
-            //return (errors, oldImageUrl);
-            var (errors, oldImageUrl) = await _unitOfWork.ProductKitTblRepository.UpdateProduct(id,kitName, brand, description, imageUrl, price, quantity, types, dateOfChange);
+            var (errors, oldImageUrl) = await _unitOfWork.ProductKitTblRepository.UpdateProduct(
+                id, kitName, brand, description, imageUrl, price, quantity, types, dateOfChange, isNewImageUploaded);
 
             if (string.IsNullOrWhiteSpace(errors))
             {
-                await _firebaseStorageService.DeleteImageAsync(oldImageUrl);
+                if (isNewImageUploaded && !string.IsNullOrWhiteSpace(oldImageUrl))
+                {
+                    // Only delete the old image if a new one was uploaded
+                    await _firebaseStorageService.DeleteImageAsync(oldImageUrl);
+                }
+                Console.WriteLine("Success");
                 return Ok("Success");
             }
             else
             {
-                //neu fail can delete anh tren firebase
-                await _firebaseStorageService.DeleteImageAsync(imageUrl);
+                if (isNewImageUploaded)
+                {
+                    // If update failed and we uploaded a new image, delete it
+                    await _firebaseStorageService.DeleteImageAsync(imageUrl);
+                }
+                Console.WriteLine($"{errors}");
                 return BadRequest($"{errors}");
             }
         }
