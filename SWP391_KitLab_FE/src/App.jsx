@@ -17,6 +17,12 @@ import ForgotPasswordPage from "./pages/forgotpassword/ForgotPassWordPage";
 import ResetPasswordPage from "./pages/resetpassword/ResetPasswordPage";
 import OrderHistoryPage from "./pages/orderHistory/OrderHistoryPage";
 
+import ProductViewPage from "./pages/products/ProductViewPage";
+import ProductDetails from "./pages/products/ProductDetails";
+import NotFound404 from "./NotFound404";
+
+import UpdateProduct from "./pages/admin/admin-update-product";
+
 function App() {
   return (
     <>
@@ -26,10 +32,13 @@ function App() {
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} ></Route>
         <Route path="/resetpassword" element={<ResetPasswordPage />} ></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
         <Route path="/checkout" element={<CheckoutPage />}></Route>
         <Route path="/cart" element={<CartPage />}></Route>
+        <Route path="/products-view" element={<ProductViewPage />}></Route>
+        <Route path="/product/:id" element={<ProductDetails />} />
         {/* <Route path="login/homepage" element={<HomePage />}></Route> */}
 
         <Route path="admin/product" element={<AdminProduct />}></Route>
@@ -40,6 +49,12 @@ function App() {
         <Route path="admin/order" element={<AdminOrder />}></Route>
         <Route path="admin/addProduct" element={<AddProduct />}></Route>
         <Route path="/admin/product/:id" element={<AdminViewProduct />} />
+
+        <Route path="*" element={<NotFound404 />}></Route>
+        <Route
+          path="/admin/product/:kitId/update"
+          element={<UpdateProduct />}
+        />
       </Routes>
     </>
   );

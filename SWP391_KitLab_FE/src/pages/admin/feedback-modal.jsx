@@ -20,13 +20,13 @@ const FeedbackModal = ({ isOpen, onClose, message, isSuccess }) => {
 
   return (
     <div
-      className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full transition-opacity duration-800 ease-in-out ${
+      className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full transition-opacity duration-1000 ease-in-out ${
         isOpen ? "opacity-100" : "opacity-0"
       }`}
       onClick={onClose}
     >
       <div
-        className={`relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white transition-all duration-800 ease-in-out ${
+        className={`relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white transition-all duration-1000 ease-in-out ${
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
         onClick={(e) => e.stopPropagation()}

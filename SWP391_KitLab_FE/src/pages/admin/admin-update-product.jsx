@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
 import Footer from "../../Footer";
 import { Camera } from "lucide-react";
 import FeedbackModal from "./feedback-modal";
-import { NavLink, useNavigate } from "react-router-dom";
 import LoadingSpinner from "./loading";
+import axios from "axios";
 
 const brandOptions = ["Arduino", "Rasberry pi", "Nanode"];
 const typeOptions = [
@@ -22,26 +23,64 @@ const typeOptions = [
   "Manual",
 ];
 
-function AddProduct() {
+function UpdateProduct() {
+  const { kitId } = useParams();
+  const navigate = useNavigate();
+
   const [kitName, setKitName] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
-  const [picture, setPicture] = useState(null);
+  const [pictureUrl, setPictureUrl] = useState(""); // For existing Firebase URL
+  const [newPicture, setNewPicture] = useState(null); // For newly uploaded file
   const [picturePreview, setPicturePreview] = useState(null);
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [types, setTypes] = useState([]);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const fetchProductData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `http://localhost:5056/Product/${kitId}`
+      );
+      if (response.status === 200) {
+        const productData = response.data;
+        console.log("Fetched product data:", productData); // Debug log
+        setKitName(productData.name);
+        setBrand(productData.brand);
+        setDescription(productData.description);
+        setPictureUrl(productData.picture);
+        setPicturePreview(productData.picture);
+        setPrice(productData.price.toString());
+        setQuantity(productData.quantity.toString());
+        setTypes(productData.typeNames || []); // Use typeNames instead of types
+        console.log("Set types:", productData.typeNames); // Debug log for types
+      } else {
+        throw new Error("Failed to fetch product data");
+      }
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+      setModalMessage("Failed to load product data. Please try again.");
+      setIsSuccess(false);
+      setIsModalOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [kitId]);
+
+  useEffect(() => {
+    fetchProductData();
+  }, [fetchProductData]);
+
   const handlePictureUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPicture(file);
+      setNewPicture(file);
       const reader = new FileReader();
       reader.onload = (e) => setPicturePreview(e.target.result);
       reader.readAsDataURL(file);
@@ -60,7 +99,6 @@ function AddProduct() {
     if (!kitName.trim()) formErrors.kitName = "Kit name is required";
     if (!brand) formErrors.brand = "Brand is required";
     if (!description.trim()) formErrors.description = "Description is required";
-    if (!picture) formErrors.picture = "Picture is required";
     if (!price || price <= 0) formErrors.price = "Valid price is required";
     if (!quantity || quantity <= 0)
       formErrors.quantity = "Valid quantity is required";
@@ -85,46 +123,52 @@ function AddProduct() {
     formData.append("kitName", kitName);
     formData.append("brand", brand);
     formData.append("description", description);
-    formData.append("picture", picture);
     formData.append("price", price);
     formData.append("quantity", quantity);
-    types.forEach((type, index) => {
-      formData.append(`types[${index}]`, type);
+    types.forEach((type) => {
+      formData.append("types", type);
     });
 
+    if (newPicture) {
+      formData.append("picture", newPicture);
+    }
+
     try {
-      const response = await fetch("http://localhost:5056/Product/AddProduct", {
-        method: "POST",
-        body: formData,
-      });
-      const responseText = await response.text();
-      if (response.ok) {
-        setIsLoading(false);
-        setModalMessage("Thành công!");
+      const response = await axios.put(
+        `http://localhost:5056/Product/${kitId}/UpdateProduct`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setModalMessage("Update successful!");
         setIsSuccess(true);
-      } else if (responseText === "Existed name") {
-        setIsLoading(false);
-        setModalMessage(`Thất bại. Tên đã tồn tại!`);
-        setIsSuccess(false);
       } else {
-        setIsLoading(false);
-        setModalMessage("Thất bại,hãy thử lại.");
+        setModalMessage("Update failed. Please try again.");
         setIsSuccess(false);
       }
     } catch (error) {
       console.error("Error:", error);
-      setIsLoading(false);
-      setModalMessage("An error occurred. Please try again.");
+      if (error.response && error.response.data) {
+        setModalMessage(`Update failed: ${error.response.data}`);
+      } else {
+        setModalMessage("An error occurred. Please try again.");
+      }
       setIsSuccess(false);
+    } finally {
+      setIsLoading(false);
+      setIsModalOpen(true);
     }
-    setIsLoading(false);
-    setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
     if (isSuccess) {
-      navigate("/admin"); // Replace '/main-page' with your actual main page route
+      navigate("/admin");
     }
   };
 
@@ -138,33 +182,38 @@ function AddProduct() {
 
           <div className="flex-1 p-8 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">Thêm sản phẩm</h1>
+              <h1 className="text-2xl font-bold">Update Product</h1>
             </div>
 
             <form
               onSubmit={handleSubmit}
               className="max-w-6xl mx-auto flex gap-4"
             >
+              {/* Image upload section */}
               <div className="w-1/3">
                 <div
                   className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center h-64 cursor-pointer"
-                  style={{
-                    height: "450px",
-                  }}
+                  style={{ height: "450px" }}
                   onClick={() =>
                     document.getElementById("pictureUpload").click()
                   }
                 >
-                  {picturePreview ? (
+                  {newPicture ? (
                     <img
                       src={picturePreview}
-                      alt="Product preview"
-                      className="obect-contain w-full h-full "
+                      alt="New product preview"
+                      className="object-contain w-full h-full"
+                    />
+                  ) : pictureUrl ? (
+                    <img
+                      src={pictureUrl}
+                      alt="Current product image"
+                      className="object-contain w-full h-full"
                     />
                   ) : (
                     <div className="text-center">
                       <Camera className="mx-auto text-gray-400" size={48} />
-                      <p className="mt-2 text-sm text-gray-500">THÊM ẢNH</p>
+                      <p className="mt-2 text-sm text-gray-500">UPDATE IMAGE</p>
                     </div>
                   )}
                   <input
@@ -175,15 +224,14 @@ function AddProduct() {
                     accept="image/*"
                   />
                 </div>
-                {errors.picture && (
-                  <p className="text-red-500 text-sm mt-1">{errors.picture}</p>
-                )}
               </div>
+
+              {/* Form fields */}
               <div className="w-2/3 space-y-4">
                 <div>
                   <input
                     type="text"
-                    placeholder="Tên của kit..."
+                    placeholder="Kit name..."
                     className={`w-full p-2 border ${
                       errors.kitName ? "border-red-500" : "border-gray-300"
                     } rounded-lg font-semibold text-xl`}
@@ -197,11 +245,12 @@ function AddProduct() {
                     </p>
                   )}
                 </div>
+
                 <div className="flex gap-4">
                   <div className="w-1/2">
                     <input
                       type="number"
-                      placeholder="Số lượng"
+                      placeholder="Quantity"
                       className={`w-full p-2 border ${
                         errors.quantity ? "border-red-500" : "border-gray-300"
                       } rounded-lg`}
@@ -218,7 +267,7 @@ function AddProduct() {
                   <div className="w-1/2">
                     <input
                       type="number"
-                      placeholder="Giá"
+                      placeholder="Price"
                       className={`w-full p-2 border ${
                         errors.price ? "border-red-500" : "border-gray-300"
                       } rounded-lg`}
@@ -233,8 +282,9 @@ function AddProduct() {
                     )}
                   </div>
                 </div>
+
                 <div>
-                  <p className="font-semibold mb-2">Hãng</p>
+                  <p className="font-semibold mb-2">Brand</p>
                   <div className="flex gap-2">
                     {brandOptions.map((option) => (
                       <button
@@ -255,8 +305,9 @@ function AddProduct() {
                     <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
                   )}
                 </div>
+
                 <div>
-                  <p className="font-semibold mb-2">Loại</p>
+                  <p className="font-semibold mb-2">Types</p>
                   <div className="flex flex-wrap gap-2">
                     {typeOptions.map((type) => (
                       <button
@@ -277,9 +328,10 @@ function AddProduct() {
                     <p className="text-red-500 text-sm mt-1">{errors.types}</p>
                   )}
                 </div>
+
                 <div>
                   <textarea
-                    placeholder="Mô tả..."
+                    placeholder="Description..."
                     className={`w-full h-32 resize-none focus:outline-none p-2 border ${
                       errors.description ? "border-red-500" : "border-gray-300"
                     } rounded-lg`}
@@ -292,19 +344,20 @@ function AddProduct() {
                     </p>
                   )}
                 </div>
+
                 <div className="flex justify-end mt-4 gap-4">
                   <button
                     type="submit"
                     className="bg-black text-white px-6 py-2 rounded-lg"
                   >
-                    Xác Nhận
+                    Update
                   </button>
                   <NavLink to="/admin">
                     <button
                       type="button"
                       className="bg-white text-black px-6 py-2 rounded-lg border border-gray-300"
                     >
-                      Hủy
+                      Cancel
                     </button>
                   </NavLink>
                 </div>
@@ -325,4 +378,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default UpdateProduct;
