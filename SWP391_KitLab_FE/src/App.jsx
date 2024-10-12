@@ -2,7 +2,6 @@ import { Link, Route, Router, Routes } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/login/LoginPage";
 import RegisterPage from "./pages/register/RegisterPage";
-import ContactPage from "./pages/contact/ContactPage";
 import ServicePage from "./pages/services/ServicePage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 import CartPage from "./pages/cart/CartPage";
@@ -14,6 +13,9 @@ import AdminDashboard from "./pages/admin/admin-dashboard";
 import AdminOrder from "./pages/admin/admin-order";
 import AddProduct from "./pages/admin/admin-add-product";
 import AdminViewProduct from "./pages/admin/admin-product-view";
+import ForgotPasswordPage from "./pages/forgotpassword/ForgotPassWordPage";
+import ResetPasswordPage from "./pages/resetpassword/ResetPasswordPage";
+import OrderHistoryPage from "./pages/orderHistory/OrderHistoryPage";
 
 function App() {
   return (
@@ -21,8 +23,10 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/forgotpassword" element={<ForgotPasswordPage />} ></Route>
+        <Route path="/resetpassword" element={<ResetPasswordPage />} ></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
-        <Route path="/contact" element={<ContactPage />}></Route>
+        <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
         <Route path="/checkout" element={<CheckoutPage />}></Route>
         <Route path="/cart" element={<CartPage />}></Route>

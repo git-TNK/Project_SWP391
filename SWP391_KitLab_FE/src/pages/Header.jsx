@@ -134,7 +134,7 @@ function Header() {
             Sản Phẩm
           </NavLink>
           <NavLink
-            to="/contact"
+            to="/orderHistory"
             style={({ isActive }) => ({
               color: isActive ? "yellow" : "white", // Change color when active
               textDecoration: "none",
@@ -143,7 +143,7 @@ function Header() {
               fontWeight: "500",
             })}
           >
-            Liên Hệ
+            Lịch Sử Đơn Hàng
           </NavLink>
           <NavLink
             to="/service"
