@@ -15,6 +15,7 @@ namespace KLM.Repository
         private OrderTblRepository _orderTblRepository;
         private AnswerTblRepository _answerTblRepository;
         private QuestionTblRepository _questionTblRepository;
+        private OrderDetailsRepository _orderDetailsTblRepository;
         public UnitOfWork() => _context ??= new Swp391Context(); //2. Khởi tạo _context
 
 
@@ -66,6 +67,14 @@ namespace KLM.Repository
             get
             {
                 return _questionTblRepository ??= new QuestionTblRepository(_context);
+            }
+        }
+
+        public OrderDetailsRepository OrderDetailsRepository
+        {
+            get
+            {
+                return _orderDetailsTblRepository ??= new OrderDetailsRepository(_context);
             }
         }
     }

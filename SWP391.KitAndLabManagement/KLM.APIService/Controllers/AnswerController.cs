@@ -11,12 +11,47 @@ namespace KLM.APIService.Controllers
     public class AnswerController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
-        public AnswerController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        private readonly FirebaseStorageService _firebaseStorageService;
+        public AnswerController(UnitOfWork unitOfWork, FirebaseStorageService firebaseStorageService)
+        {
+            _unitOfWork ??= unitOfWork;
+            _firebaseStorageService ??= firebaseStorageService;
+        }
 
         [HttpGet]
         public async Task<List<AnswerTbl>> GetAllAnswers()
         {
             return await _unitOfWork.AnswerTblRepository.GetAllAnswers();
         }
+
+        [HttpPost("answerQuestion/{questionId}/{accountId}/{answer}/{labName}")]
+        public async Task<IActionResult> CreatNewAnswer(string questionId, string accountId, string answer, string labName, IFormFile? acctachFile)
+        {
+            string? documentUrl = null;
+            if (acctachFile != null && acctachFile.Length > 0)
+            {
+                using (var stream = acctachFile.OpenReadStream())
+                {
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, acctachFile.FileName, acctachFile.ContentType);
+                    documentUrl = uploadUrl;
+                }
+            }
+            var result = new AnswerTbl();
+            result.AnswerId = questionId;
+            result.QuestionId = questionId;
+            result.AccountId = accountId;
+            result.Answer = answer;
+            result.LabName = labName;
+            result.AttachedFile = documentUrl;
+            result.DateOfAnswer = DateOnly.FromDateTime(DateTime.Now.Date);
+            result.Status = "Answered";
+            if (documentUrl != null)
+            {
+                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+            }
+            _unitOfWork.AnswerTblRepository.Create(result);
+            return Ok(result);
+        }
+
     }
 }
