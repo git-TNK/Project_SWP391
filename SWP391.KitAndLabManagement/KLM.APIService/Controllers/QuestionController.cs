@@ -44,6 +44,8 @@ namespace KLM.APIService.Controllers
             }
 
             Task<List<QuestionTbl>> listQuestions = _unitOfWork.QuestionTblRepository.GetAllQuestions();
+            //Check turn con lai neu Account da hoi roi
+            var result = new QuestionTbl();
             List<QuestionTbl> listCheckTurn = new();
             foreach (var x in await listQuestions)
             {
@@ -52,47 +54,61 @@ namespace KLM.APIService.Controllers
                     listCheckTurn.Add(x);
                 }
             }
-            //Check turn con lai
-
-
-            int min = 100;
-            int checkTurn = 0;
-            foreach (var x in listCheckTurn)
+            //==================================================================            
+            foreach (var item in await listQuestions)
             {
-                if (x.Turn <= min)
+                if (item.AccountId.Equals(accountId))
                 {
-                    min = x.Turn;
-                    checkTurn = min;
+                    int min = 100;
+                    int checkTurn = 0;
+                    foreach (var x in listCheckTurn)
+                    {
+                        if (x.Turn <= min)
+                        {
+                            min = x.Turn;
+                            checkTurn = min;
+                        }
+                    }
+                    if (checkTurn > 0)
+                    {
+                        result.QuestionId = "Q" + (new Random().Next(0, 999));
+                        result.AccountId = accountId;
+                        result.Question = question;
+                        result.LabName = labName;
+                        result.AttachedFile = documentUrl;
+                        result.Status = "Active";
+                        result.Turn = min - 1;
+                        result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
+                        if (documentUrl != null)
+                        {
+                            await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                        }
+                        _unitOfWork.QuestionTblRepository.Create(result);
+                        return Ok(result);
+                    }
+                    else if (checkTurn == 0)
+                    {
+                        return BadRequest("You end of turn to ask");
+                    }
                 }
             }
-            if (checkTurn > 0)
-            {
-                var result = new QuestionTbl();
-                result.QuestionId = "Q" + (new Random().Next(0, 999));
-                result.AccountId = accountId;
-                result.Question = question;
-                result.LabName = labName;
-                result.AttachedFile = documentUrl;
-                result.Status = "Active";
-                result.Turn = min - 1;
-                _unitOfWork.QuestionTblRepository.Create(result);
-                return Ok(result);
-            }
-            else if (checkTurn == 0)
-            {
-                return BadRequest("You end of turn to ask");
-            }
-            else
-            {
-                if (documentUrl != null)
-                {
-                    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-                }
+            //Neu Account lan dau hoi thi khong can check turn nua
 
-                return BadRequest("Err");
+            result = new QuestionTbl();
+            result.QuestionId = "Q" + (new Random().Next(0, 999));
+            result.AccountId = accountId;
+            result.Question = question;
+            result.LabName = labName;
+            result.AttachedFile = documentUrl;
+            result.Status = "Active";
+            result.Turn = 3;
+            result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
+            if (documentUrl != null)
+            {
+                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
             }
-
-
+            _unitOfWork.QuestionTblRepository.Create(result);
+            return Ok(result);
         }
 
     }
