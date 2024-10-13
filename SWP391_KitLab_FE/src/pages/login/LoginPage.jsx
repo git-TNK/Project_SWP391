@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./LoginPage.css"; // Make sure to create this file with the CSS from the previous example
+import "./LoginPage.css"; 
+import { NavLink } from "react-router-dom";
 
 function LoginPage() {
   const [userName, setUserName] = useState("");
@@ -15,9 +16,6 @@ function LoginPage() {
     console.log("Username: ", userName);
     console.log("Password: ", password);
     fetchAccount(userName, password);
-    if (userName === "" || password === "") {
-      alert("Điền đầy đủ tên đăng nhập và mật khẩu");
-    }
   };
 
   async function fetchAccount(userName, password) {
@@ -80,12 +78,12 @@ function LoginPage() {
               required
             />
           </div>
-          <a
-            href="#"
+          <NavLink
+            to="/forgotpassword"
             className="custom-forgot-password block text-left mb-4 text-blue-500 text-sm"
           >
             Quên mật khẩu
-          </a>
+          </NavLink>
           <button
             type="submit"
             className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors"

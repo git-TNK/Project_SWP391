@@ -13,7 +13,9 @@ import "../../tailwindstyle.css";
 import axios from "axios";
 import Sidebar from "./sidebar";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+
+import { NavLink, useLocation } from "react-router-dom";
+
 import Notification from "./notification";
 import LoadingSpinner from "./loading";
 
@@ -21,6 +23,11 @@ const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+
+  //
+  const location = useLocation();
+  const account = location.state?.account;
+
   const [notification, setNotification] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
   const [isFilterOpen, setIsFilterOpen] = useState(false);

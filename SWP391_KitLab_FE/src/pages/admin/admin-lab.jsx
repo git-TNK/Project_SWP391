@@ -11,28 +11,24 @@ import {
   Wrench,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 
 function AdminLab() {
   const [labData, setLabData] = useState([]);
   const [selectedLab, setSelectedLab] = useState(null);
   const [modalContent, setModalContent] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const labPerpage = 10;
 
   useEffect(() => {
     const fetchLabData = async () => {
       try {
-        const response = await fetch("http://localhost:5056/Lab");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setLabData(data);
-        setIsLoading(false);
+        const response = await axios.get("http://localhost:5056/Lab");
+        setLabData(response.data);
       } catch (error) {
         setError("Failed to fetch lab data");
-        setIsLoading(false);
       }
     };
 
@@ -92,6 +88,10 @@ function AdminLab() {
     );
   };
 
+  const indexOfLastLab = currentPage * labPerpage;
+  const indexOfFirstLab = indexOfLastLab - labPerpage;
+  const currentLabs = labData.slice(indexOfFirstLab, indexOfLastLab);
+
   const getDisplayStatus = (status) => {
     switch (status.toLowerCase()) {
       case "new":
@@ -104,6 +104,8 @@ function AdminLab() {
         return status;
     }
   };
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -126,100 +128,113 @@ function AdminLab() {
             </div>
 
             {/* Lab Table */}
-            {isLoading ? (
-              <div className="text-center py-4">Loading...</div>
-            ) : error ? (
-              <div className="text-center py-4 text-red-500">{error}</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-                  <thead className="bg-gray-200 text-gray-700">
-                    <tr>
-                      <th className="py-3 px-4 text-left">ID</th>
-                      <th className="py-3 px-4 text-left">Tên bài lab</th>
-                      <th className="py-3 px-4 text-center">Mô tả</th>
-                      <th className="py-3 px-4 text-center">Loại</th>
-                      <th className="py-3 px-4 text-center">Kits</th>
-                      <th className="py-3 px-4 text-left">Ngày tạo</th>
-                      <th className="py-3 px-4 text-left">Ngày chỉnh</th>
-                      <th className="py-3 px-4 text-center">Trạng thái</th>
-                      <th className="py-3 px-4 text-center">Chức năng</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600">
-                    {labData.map((lab) => (
-                      <tr
-                        key={lab.labId}
-                        className="border-b border-gray-200 hover:bg-gray-50"
-                      >
-                        <td className="py-2 px-4">{lab.labId}</td>
-                        <td className="py-2 px-4">{lab.labName}</td>
-                        <td className="py-2 px-4 text-center">
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead className="bg-gray-200 text-gray-700">
+                  <tr>
+                    <th className="py-3 px-4 text-left">ID</th>
+                    <th className="py-3 px-4 text-left">Tên bài lab</th>
+                    <th className="py-3 px-4 text-center">Mô tả</th>
+                    <th className="py-3 px-4 text-center">Loại</th>
+                    <th className="py-3 px-4 text-center">Kits</th>
+                    <th className="py-3 px-4 text-left">Ngày tạo</th>
+                    <th className="py-3 px-4 text-left">Ngày chỉnh</th>
+                    <th className="py-3 px-4 text-center">Trạng thái</th>
+                    <th className="py-3 px-4 text-center">Chức năng</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-600">
+                  {currentLabs.map((lab) => (
+                    <tr
+                      key={lab.labId}
+                      className="border-b border-gray-200 hover:bg-gray-50"
+                    >
+                      <td className="py-2 px-4">{lab.labId}</td>
+                      <td className="py-2 px-4">{lab.labName}</td>
+                      <td className="py-2 px-4 text-center">
+                        <button
+                          onClick={() => handleModalOpen(lab, "description")}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          Xem mô tả
+                        </button>
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        <div className="p-2 grid grid-cols-2 gap-2">
+                          {lab.labTypes.map((type, index) => (
+                            <span
+                              key={index}
+                              className="bg-gray-100 px-2 py-1 rounded truncate"
+                            >
+                              {type}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {lab.kits && lab.kits.length > 0 ? (
                           <button
-                            onClick={() => handleModalOpen(lab, "description")}
+                            onClick={() => handleModalOpen(lab, "kits")}
                             className="text-blue-500 hover:text-blue-700"
                           >
-                            Xem mô tả
+                            Xem kit
                           </button>
-                        </td>
-                        <td className="py-2 px-4 text-center">
-                          <div className="p-2 grid grid-cols-2 gap-2">
-                            {lab.labTypes.map((type, index) => (
-                              <span
-                                key={index}
-                                className="bg-gray-100 px-2 py-1 rounded truncate"
-                              >
-                                {type}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="py-2 px-4 text-center">
-                          {lab.kits && lab.kits.length > 0 ? (
-                            <button
-                              onClick={() => handleModalOpen(lab, "kits")}
-                              className="text-blue-500 hover:text-blue-700"
-                            >
-                              Xem kit
-                            </button>
-                          ) : (
-                            <span className="text-gray-400">-</span>
-                          )}
-                        </td>
-                        <td className="py-2 px-4 text-center">
-                          {lab.dateOfCreationLab}
-                        </td>
-                        <td className="py-2 px-4 text-center">
-                          {lab.dateOfDeletionLab || lab.dateOfChangeLab || (
-                            <span className="text-gray-400">Không</span>
-                          )}
-                        </td>
-                        <td className="py-2 px-4 text-center">
-                          {getDisplayStatus(lab.status)}
-                        </td>
-                        <td className="py-2 px-4">
-                          <div className="flex items-center justify-center space-x-2">
-                            <button
-                              className="text-green-500 hover:text-green-700"
-                              title="Sửa"
-                            >
-                              <Wrench size={16} />
-                            </button>
-                            <button
-                              className="text-red-500 hover:text-red-700"
-                              title="Xóa"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {lab.dateOfCreationLab}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {lab.dateOfDeletionLab || lab.dateOfChangeLab || (
+                          <span className="text-gray-400">Không</span>
+                        )}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {getDisplayStatus(lab.status)}
+                      </td>
+                      <td className="py-2 px-4">
+                        <div className="flex items-center justify-center space-x-2">
+                          <button
+                            className="text-green-500 hover:text-green-700"
+                            title="Sửa"
+                          >
+                            <Wrench size={16} />
+                          </button>
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            title="Xóa"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             {isModalOpen && renderModalContent()}
+            {/* Pagination */}
+            <div className="flex justify-center mt-8">
+              {[...Array(Math.ceil(labData.length / labPerpage))].map(
+                (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => paginate(index + 1)}
+                    className={`mx-1 px-3 py-1 rounded ${
+                      currentPage === index + 1
+                        ? "bg-black text-white"
+                        : "bg-white text-black"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>

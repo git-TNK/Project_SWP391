@@ -20,20 +20,40 @@ function AdminHeader() {
             backgroundColor: "white",
           }}
         >
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", color: "black" }}>
-            KitCentral{" "}
-            <span
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/swp391-2004.appspot.com/o/Logo%2Flogo.jpg?alt=media&token=7ec2c0f7-bebb-4c69-ab1d-0e70fc821d99"
+              alt="KitCentral Logo"
               style={{
-                display: "block",
-                fontSize: "12px",
-                fontWeight: "normal",
-                marginTop: "-5px",
-                color: "black",
+                height: "80px", // Make the logo bigger
+                borderRadius: "8px", // Slight border radius for softer edges
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add a subtle shadow for depth
               }}
-            >
-              Linh Kiện Điện Tử
-            </span>
-          </h1>
+            />
+            <div className="pl-3 cursor-default">
+              <h1
+                style={{ fontSize: "24px", fontWeight: "bold", color: "black" }}
+              >
+                KitCentral{" "}
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    marginTop: "-5px",
+                    color: "black",
+                  }}
+                >
+                  Linh Kiện Điện Tử
+                </span>
+              </h1>
+            </div>
+          </div>
 
           {/* <div style={{ display: "flex", alignItems: "center" }}>
             <input
