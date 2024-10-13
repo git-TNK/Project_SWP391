@@ -15,6 +15,7 @@ import Sidebar from "./sidebar";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import Notification from "./notification";
+import LoadingSpinner from "./loading";
 
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
@@ -23,15 +24,19 @@ const AdminProduct = () => {
   const [notification, setNotification] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const productsPerPage = 12;
 
   async function fetchProduct() {
+    setIsLoading(true);
     try {
       const response = await axios.get("http://localhost:5056/Product");
       setListProduct(response.data);
       console.log(response.data);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
   }
 
@@ -278,6 +283,7 @@ const AdminProduct = () => {
         </div>
       </div>
       <Footer />
+      {isLoading && <LoadingSpinner />}
     </div>
   );
 };

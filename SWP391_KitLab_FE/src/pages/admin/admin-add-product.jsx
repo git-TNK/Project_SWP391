@@ -40,15 +40,17 @@ function AddProduct() {
 
   const handlePictureUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && file.type.startsWith("image/")) {
       setPicture(file);
       const reader = new FileReader();
       reader.onload = (e) => setPicturePreview(e.target.result);
       reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid image file");
     }
   };
 
-  const toggleType = (type) => {
+  const handleToggleType = (type) => {
     setTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
@@ -147,7 +149,7 @@ function AddProduct() {
             >
               <div className="w-1/3">
                 <div
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center h-64 cursor-pointer"
+                  className="border-2 border-dashed border-black rounded-lg p-4 flex items-center justify-center h-64 cursor-pointer"
                   style={{
                     height: "450px",
                   }}
@@ -159,7 +161,7 @@ function AddProduct() {
                     <img
                       src={picturePreview}
                       alt="Product preview"
-                      className="obect-contain w-full h-full "
+                      className="object-fill w-full h-full "
                     />
                   ) : (
                     <div className="text-center">
@@ -185,7 +187,7 @@ function AddProduct() {
                     type="text"
                     placeholder="Tên của kit..."
                     className={`w-full p-2 border ${
-                      errors.kitName ? "border-red-500" : "border-gray-300"
+                      errors.kitName ? "border-red-500" : "border-black"
                     } rounded-lg font-semibold text-xl`}
                     value={kitName}
                     style={{ width: "760px", height: "50px" }}
@@ -203,7 +205,7 @@ function AddProduct() {
                       type="number"
                       placeholder="Số lượng"
                       className={`w-full p-2 border ${
-                        errors.quantity ? "border-red-500" : "border-gray-300"
+                        errors.quantity ? "border-red-500" : "border-black"
                       } rounded-lg`}
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
@@ -220,7 +222,7 @@ function AddProduct() {
                       type="number"
                       placeholder="Giá"
                       className={`w-full p-2 border ${
-                        errors.price ? "border-red-500" : "border-gray-300"
+                        errors.price ? "border-red-500" : "border-black"
                       } rounded-lg`}
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
@@ -262,7 +264,7 @@ function AddProduct() {
                       <button
                         key={type}
                         type="button"
-                        onClick={() => toggleType(type)}
+                        onClick={() => handleToggleType(type)}
                         className={`px-4 py-2 rounded-full text-sm ${
                           types.includes(type)
                             ? "bg-black text-white"
@@ -281,7 +283,7 @@ function AddProduct() {
                   <textarea
                     placeholder="Mô tả..."
                     className={`w-full h-32 resize-none focus:outline-none p-2 border ${
-                      errors.description ? "border-red-500" : "border-gray-300"
+                      errors.description ? "border-red-500" : "border-black"
                     } rounded-lg`}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -302,7 +304,7 @@ function AddProduct() {
                   <NavLink to="/admin">
                     <button
                       type="button"
-                      className="bg-white text-black px-6 py-2 rounded-lg border border-gray-300"
+                      className="bg-white text-black px-6 py-2 rounded-lg border border-black"
                     >
                       Hủy
                     </button>

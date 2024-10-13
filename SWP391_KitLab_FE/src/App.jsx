@@ -15,6 +15,7 @@ import AdminOrder from "./pages/admin/admin-order";
 import AddProduct from "./pages/admin/admin-add-product";
 import AdminViewProduct from "./pages/admin/admin-product-view";
 import UpdateProduct from "./pages/admin/admin-update-product";
+import AdminAddLab from "./pages/admin/admin-add-lab";
 
 function App() {
   return (
@@ -36,11 +37,12 @@ function App() {
         <Route path="admin/dashboard" element={<AdminDashboard />}></Route>
         <Route path="admin/order" element={<AdminOrder />}></Route>
         <Route path="admin/addProduct" element={<AddProduct />}></Route>
-        <Route path="/admin/product/:id" element={<AdminViewProduct />} />
+        <Route path="/admin/product/:id" element={<AdminViewProduct />}></Route>
         <Route
           path="/admin/product/:kitId/update"
           element={<UpdateProduct />}
         />
+        <Route path="admin/addLab" element={<AdminAddLab />}></Route>
       </Routes>
     </>
   );

@@ -10,6 +10,7 @@ import {
   Eye,
   Wrench,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 function AdminLab() {
   const [labData, setLabData] = useState([]);
@@ -53,19 +54,6 @@ function AdminLab() {
 
     let title, content;
     switch (modalContent) {
-      case "types":
-        title = "Loại của lab";
-        content =
-          selectedLab.labTypes && selectedLab.labTypes.length > 0 ? (
-            <ul className="list-disc pl-5 mb-4">
-              {selectedLab.labTypes.map((type, index) => (
-                <li key={index}>{type}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mb-4 text-gray-500 italic">No types available</p>
-          );
-        break;
       case "kits":
         title = "Lab Kits";
         content =
@@ -129,10 +117,12 @@ function AdminLab() {
           <div className="flex-1 p-4 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Quản lý lab</h1>
-              <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
-                <PlusCircle size={20} className="mr-2" />
-                Thêm lab
-              </button>
+              <NavLink to="/admin/addLab">
+                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
+                  <PlusCircle size={20} className="mr-2" />
+                  Thêm lab
+                </button>
+              </NavLink>
             </div>
 
             {/* Lab Table */}
@@ -173,12 +163,16 @@ function AdminLab() {
                           </button>
                         </td>
                         <td className="py-2 px-4 text-center">
-                          <button
-                            onClick={() => handleModalOpen(lab, "types")}
-                            className="text-blue-500 hover:text-blue-700"
-                          >
-                            Xem loại
-                          </button>
+                          <div className="p-2 grid grid-cols-2 gap-2">
+                            {lab.labTypes.map((type, index) => (
+                              <span
+                                key={index}
+                                className="bg-gray-100 px-2 py-1 rounded truncate"
+                              >
+                                {type}
+                              </span>
+                            ))}
+                          </div>
                         </td>
                         <td className="py-2 px-4 text-center">
                           {lab.kits && lab.kits.length > 0 ? (
