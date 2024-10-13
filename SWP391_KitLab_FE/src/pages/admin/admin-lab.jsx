@@ -88,6 +88,16 @@ function AdminLab() {
     );
   };
 
+  const handleDeleteLab = (labId) => {
+    const labToDelete = labData.find((lab) => lab.labId === labId);
+
+    if (labToDelete) {
+      console.log(labToDelete);
+    } else {
+      console.log("nope");
+    }
+  };
+
   const indexOfLastLab = currentPage * labPerpage;
   const indexOfFirstLab = indexOfLastLab - labPerpage;
   const currentLabs = labData.slice(indexOfFirstLab, indexOfLastLab);
@@ -206,6 +216,10 @@ function AdminLab() {
                           <button
                             className="text-red-500 hover:text-red-700"
                             title="Xóa"
+                            value={lab.labId}
+                            onClick={(e) =>
+                              handleDeleteLab(e.currentTarget.value)
+                            }
                           >
                             <Trash2 size={16} />
                           </button>
