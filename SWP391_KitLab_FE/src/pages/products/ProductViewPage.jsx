@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import axios from "axios";
 import Header from "../Header";
+import Footer from "../../Footer";
 
 function ProductViewPage() {
   const [listProduct, setListProduct] = useState([]);
@@ -97,7 +98,7 @@ function ProductViewPage() {
                     <div className="p-4 flex flex-col flex-grow">
                       <p className="text-lg font-semibold mb-2">{item.name}</p>
                       <p className="text-red-600 font-bold mb-4">
-                        {item.price}
+                        {item.price} <span>VND</span>
                       </p>
                       <button className="mt-auto w-full bg-gray-200 text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
                         MUA HÀNG
@@ -154,6 +155,7 @@ function ProductViewPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
