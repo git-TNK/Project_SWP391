@@ -42,24 +42,6 @@ namespace KLM.APIService.Controllers
             return await _unitOfWork.LabTblRepository.GetLabById(id);
         }
 
-        //testing upload pdf len firebase
-        //[HttpPost("UploadPDF(testing)")]
-        //public async Task<ActionResult> UploadPdfTest(IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //        return BadRequest("No file uploaded");
-
-        //    using (var stream = file.OpenReadStream())
-        //    {
-        //        var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, file.FileName, file.ContentType);
-        //        return Ok(new { DownloadUrl = uploadUrl });
-        //    }
-        //}
-
-
-
-        //create lab(them kit)
-
 
 
         [HttpPost("AddLab")]

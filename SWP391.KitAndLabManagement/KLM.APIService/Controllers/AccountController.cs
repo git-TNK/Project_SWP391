@@ -1,5 +1,6 @@
 ﻿using KLM.Repository;
 using KLM.Repository.Models;
+using KLM.Repository.ModelView;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KLM.APIService.Controllers
@@ -25,6 +26,31 @@ namespace KLM.APIService.Controllers
             }
             return NotFound();
         }
+
+        //get account for admin page
+        [HttpGet("AccountManage")]
+        public async Task<List<AccountDTO>> GetAccountForAdmin()
+        {
+            return await _unitOfWork.AccountTblRepository.GetAccountForAdmin();
+        }
+
+        [HttpPut("AccountPromote")]
+        public async Task<IActionResult> Promotion(string id)
+        {
+            bool result = await _unitOfWork.AccountTblRepository.PromotingAccount(id);
+
+            if (result)
+            {
+                Console.WriteLine("Success");
+                return Ok("Success");
+            }
+            else
+            {
+                Console.WriteLine("Failed to change role");
+                return BadRequest("Fail to promote");
+            }
+        }
+
 
         [HttpPost("{userName},{fullName} ,{password},{email}")]
         public async Task<bool> Register(string userName, string password, string email, string fullName)
