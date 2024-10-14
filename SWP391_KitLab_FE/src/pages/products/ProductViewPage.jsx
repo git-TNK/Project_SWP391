@@ -13,7 +13,10 @@ function ProductViewPage() {
   async function fetchProduct() {
     try {
       const response = await axios.get(`http://localhost:5056/product`);
-      setListProduct(response.data);
+      const filteredProducts = response.data.filter(
+        (item) => item.status !== "Deleted"
+      );
+      setListProduct(filteredProducts);
     } catch (err) {
       console.log(err);
     }

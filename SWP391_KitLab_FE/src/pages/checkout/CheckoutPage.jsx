@@ -134,30 +134,6 @@ function CheckoutPage() {
             {/* Payment and Order Summary */}
             <div className="flex-1 space-y-8">
               <div>
-                <h2 className="text-xl font-bold mb-4">Thanh Toán</h2>
-                <div className="flex items-center p-2 bg-white rounded border">
-                  <input
-                    type="radio"
-                    id="bank-transfer"
-                    name="payment"
-                    className="mr-2"
-                  />
-                  <label htmlFor="bank-transfer">
-                    Chuyển khoản qua ngân hàng
-                  </label>
-                </div>
-                <div className="flex items-center p-2 bg-white rounded border">
-                  <input
-                    type="radio"
-                    id="COD-transfer"
-                    name="payment"
-                    className="mr-2"
-                  />
-                  <label htmlFor="COD-transfer">Thanh toán khi nhận hàng</label>
-                </div>
-              </div>
-
-              <div>
                 <h2 className="text-xl font-bold mb-4">Đơn Hàng</h2>
                 <div className="bg-white p-4 rounded border">
                   {cart.map((productCart, index) => (

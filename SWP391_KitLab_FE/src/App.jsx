@@ -26,6 +26,7 @@ import EditProfile from "./pages/profile/EditProfile";
 import AdminAddLab from "./pages/admin/admin-add-lab";
 import AdminNotFound from "./pages/admin/admin-not-found-page";
 import UpdateLab from "./pages/admin/admin-update-lab";
+import StaffPage from "./pages/staff/StaffPage";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route path="/cart" element={<CartPage />}></Route>
         <Route path="/products-view" element={<ProductViewPage />}></Route>
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/staff" element={<StaffPage />}></Route>
         {/* <Route path="login/homepage" element={<HomePage />}></Route> */}
 
         <Route path="admin/product" element={<AdminProduct />}></Route>
