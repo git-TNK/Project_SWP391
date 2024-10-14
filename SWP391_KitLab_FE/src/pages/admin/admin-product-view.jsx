@@ -4,6 +4,7 @@ import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
 import Footer from "../../Footer";
 import axios from "axios";
+import AdminNotFound from "./admin-not-found-page";
 
 function AdminViewProduct() {
   const [product, setProduct] = useState(null);
@@ -128,7 +129,7 @@ function AdminViewProduct() {
                 </div>
               </div>
             ) : (
-              <p>Không tìm thấy kit</p>
+              <AdminNotFound />
             )}
           </div>
         </div>

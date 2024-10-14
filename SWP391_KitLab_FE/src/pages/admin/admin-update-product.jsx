@@ -145,16 +145,16 @@ function UpdateProduct() {
       );
 
       if (response.status === 200) {
-        setModalMessage("Update successful!");
+        setModalMessage("Cập nhật thành công!");
         setIsSuccess(true);
-      } else {
-        setModalMessage("Update failed. Please try again.");
-        setIsSuccess(false);
       }
     } catch (error) {
       console.error("Error:", error);
       if (error.response && error.response.data) {
-        setModalMessage(`Update failed: ${error.response.data}`);
+        if (error.response.data === "Product is deleted")
+          setModalMessage("Cập nhật thất bại: Sản phậm đã bị xóa");
+        if (error.response.data === "Existed name")
+          setModalMessage("Cập nhất thất bại: Tên đã tồn tại");
       } else {
         setModalMessage("An error occurred. Please try again.");
       }
@@ -182,7 +182,7 @@ function UpdateProduct() {
 
           <div className="flex-1 p-8 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">Update Product</h1>
+              <h1 className="text-2xl font-bold">Cập nhật sản phẩm</h1>
             </div>
 
             <form
@@ -192,7 +192,7 @@ function UpdateProduct() {
               {/* Image upload section */}
               <div className="w-1/3">
                 <div
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center h-64 cursor-pointer"
+                  className="border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center h-64 cursor-pointer"
                   style={{ height: "450px" }}
                   onClick={() =>
                     document.getElementById("pictureUpload").click()
@@ -202,19 +202,14 @@ function UpdateProduct() {
                     <img
                       src={picturePreview}
                       alt="New product preview"
-                      className="object-contain w-full h-full"
-                    />
-                  ) : pictureUrl ? (
-                    <img
-                      src={pictureUrl}
-                      alt="Current product image"
-                      className="object-contain w-full h-full"
+                      className="object-fill rounded-lg w-full h-full"
                     />
                   ) : (
-                    <div className="text-center">
-                      <Camera className="mx-auto text-gray-400" size={48} />
-                      <p className="mt-2 text-sm text-gray-500">UPDATE IMAGE</p>
-                    </div>
+                    <img
+                      src={pictureUrl}
+                      alt="No picture"
+                      className="object-fill rounded-lg w-full h-full"
+                    />
                   )}
                   <input
                     id="pictureUpload"
@@ -350,14 +345,14 @@ function UpdateProduct() {
                     type="submit"
                     className="bg-black text-white px-6 py-2 rounded-lg"
                   >
-                    Update
+                    Cập nhật
                   </button>
                   <NavLink to="/admin">
                     <button
                       type="button"
                       className="bg-white text-black px-6 py-2 rounded-lg border border-gray-300"
                     >
-                      Cancel
+                      Hủy
                     </button>
                   </NavLink>
                 </div>

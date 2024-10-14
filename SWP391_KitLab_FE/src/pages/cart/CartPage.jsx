@@ -45,7 +45,8 @@ function CartPage() {
 
   const handleQuantityChange = (productId, change) => {
     // Find the product in the database by kitId
-    var productInDb = listProduct.find((item) => item.kitId === productId);
+    var productInDb = listProduct.find((item) => item.kitId == productId);
+    console.log(productInDb);
 
     setListProductsInCart((prevCart) => {
       const updatedCart = prevCart.map((productCart) => {

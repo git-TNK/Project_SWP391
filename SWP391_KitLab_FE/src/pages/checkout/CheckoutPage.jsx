@@ -3,9 +3,26 @@ import Footer from "../../Footer";
 import Header from "../Header";
 import Cookies from "js-cookie";
 import { Link, NavLink } from "react-router-dom";
+import axios from "axios";
 
 function CheckoutPage() {
   const cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+  const [listProvince, setListProvince] = useState([]);
+
+  async function fetchProvince() {
+    try {
+      const response = await axios.get(
+        `https://provinces.open-api.vn/api/?depth=2`
+      );
+      setListProvince(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchProvince();
+  }, []);
 
   // Use useState to manage account state if necessary, otherwise just read from localStorage directly
   const [formData, setFormData] = useState({
@@ -73,9 +90,6 @@ function CheckoutPage() {
                   onChange={handleInputChange}
                 />
                 <div className="flex">
-                  <select className="p-2 border rounded-l w-16">
-                    <option>🇻🇳</option>
-                  </select>
                   <input
                     type="tel"
                     name="phone"
@@ -99,14 +113,11 @@ function CheckoutPage() {
                     className="flex-1 p-2 border rounded"
                     onChange={handleInputChange}
                   >
-                    <option value="">Tỉnh thành</option>
-                  </select>
-                  <select
-                    name="district"
-                    className="flex-1 p-2 border rounded"
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Quận huyện</option>
+                    {listProvince.map((province) => (
+                      <option key={province.code} value={province.name}>
+                        {province.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <textarea
