@@ -22,6 +22,7 @@ import ProductDetails from "./pages/products/ProductDetails";
 import NotFound404 from "./NotFound404";
 
 import UpdateProduct from "./pages/admin/admin-update-product";
+import EditProfile from "./pages/profile/EditProfile";
 
 function App() {
   return (
@@ -29,9 +30,10 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/forgotpassword" element={<ForgotPasswordPage />} ></Route>
-        <Route path="/resetpassword" element={<ResetPasswordPage />} ></Route>
+        <Route path="/forgotpassword" element={<ForgotPasswordPage />}></Route>
+        <Route path="/resetpassword" element={<ResetPasswordPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/edit-profile" element={<EditProfile />}></Route>
 
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
