@@ -14,9 +14,13 @@ function Header() {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("account"); // Remove account from localStorage
-    navigate("/");
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("account");
+    setAccount(null); // Update state to remove account
+    setTimeout(() => {
+      navigate("/"); // Navigate after state change
+    }, 0);
   };
 
   const handleSearch = () => {

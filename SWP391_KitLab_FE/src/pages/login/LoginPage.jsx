@@ -37,7 +37,7 @@ function LoginPage() {
       if (role === "Admin") {
         navigate("/admin/product", { state: { account } });
       } else if (role === "Staff") {
-        navigate("/");
+        navigate("/staff");
       } else if (role === "Customer") {
         navigate("/");
       }
