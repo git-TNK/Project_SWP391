@@ -68,7 +68,7 @@ function ProductDetails() {
             style={{ position: "sticky", alignSelf: "flex-start" }}
           >
             <img
-              className="w-full h-full object-cover rounded-lg shadow-md"
+              className="w-full h-full object-contain rounded-lg shadow-md"
               src={product.picture}
               alt={product.name}
             />

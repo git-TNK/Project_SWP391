@@ -24,18 +24,20 @@ function Header() {
     navigate(`/`, { state: { search: searchTerm } });
   };
 
-  const linkStyle = (enabled) => ({
-    color: enabled ? "white" : "gray", // Gray if disabled
-    pointerEvents: enabled ? "auto" : "none", // Disable click if no account
-    cursor: enabled ? "pointer" : "default",
+  const navLinkStyle = {
+    color: "white",
     margin: "0 15px",
     fontSize: "18px",
     textDecoration: "none",
-  });
+    padding: "10px 15px",
+    borderRadius: "8px",
+    transition: "background-color 0.3s, color 0.3s",
+  };
 
-  const activeLinkStyle = {
-    color: "yellow", // Change to the desired active color
-    textDecoration: "underline", // Optional: add underline to active link
+  const activeNavLinkStyle = {
+    ...navLinkStyle,
+    backgroundColor: "#444",
+    color: "yellow",
   };
 
   console.log(account);
@@ -70,6 +72,24 @@ function Header() {
                 boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add a subtle shadow for depth
               }}
             />
+            <div className="pl-3 cursor-default">
+              <h1
+                style={{ fontSize: "24px", fontWeight: "bold", color: "black" }}
+              >
+                KitCentral{" "}
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    marginTop: "-5px",
+                    color: "black",
+                  }}
+                >
+                  Linh Kiện Điện Tử
+                </span>
+              </h1>
+            </div>
           </NavLink>
 
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -215,13 +235,13 @@ function Header() {
             backgroundColor: "#222",
             padding: "10px 40px",
             color: "white",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Shadow for better distinction
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
           }}
         >
           <NavLink
             to="/"
             style={({ isActive }) =>
-              isActive ? activeLinkStyle : linkStyle(true)
+              isActive ? activeNavLinkStyle : navLinkStyle
             }
           >
             Trang chủ
@@ -229,7 +249,7 @@ function Header() {
           <NavLink
             to="/products-view"
             style={({ isActive }) =>
-              isActive ? activeLinkStyle : linkStyle(true)
+              isActive ? activeNavLinkStyle : navLinkStyle
             }
           >
             Sản Phẩm
@@ -237,7 +257,11 @@ function Header() {
           <NavLink
             to="/orderHistory"
             style={({ isActive }) =>
-              isActive ? activeLinkStyle : linkStyle(!!account)
+              account
+                ? isActive
+                  ? activeNavLinkStyle
+                  : navLinkStyle
+                : { ...navLinkStyle, color: "gray", pointerEvents: "none" }
             }
           >
             Lịch Sử Đơn Hàng
@@ -245,7 +269,11 @@ function Header() {
           <NavLink
             to="/service"
             style={({ isActive }) =>
-              isActive ? activeLinkStyle : linkStyle(!!account)
+              account
+                ? isActive
+                  ? activeNavLinkStyle
+                  : navLinkStyle
+                : { ...navLinkStyle, color: "gray", pointerEvents: "none" }
             }
           >
             Yêu Cầu Hỗ Trợ
@@ -253,7 +281,11 @@ function Header() {
           <NavLink
             to="/checkout"
             style={({ isActive }) =>
-              isActive ? activeLinkStyle : linkStyle(!!account)
+              account
+                ? isActive
+                  ? activeNavLinkStyle
+                  : navLinkStyle
+                : { ...navLinkStyle, color: "gray", pointerEvents: "none" }
             }
           >
             Thanh Toán
@@ -263,13 +295,13 @@ function Header() {
             <NavLink
               to="/cart"
               style={({ isActive }) => ({
-                color: isActive ? "yellow" : "white", // Change color when active
+                ...navLinkStyle,
+                color: isActive ? "yellow" : "white",
+                backgroundColor: isActive ? "#444" : "#333",
                 display: "flex",
                 alignItems: "center",
-                backgroundColor: "#333",
                 padding: "10px 20px",
                 borderRadius: "8px",
-                textDecoration: "none",
               })}
             >
               Giỏ Hàng

@@ -14,7 +14,7 @@ const Notification = ({ message, type, onClose }) => {
 
   return (
     <div
-      className={`fixed top-4 right-4 ${backgroundColor} text-white px-4 py-2 rounded shadow-lg`}
+      className={`fixed top-[73px] right-[650px] ${backgroundColor} text-white px-4 py-2 rounded shadow-lg`}
     >
       {message}
     </div>

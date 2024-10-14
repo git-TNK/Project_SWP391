@@ -65,7 +65,7 @@ function AdminLab() {
               ))}
             </ul>
           ) : (
-            <p className="mb-4 text-gray-500 italic">No kits available</p>
+            <p className="mb-4 text-gray-500 italic">Không có kit phù hợp</p>
           );
         break;
       case "description":
