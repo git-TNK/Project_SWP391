@@ -22,6 +22,7 @@ import ProductDetails from "./pages/products/ProductDetails";
 import NotFound404 from "./NotFound404";
 
 import UpdateProduct from "./pages/admin/admin-update-product";
+import EditProfile from "./pages/profile/EditProfile";
 import AdminAddLab from "./pages/admin/admin-add-lab";
 import AdminNotFound from "./pages/admin/admin-not-found-page";
 import UpdateLab from "./pages/admin/admin-update-lab";
@@ -35,6 +36,7 @@ function App() {
         <Route path="/forgotpassword" element={<ForgotPasswordPage />}></Route>
         <Route path="/resetpassword" element={<ResetPasswordPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/edit-profile" element={<EditProfile />}></Route>
 
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>

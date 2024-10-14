@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./LoginPage.css"; 
+import "./LoginPage.css";
 import { NavLink } from "react-router-dom";
 
 function LoginPage() {
@@ -25,6 +25,7 @@ function LoginPage() {
       );
       setAccount(response.data);
       setRole(response.data.role);
+      localStorage.setItem("account", JSON.stringify(response.data));
     } catch (err) {
       console.log(err);
       alert("Sai tài khoản hoặc mật khẩu");
@@ -36,9 +37,9 @@ function LoginPage() {
       if (role === "Admin") {
         navigate("/admin/product", { state: { account } });
       } else if (role === "Staff") {
-        navigate("/", { state: { account } });
-      } else {
-        alert("Hello");
+        navigate("/");
+      } else if (role === "Customer") {
+        navigate("/");
       }
     }
   }, [account, role, navigate]);

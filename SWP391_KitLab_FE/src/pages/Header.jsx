@@ -1,7 +1,44 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function Header() {
+  const [searchTerm, setSearchTerm] = useState(""); // State to capture search term
+  const navigate = useNavigate();
+
+  const [account, setAccount] = useState(null);
+
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    if (savedAccount) {
+      setAccount(savedAccount);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("account"); // Remove account from localStorage
+    navigate("/");
+  };
+
+  const handleSearch = () => {
+    // Navigate to the homepage with the search term as a query parameter
+    navigate(`/`, { state: { search: searchTerm } });
+  };
+
+  const linkStyle = (enabled) => ({
+    color: enabled ? "white" : "gray", // Gray if disabled
+    pointerEvents: enabled ? "auto" : "none", // Disable click if no account
+    cursor: enabled ? "pointer" : "default",
+    margin: "0 15px",
+    fontSize: "18px",
+    textDecoration: "none",
+  });
+
+  const activeLinkStyle = {
+    color: "yellow", // Change to the desired active color
+    textDecoration: "underline", // Optional: add underline to active link
+  };
+
+  console.log(account);
   return (
     <div>
       <header
@@ -21,7 +58,7 @@ function Header() {
             backgroundColor: "white",
           }}
         >
-          {/* Replace the text logo with an image logo */}
+          {/* Logo */}
           <NavLink to="/" style={{ display: "flex", alignItems: "center" }}>
             <img
               src="https://firebasestorage.googleapis.com/v0/b/swp391-2004.appspot.com/o/Logo%2Flogo.jpg?alt=media&token=7ec2c0f7-bebb-4c69-ab1d-0e70fc821d99"
@@ -38,6 +75,8 @@ function Header() {
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm kiếm sản phẩm"
               style={{
                 padding: "10px",
@@ -64,47 +103,106 @@ function Header() {
               }}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#555")} // Change on hover
               onMouseLeave={(e) => (e.target.style.backgroundColor = "#333")}
+              onClick={handleSearch}
             >
               Tìm Kiếm
             </button>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <NavLink
-              to="/login"
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#333",
-                color: "white",
-                border: "none",
-                borderRadius: "20px",
-                cursor: "pointer",
-                textDecoration: "none",
-                transition: "background-color 0.3s",
-              }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#555")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "#333")}
-            >
-              Đăng nhập
-            </NavLink>
-            <span style={{ color: "black" }}>hoặc</span>
-            <NavLink
-              to="/register"
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "#333",
-                color: "white",
-                border: "none",
-                borderRadius: "20px",
-                cursor: "pointer",
-                textDecoration: "none",
-                transition: "background-color 0.3s",
-              }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#555")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "#333")}
-            >
-              Đăng Ký
-            </NavLink>
+            {account ? (
+              <>
+                <NavLink
+                  to="/edit-profile"
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#333",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "20px",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#555")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#333")
+                  }
+                >
+                  {account.fullName}
+                </NavLink>
+                <NavLink
+                  to="/"
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#333",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "20px",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#555")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#333")
+                  }
+                  onClick={handleLogout}
+                >
+                  Đăng xuất
+                </NavLink>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/login"
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#333",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "20px",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#555")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#333")
+                  }
+                >
+                  Đăng nhập
+                </NavLink>
+                <span style={{ color: "black" }}>hoặc</span>
+                <NavLink
+                  to="/register"
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#333",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "20px",
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.backgroundColor = "#555")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.backgroundColor = "#333")
+                  }
+                >
+                  Đăng Ký
+                </NavLink>
+              </>
+            )}
           </div>
         </div>
 
@@ -122,63 +220,41 @@ function Header() {
         >
           <NavLink
             to="/"
-            style={({ isActive }) => ({
-              color: isActive ? "yellow" : "white", // Change color when active
-              textDecoration: "none",
-              margin: "0 20px",
-              fontSize: "18px",
-              fontWeight: "500",
-            })}
+            style={({ isActive }) =>
+              isActive ? activeLinkStyle : linkStyle(true)
+            }
           >
             Trang chủ
           </NavLink>
           <NavLink
             to="/products-view"
-            style={({ isActive }) => ({
-              color: isActive ? "yellow" : "white", // Change color when active
-              textDecoration: "none",
-              margin: "0 20px",
-              fontSize: "18px",
-              fontWeight: "500",
-            })}
+            style={({ isActive }) =>
+              isActive ? activeLinkStyle : linkStyle(true)
+            }
           >
             Sản Phẩm
           </NavLink>
           <NavLink
-
             to="/orderHistory"
-            style={({ isActive }) => ({
-              color: isActive ? "yellow" : "white", // Change color when active
-              textDecoration: "none",
-              margin: "0 15px",
-              fontSize: "16px",
-              fontWeight: "500",
-            })}
+            style={({ isActive }) =>
+              isActive ? activeLinkStyle : linkStyle(!!account)
+            }
           >
             Lịch Sử Đơn Hàng
           </NavLink>
           <NavLink
-
             to="/service"
-            style={({ isActive }) => ({
-              color: isActive ? "yellow" : "white", // Change color when active
-              textDecoration: "none",
-              margin: "0 20px",
-              fontSize: "18px",
-              fontWeight: "500",
-            })}
+            style={({ isActive }) =>
+              isActive ? activeLinkStyle : linkStyle(!!account)
+            }
           >
             Yêu Cầu Hỗ Trợ
           </NavLink>
           <NavLink
             to="/checkout"
-            style={({ isActive }) => ({
-              color: isActive ? "yellow" : "white", // Change color when active
-              textDecoration: "none",
-              margin: "0 20px",
-              fontSize: "18px",
-              fontWeight: "500",
-            })}
+            style={({ isActive }) =>
+              isActive ? activeLinkStyle : linkStyle(!!account)
+            }
           >
             Thanh Toán
           </NavLink>

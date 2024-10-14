@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
 import Header from "../Header";
 import Footer from "../../Footer";
 import axios from "axios";
@@ -9,11 +9,20 @@ function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
+  const location = useLocation(); // Access the location object to get the search state
+
+  // Extract the search term from the location state (if it exists)
+  const searchTerm = location.state?.search || "";
+
   // Fetch products from the API
   async function fetchProduct() {
     try {
       const response = await axios.get(`http://localhost:5056/product`);
-      setListProduct(response.data);
+      // Filter out products with status 'Deleted'
+      const filteredProducts = response.data.filter(
+        (item) => item.status !== "Deleted"
+      );
+      setListProduct(filteredProducts);
     } catch (err) {
       console.log(err);
     }
@@ -23,8 +32,15 @@ function HomePage() {
     fetchProduct();
   }, []);
 
-  // Filter the products with status "New"
-  const newProducts = listProduct.filter((item) => item.status === "New");
+  // Filter products based on search term, excluding "Deleted" products
+  const filteredProducts = listProduct.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Check if searchTerm is empty or not
+  const newProducts = searchTerm
+    ? filteredProducts // If there is a search term, show filtered products
+    : listProduct.filter((item) => item.status === "New"); // Otherwise, show products with status "New"
 
   // Calculate total pages
   const totalPages = Math.ceil(newProducts.length / productsPerPage);
@@ -40,14 +56,14 @@ function HomePage() {
     setCurrentPage(pageNumber);
   };
 
-  console.log(listProduct);
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
         <section>
-          <h2 className="text-2xl font-bold mb-6">Sản Phẩm Mới</h2>
+          <h2 className="text-2xl font-bold mb-6">
+            {searchTerm ? "Kết Quả Tìm Kiếm" : "Sản Phẩm Mới"}
+          </h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentProducts.map((item, index) => (
               <li
@@ -55,8 +71,6 @@ function HomePage() {
                 className="border border-gray-200 rounded-lg overflow-hidden shadow-md"
               >
                 <Link to={`/product/${item.kitId}`}>
-                  {" "}
-                  {/* Link to product details */}
                   <div className="flex flex-col h-full">
                     <img
                       className="w-full h-48 object-cover"
@@ -80,7 +94,6 @@ function HomePage() {
 
           {/* Pagination controls */}
           <div className="mt-8 flex justify-center space-x-2">
-            {/* Previous Button */}
             <button
               className={`px-4 py-2 rounded-lg border ${
                 currentPage === 1
@@ -93,7 +106,6 @@ function HomePage() {
               Previous
             </button>
 
-            {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, index) => (
               <button
                 key={index}
@@ -108,7 +120,6 @@ function HomePage() {
               </button>
             ))}
 
-            {/* Next Button */}
             <button
               className={`px-4 py-2 rounded-lg border ${
                 currentPage === totalPages
