@@ -233,12 +233,14 @@ function AdminLab() {
                       </td>
                       <td className="py-2 px-4">
                         <div className="flex items-center justify-center space-x-2">
-                          <button
-                            className="text-green-500 hover:text-green-700"
-                            title="Sửa"
-                          >
-                            <Wrench size={16} />
-                          </button>
+                          <NavLink to={`/admin/lab/${lab.labId}/updateLab`}>
+                            <button
+                              className="text-green-500 hover:text-green-700"
+                              title="Sửa"
+                            >
+                              <Wrench size={16} />
+                            </button>
+                          </NavLink>
                           <button
                             className="text-red-500 hover:text-red-700"
                             title="Xóa"

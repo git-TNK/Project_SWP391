@@ -257,8 +257,8 @@ const AdminProduct = () => {
 
             {/* Product grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {currentProducts.map((item, index) => (
-                <ProductItem key={item.kitId || index} item={item} />
+              {currentProducts.map((item) => (
+                <ProductItem key={item.kitId} item={item} /> //remove || index
               ))}
             </div>
             {/* Pagination */}
