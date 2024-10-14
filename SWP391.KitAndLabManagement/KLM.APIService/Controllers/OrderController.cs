@@ -12,14 +12,35 @@ namespace KLM.APIService.Controllers
         public OrderController() => _unitOfWork ??= new UnitOfWork();
 
 
-        //get all order, khi staff bam vao Quan li do hang de proccess cac don hang
+        //get all order, khi staff bam vao Quan li don hang de proccess cac don hang
         [HttpGet]
         public async Task<List<OrderTbl>> GetOrder()
         {
             return await _unitOfWork.OrderTblRepository.GetAllOrderTbl();
         }
 
-        //get specific order by ID (khi customer bam vao lich su giao dich)
+        [HttpPost("addOrder/{accountId}/{note}/{price}/{address}")]
+        public async Task<IActionResult> AddOrder(string accountId, string note, string address, decimal price)
+        {
+            List<OrderTbl> listCheckOrderId = await GetOrder();
+            OrderTbl newOrder = new OrderTbl();
+            newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
+            foreach (var x in listCheckOrderId)
+            {
+                if (x.OrderId.Equals(newOrder.OrderId))
+                {
+                    newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
+                }
+            }
+            newOrder.AccountId = accountId;
+            newOrder.Note = note;
+            newOrder.Address = address;
+            newOrder.Price = price;
+            newOrder.OrderDate = DateOnly.FromDateTime(DateTime.Today.Date);
+            newOrder.Status = "Processing";
+            _unitOfWork.OrderTblRepository.Create(newOrder);
+            return Ok(newOrder);
+        }
 
     }
 }

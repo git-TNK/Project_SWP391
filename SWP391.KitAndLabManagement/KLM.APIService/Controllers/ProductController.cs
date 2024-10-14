@@ -1,11 +1,7 @@
 ﻿using KLM.APIService.RequestModifier;
 using KLM.Repository;
-using KLM.Repository.Models;
 using KLM.Repository.ModelView;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Azure.Core;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace KLM.APIService.Controllers
 {
@@ -51,7 +47,7 @@ namespace KLM.APIService.Controllers
         }
 
 
-        
+
 
 
         //Add product

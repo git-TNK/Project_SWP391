@@ -65,17 +65,17 @@ namespace KLM.APIService.Controllers
         }
 
         [HttpGet("{userName}")]
-        public async Task<AccountTbl> ViewProfile(string userName)
+        public async Task<IActionResult> ViewProfile(string userName)
         {
             var listAccount = await GetAccountTbls();
             foreach (var account in listAccount)
             {
                 if (account.UserName.Equals(userName))
                 {
-                    return account;
+                    return Ok(account);
                 }
             }
-            return null;
+            return NotFound();
         }
 
         [HttpPut("{userName},{phoneNumber}, {address}")]
