@@ -149,7 +149,7 @@ function AddProduct() {
             >
               <div className="w-1/3">
                 <div
-                  className="border-2 border-dashed border-black rounded-lg p-4 flex items-center justify-center h-64 cursor-pointer"
+                  className="border-2 border-dashed border-black rounded-lg flex items-center justify-center h-64 cursor-pointer"
                   style={{
                     height: "450px",
                   }}
@@ -161,7 +161,7 @@ function AddProduct() {
                     <img
                       src={picturePreview}
                       alt="Product preview"
-                      className="object-fill w-full h-full "
+                      className="object-fill w-full h-full rounded-lg"
                     />
                   ) : (
                     <div className="text-center">

@@ -32,7 +32,7 @@ const AdminProduct = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const productsPerPage = 12;
+  const productsPerPage = 8;
 
   async function fetchProduct() {
     setIsLoading(true);

@@ -13,6 +13,9 @@ import {
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 
+import Notification from "./notification";
+import LoadingSpinner from "./loading";
+
 function AdminLab() {
   const [labData, setLabData] = useState([]);
   const [selectedLab, setSelectedLab] = useState(null);
@@ -20,18 +23,20 @@ function AdminLab() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const labPerpage = 10;
+  const [notification, setNotification] = useState(null);
+  const labPerpage = 5;
+
+  const fetchLabData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5056/Lab");
+      setLabData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      setError("Failed to fetch lab data");
+    }
+  };
 
   useEffect(() => {
-    const fetchLabData = async () => {
-      try {
-        const response = await axios.get("http://localhost:5056/Lab");
-        setLabData(response.data);
-      } catch (error) {
-        setError("Failed to fetch lab data");
-      }
-    };
-
     fetchLabData();
   }, []);
 
@@ -88,13 +93,30 @@ function AdminLab() {
     );
   };
 
-  const handleDeleteLab = (labId) => {
+  const handleDeleteLab = async (labId, labName) => {
     const labToDelete = labData.find((lab) => lab.labId === labId);
 
     if (labToDelete) {
       console.log(labToDelete);
     } else {
       console.log("nope");
+      return;
+    }
+
+    try {
+      const response = await axios.delete(
+        `http://localhost:5056/Lab/DeleteLab?id=${labId}`
+      );
+      if (response.status === 200) {
+        fetchLabData();
+        console.log("Success message: ", response.data);
+        setNotification({ message: `Đã xóa: ${labName}`, type: "success" });
+      } else {
+        throw new Error("Unexpected response status");
+      }
+    } catch (err) {
+      console.error("error while deleting lab: ", err);
+      setNotification({ message: "Xóa thất bại", type: "error" });
     }
   };
 
@@ -113,6 +135,10 @@ function AdminLab() {
       default:
         return status;
     }
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -216,9 +242,8 @@ function AdminLab() {
                           <button
                             className="text-red-500 hover:text-red-700"
                             title="Xóa"
-                            value={lab.labId}
-                            onClick={(e) =>
-                              handleDeleteLab(e.currentTarget.value)
+                            onClick={() =>
+                              handleDeleteLab(lab.labId, lab.labName)
                             }
                           >
                             <Trash2 size={16} />
@@ -249,6 +274,13 @@ function AdminLab() {
                 )
               )}
             </div>
+            {notification && (
+              <Notification
+                message={notification.message}
+                type={notification.type}
+                onClose={closeNotification}
+              />
+            )}
           </div>
         </div>
       </div>
