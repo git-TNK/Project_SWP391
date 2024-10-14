@@ -36,6 +36,12 @@ namespace KLM.APIService.Controllers
         }
 
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<LabDTO>> GetLabWithChosenId(string id)
+        {
+            return await _unitOfWork.LabTblRepository.GetLabById(id);
+        }
+
         //testing upload pdf len firebase
         //[HttpPost("UploadPDF(testing)")]
         //public async Task<ActionResult> UploadPdfTest(IFormFile file)
@@ -120,37 +126,55 @@ namespace KLM.APIService.Controllers
         public async Task<IActionResult> UpdateLabInfo(string id, AddLabRequest request)
         {
 
-            string documentUrl;
+            string? documentUrl = null;
+            bool isNewFileUpload = false;
 
-            //qua trinh upload file gap van de
-            using (var stream = request.document.OpenReadStream())
+
+            if (request.document != null && request.document.Length > 0)
             {
-                var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.document.FileName, request.document.ContentType);
-                documentUrl = uploadUrl;
+                //qua trinh upload file gap van de
+                using (var stream = request.document.OpenReadStream())
+                {
+                    documentUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.document.FileName, request.document.ContentType);
+                }
+                isNewFileUpload = true;
             }
 
-            if (documentUrl == null || documentUrl.Length == 0)
-                return BadRequest("No file uploaded");
+            
+
+            //if (documentUrl == null || documentUrl.Length == 0)
+            //    return BadRequest("No file uploaded");
 
 
-            string labName = request.labName;
-            string description = request.description;
+            string labName = request.labName.Trim();
+            string description = request.description.Trim();
             List<string> labTypes = request.labTypes;
             DateOnly dateOfChange = DateOnly.FromDateTime(DateTime.Today.Date);
 
             //return (errors, oldImageUrl);
-            var (errors, oldDocumentUrl) = await _unitOfWork.LabTblRepository.UpdateLab(id, labName, description, documentUrl, labTypes, dateOfChange);
+            var (errors, oldDocumentUrl) = await _unitOfWork.LabTblRepository.UpdateLab(id, labName, description, documentUrl, labTypes, dateOfChange, isNewFileUpload);
 
             if (string.IsNullOrWhiteSpace(errors))
             {
-                //neu thanh cong thi xoa url cu them url moi
-                await _firebaseStorageService.DeleteDocumentAsync(oldDocumentUrl);
+                if(isNewFileUpload && !string.IsNullOrWhiteSpace(oldDocumentUrl))
+                {
+                    //Xoa file cu khi co file moi upload
+                    await _firebaseStorageService.DeleteDocumentAsync(oldDocumentUrl);
+                }
+
+                Console.WriteLine("Success");
                 return Ok("Success");
             }
             else
             {
-                //neu fail can delete url tren firebase
-                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+
+                if (isNewFileUpload)
+                {
+                    //neu fail can delete url tren firebase
+                    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                }
+
+                Console.WriteLine($"{errors}");
                 return BadRequest($"{errors}");
             }
         }

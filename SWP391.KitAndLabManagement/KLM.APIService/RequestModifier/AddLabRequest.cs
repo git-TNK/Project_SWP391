@@ -4,18 +4,18 @@ namespace KLM.APIService.RequestModifier
 {
     public class AddLabRequest
     {
-        [Required]
+        //[Required]
         public string labName { get; set; }
 
 
-        [Required]
+        //[Required]
         public string description { get; set; }
 
-        [Required]
-        public IFormFile document { get; set; }
+        //[Required]
+        public IFormFile? document { get; set; }
 
 
-        [Required]
+        //[Required]
         public List<string> labTypes { get; set; }
     }
 }
