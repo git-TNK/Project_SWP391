@@ -2,12 +2,30 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import Header from "../Header";
 import Cookies from "js-cookie";
-import { Link, NavLink } from "react-router-dom";
+import { Link, Navigate, NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function CheckoutPage() {
   const cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
   const [listProvince, setListProvince] = useState([]);
+
+  const [account, setAccount] = useState(null);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    if (savedAccount) {
+      setAccount(savedAccount);
+    } else {
+      navigate("*");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (account && account.role !== "Customer") {
+      navigate("*"); // Redirect if the user is not a Customer
+    }
+  }, [account, navigate]);
 
   async function fetchProvince() {
     try {
@@ -151,16 +169,6 @@ function CheckoutPage() {
                       </div>
                     </div>
                   ))}
-                  <div className="flex items-center mb-4">
-                    <input
-                      type="text"
-                      placeholder="Nhập mã giảm giá"
-                      className="flex-1 p-2 border rounded-l"
-                    />
-                    <button className="bg-blue-500 text-white p-2 rounded-r">
-                      Áp dụng
-                    </button>
-                  </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Tạm tính</span>
@@ -193,9 +201,11 @@ function CheckoutPage() {
                     <Link to="/cart" className="text-blue-500">
                       ‹ Quay về giỏ hàng
                     </Link>
-                    <button className="bg-black text-white px-4 py-2 rounded">
-                      Thanh Toán
-                    </button>
+                    <Link to="/banking">
+                      <button className="bg-black text-white px-4 py-2 rounded">
+                        Thanh Toán
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../../Footer";
-import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate
+import { NavLink, useNavigate, useNavigationType } from "react-router-dom"; // Import useNavigate
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -15,6 +15,12 @@ function CartPage() {
       setAccount(savedAccount);
     }
   }, []);
+
+  useEffect(() => {
+    if (account && account.role !== "Customer") {
+      navigate("*"); // Redirect if the user is not a Customer
+    }
+  }, [account, navigate]);
 
   const [listProductsInCart, setListProductsInCart] = useState([]);
   const [listProduct, setListProduct] = useState([]);

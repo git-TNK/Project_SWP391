@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "../Header";
 import Footer from "../../Footer";
@@ -8,6 +8,21 @@ import Cookies from "js-cookie"; // npm install js-cookie
 function ProductDetails() {
   const { id } = useParams(); // Get the product ID from the URL params
   const [product, setProduct] = useState(null);
+
+  const [account, setAccount] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    if (savedAccount) {
+      setAccount(savedAccount);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (account && account.role !== "Customer") {
+      navigate("*"); // Redirect if the user is not a Customer
+    }
+  }, [account, navigate]);
 
   // Fetch product details from the API
   useEffect(() => {
