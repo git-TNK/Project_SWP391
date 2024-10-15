@@ -14,17 +14,17 @@ namespace KLM.APIService.Controllers
         public AccountController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet("{userName},{password}")]
-        public async Task<AccountTbl?> CheckExistAccount(string userName, string password)
+        public async Task<IActionResult> CheckExistAccount(string userName, string password)
         {
             List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
             {
                 if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
                 {
-                    return account[i];
+                    return Ok(account[i]);
                 }
             }
-            return null;
+            return BadRequest();
         }
 
         //get account for admin page
@@ -64,25 +64,17 @@ namespace KLM.APIService.Controllers
                 }
             }
             string accountId = "ACC" + (new Random().Next(000, 999));
-            if (await CheckExistAccount(userName, password) != null)
-            {
-                return false;
-            }
-            else
-            {
-                AccountTbl registerAccount = new AccountTbl();
-                registerAccount.AccountId = accountId;
-                registerAccount.FullName = fullName;
-                registerAccount.UserName = userName;
-                registerAccount.Password = password;
-                registerAccount.Email = email;
-                registerAccount.Role = "Customer";
-                registerAccount.Status = "Active";
-                registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
-                _unitOfWork.AccountTblRepository.Create(registerAccount);
-                return true;
-            }
-
+            AccountTbl registerAccount = new AccountTbl();
+            registerAccount.AccountId = accountId;
+            registerAccount.FullName = fullName;
+            registerAccount.UserName = userName;
+            registerAccount.Password = password;
+            registerAccount.Email = email;
+            registerAccount.Role = "Customer";
+            registerAccount.Status = "Active";
+            registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
+            _unitOfWork.AccountTblRepository.Create(registerAccount);
+            return true;
         }
         [HttpGet]
         public async Task<List<AccountTbl>> GetAccountTbls()
