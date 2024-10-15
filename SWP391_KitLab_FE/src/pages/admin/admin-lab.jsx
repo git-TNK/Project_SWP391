@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
@@ -24,6 +24,7 @@ function AdminLab() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [notification, setNotification] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const labPerpage = 5;
 
   const fetchLabData = async () => {
@@ -110,7 +111,7 @@ function AdminLab() {
       if (response.status === 200) {
         fetchLabData();
         console.log("Success message: ", response.data);
-        setNotification({ message: `Đã xóa: ${labName}`, type: "err" });
+        setNotification({ message: `Đã xóa: ${labName}`, type: "error" });
       } else {
         throw new Error("Unexpected response status");
       }
@@ -120,9 +121,19 @@ function AdminLab() {
     }
   };
 
+  const filteredLab = useMemo(() => {
+    return labData.filter((lab) => {
+      const nameMatch = lab.labName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      return nameMatch;
+    });
+  }, [labData, searchTerm]);
+
   const indexOfLastLab = currentPage * labPerpage;
   const indexOfFirstLab = indexOfLastLab - labPerpage;
-  const currentLabs = labData.slice(indexOfFirstLab, indexOfLastLab);
+  const currentLabs = filteredLab.slice(indexOfFirstLab, indexOfLastLab);
 
   const getStatusTranslate = (status) => {
     switch (status.toLowerCase()) {
@@ -151,6 +162,10 @@ function AdminLab() {
   const closeNotification = () => {
     setNotification(null);
   };
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -166,6 +181,14 @@ function AdminLab() {
           <div className="flex-1 p-4 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Quản lý lab</h1>
+              <input
+                type="text"
+                placeholder="Tìm kiếm lab..."
+                value={searchTerm}
+                onChange={handleSearch}
+                style={{ width: "600px" }}
+                className="py-2 px-3 rounded-lg mr-[30px]  h-[35px] border-2 border-black text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              />
               <NavLink to="/admin/addLab">
                 <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
                   <PlusCircle size={20} className="mr-2" />
@@ -279,7 +302,7 @@ function AdminLab() {
             {isModalOpen && renderModalContent()}
             {/* Pagination */}
             <div className="flex justify-center mt-8">
-              {[...Array(Math.ceil(labData.length / labPerpage))].map(
+              {[...Array(Math.ceil(filteredLab.length / labPerpage))].map(
                 (_, index) => (
                   <button
                     key={index}

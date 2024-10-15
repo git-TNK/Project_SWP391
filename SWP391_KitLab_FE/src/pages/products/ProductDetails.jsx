@@ -7,13 +7,19 @@ import Cookies from "js-cookie"; // npm install js-cookie
 
 //Bình thêm
 import Notification from "../admin/notification";
+import Modal from "./Modal-description";
 
 function ProductDetails() {
   const { id } = useParams(); // Get the product ID from the URL params
   const [product, setProduct] = useState(null);
-  const [notification, setNotification] = useState(null); //Bình thêm
+
+  //Bình thêm
+  const [notification, setNotification] = useState(null);
+  const [selectedLab, setSelectedLab] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [account, setAccount] = useState(null);
+  const [labList, setLabList] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -34,6 +40,7 @@ function ProductDetails() {
       try {
         const response = await axios.get(`http://localhost:5056/product/${id}`);
         setProduct(response.data);
+        setLabList(response.data.labs);
       } catch (err) {
         console.log(err);
       }
@@ -96,6 +103,15 @@ function ProductDetails() {
     setNotification(null);
   };
 
+  const openLabModal = (lab) => {
+    setSelectedLab(lab);
+    setIsModalOpen(true);
+  };
+
+  const closeLabModal = () => {
+    setIsModalOpen(false);
+  };
+
   if (!product) {
     return <p>Loading...</p>;
   }
@@ -147,13 +163,25 @@ function ProductDetails() {
             {/* Labs */}
             <div className="mb-4">
               <span className="font-semibold">Danh sách Labs: </span>
-              <ul className="list-disc list-inside">
-                {product.labNames.map((lab, index) => (
-                  <li key={index} className="text-gray-800">
-                    {lab}
-                  </li>
-                ))}
-              </ul>
+              {labList.length > 0 ? (
+                <ul className="list-none pl-0">
+                  {labList.map((lab, index) => (
+                    <li key={index} className="flex items-start mb-2">
+                      <span className="text-2xl mr-2 leading-none">•</span>
+                      <button
+                        onClick={() => openLabModal(lab)}
+                        className="text-left hover:bg-gray-100 px-2 py-1 rounded text-gray-800"
+                      >
+                        {lab.name}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span className="text-gray-800">
+                  Không có lab nào được liên kết
+                </span>
+              )}
             </div>
 
             {/* Buy Now Button */}
@@ -172,6 +200,13 @@ function ProductDetails() {
               onClose={closeNotification}
             />
           )}
+
+          {/* Modal */}
+          <Modal
+            isOpen={isModalOpen}
+            onClose={closeLabModal}
+            lab={selectedLab}
+          />
         </div>
       </div>
       <Footer />

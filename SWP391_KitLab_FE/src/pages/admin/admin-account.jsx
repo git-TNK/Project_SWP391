@@ -50,7 +50,7 @@ function AdminAccount() {
         } else if (account.role === "Staff") {
           setNotification({
             message: `Giáng cấp tài khoản: ${account.username}`,
-            type: "err",
+            type: "error",
           });
         }
       }
@@ -148,18 +148,16 @@ function AdminAccount() {
                       </td>
                       <td className="py-2 px-4 text-center">{account.email}</td>
                       <td className="py-2 px-4 text-center">
-                        <td className="py-2 px-4 text-center">
-                          {account.address ? (
-                            <button
-                              onClick={() => handleModalOpen(account)}
-                              className="text-blue-500 hover:text-blue-700"
-                            >
-                              Xem đỉa chỉ
-                            </button>
-                          ) : (
-                            <span className="text-gray-400">-</span>
-                          )}
-                        </td>
+                        {account.address ? (
+                          <button
+                            onClick={() => handleModalOpen(account)}
+                            className="text-blue-500 hover:text-blue-700"
+                          >
+                            Xem địa chỉ
+                          </button>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
                       </td>
                       <td className="py-2 px-4 text-center">
                         <span className="inline-block w-20">

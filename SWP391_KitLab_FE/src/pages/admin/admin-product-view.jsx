@@ -9,6 +9,7 @@ import AdminNotFound from "./admin-not-found-page";
 function AdminViewProduct() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [labList, setLabList] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -16,6 +17,7 @@ function AdminViewProduct() {
       try {
         const response = await axios.get(`http://localhost:5056/Product/${id}`);
         setProduct(response.data);
+        setLabList(response.data.labs);
         console.log(response.data);
         setLoading(false);
       } catch (err) {
@@ -121,13 +123,13 @@ function AdminViewProduct() {
                       </div>
                     </div>
                   )}
-                  {product.labNames && (
+                  {labList && (
                     <div>
                       <h3 className="font-semibold mb-2">Lab kèm theo:</h3>
-                      {product.labNames && product.labNames.length > 0 ? (
+                      {labList && labList.length > 0 ? (
                         <ul className="list-disc list-inside text-sm text-gray-700">
-                          {product.labNames.map((lab, index) => (
-                            <li key={index}>{lab}</li>
+                          {labList.map((lab, index) => (
+                            <li key={index}>{lab.name}</li>
                           ))}
                         </ul>
                       ) : (
