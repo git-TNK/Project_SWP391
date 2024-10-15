@@ -14,14 +14,14 @@ namespace KLM.APIService.Controllers
         public AccountController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet("{userName},{password}")]
-        public async Task<IActionResult?> CheckExistAccount(string userName, string password)
+        public async Task<AccountTbl?> CheckExistAccount(string userName, string password)
         {
             List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
             {
                 if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
                 {
-                    return Ok(account[i]);
+                    return account[i];
                 }
             }
             return null;
@@ -52,7 +52,7 @@ namespace KLM.APIService.Controllers
         }
 
 
-        [HttpPost("{userName},{fullName} ,{password},{email}, {phone}")]
+        [HttpPost("Register/{userName}/{password}/{email}/{fullName}/{phone}")]
         public async Task<bool> Register(string userName, string password, string email, string fullName, string phone)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
@@ -76,9 +76,9 @@ namespace KLM.APIService.Controllers
                 registerAccount.UserName = userName;
                 registerAccount.Password = password;
                 registerAccount.Email = email;
-                registerAccount.Role = "Member";
+                registerAccount.Role = "Customer";
                 registerAccount.Status = "Active";
-                registerAccount.DateOfCreation = DateOnly.MaxValue;
+                registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
                 _unitOfWork.AccountTblRepository.Create(registerAccount);
                 return true;
             }
