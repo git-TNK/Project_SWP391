@@ -1,7 +1,12 @@
 import React from "react";
+import StaffHeader from "./StaffHeader";
 
 function StaffPage() {
-  return <div>Staff Page</div>;
+  return (
+    <>
+      <StaffHeader />
+    </>
+  );
 }
 
 export default StaffPage;

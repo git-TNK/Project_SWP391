@@ -1,7 +1,24 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 
 function NotFound404() {
+  const [account, setAccount] = useState(null);
+
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    if (savedAccount) {
+      setAccount(savedAccount);
+    }
+  }, []);
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("account");
+    setAccount(null); // Update state to remove account
+    setTimeout(() => {
+      Navigate("/"); // Navigate after state change
+    }, 0);
+  };
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="text-center">
@@ -14,7 +31,10 @@ function NotFound404() {
         </p>
 
         <Link to="/">
-          <button className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition duration-300 font-medium">
+          <button
+            className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition duration-300 font-medium"
+            onClick={handleLogout}
+          >
             Go back to Homepage
           </button>
         </Link>
