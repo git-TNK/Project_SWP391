@@ -32,6 +32,26 @@ namespace KLM.Repository.Repositories
             return lab;
         }
 
+        //tim lab bang id
+        public async Task<LabDTO> GetLabById(string id)
+        {
+            var searchedLab = await _context.Set<LabTbl>()
+                .Select(p => new LabDTO
+                {
+                    LabId = p.LabId,
+                    LabName = p.Name,
+                    LabDescription = p.Description,
+                    Document = p.Document,
+                    DateOfCreationLab = p.DateOfCreation,
+                    DateOfDeletionLab = p.DateOfDeletion,
+                    DateOfChangeLab = p.DateOfChangeLab,
+                    Status = p.Status,
+                    LabTypes = p.Ltypes.Select(k => k.TypeName).ToList(),
+                    Kits = p.Kits.Select(l => l.Name).ToList()
+                })
+                .FirstOrDefaultAsync(search => search.LabId == $"{id}");
+            return searchedLab;
+        }
 
 
         //tim lab bang name
@@ -154,10 +174,10 @@ namespace KLM.Repository.Repositories
 
 
         //update lab
-        public async Task<ValueTuple<string, string>> UpdateLab(string idToChange, string labName, string description, string documentUrl, List<string> types, DateOnly dateOfChange)
+        public async Task<ValueTuple<string, string>> UpdateLab(string idToChange, string labName, string description, string documentUrl, List<string> types, DateOnly dateOfChange, bool isNewFileUpload)
         {
             //get name in database base on request's sent name
-            string? nameCheck = _context.Set<LabTbl>().Where(e => e.Name == $"{labName}").Select(e => e.Name).FirstOrDefault()?.ToString();
+            string? nameCheck = _context.Set<LabTbl>().Where(e => e.Name == $"{labName}" && e.LabId != idToChange).Select(e => e.Name).FirstOrDefault()?.ToString();
 
             //string labId; (keep old id so not needed)
             //string? idCheck; (not needed)
@@ -188,23 +208,30 @@ namespace KLM.Repository.Repositories
             }
 
 
-            string oldName = searchedLab.Name;
+            //string oldName = searchedLab.Name;
+            //&& !string.Equals(nameCheck, oldName, StringComparison.OrdinalIgnoreCase)
 
             //check existed lab name
-            if (!string.IsNullOrWhiteSpace(nameCheck) && !string.Equals(nameCheck, oldName, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(nameCheck))
             {
                 Console.WriteLine("Existed name");
                 errors = "Existed name";
                 return (errors, oldDocumentUrl);
             }
 
+            if (isNewFileUpload)
+            {
+                oldDocumentUrl = searchedLab.Document;
+                searchedLab.Document = documentUrl;
+            }
+
 
             //mapping du lieu
-            oldDocumentUrl = searchedLab.Document;
+            //oldDocumentUrl = searchedLab.Document;
 
             searchedLab.Name = labName;
             searchedLab.Description = description;
-            searchedLab.Document = documentUrl;
+            //searchedLab.Document = documentUrl;
             searchedLab.DateOfChangeLab = dateOfChange;
             searchedLab.Status = "Changed";
 
@@ -241,7 +268,16 @@ namespace KLM.Repository.Repositories
             searchedLab.Kits.Clear();
             searchedLab.Kits = kitLists;
 
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                errors = $"Error saving changes: {ex.Message}";
+            }
 
             return (errors, oldDocumentUrl);
         }

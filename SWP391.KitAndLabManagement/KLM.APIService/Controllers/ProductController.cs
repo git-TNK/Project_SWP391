@@ -145,7 +145,7 @@ namespace KLM.APIService.Controllers
             {
                 if (isNewImageUploaded && !string.IsNullOrWhiteSpace(oldImageUrl))
                 {
-                    // Only delete the old image if a new one was uploaded
+                    //Xoa anh cu khi co anh moi upload
                     await _firebaseStorageService.DeleteImageAsync(oldImageUrl);
                 }
                 Console.WriteLine("Success");
@@ -155,7 +155,7 @@ namespace KLM.APIService.Controllers
             {
                 if (isNewImageUploaded)
                 {
-                    // If update failed and we uploaded a new image, delete it
+                    //neu fail can delete url tren firebase
                     await _firebaseStorageService.DeleteImageAsync(imageUrl);
                 }
                 Console.WriteLine($"{errors}");

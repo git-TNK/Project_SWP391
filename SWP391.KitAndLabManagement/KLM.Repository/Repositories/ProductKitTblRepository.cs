@@ -116,14 +116,6 @@ namespace KLM.Repository.Repositories
                     LabNames = p.Labs.Select(l => l.Name).ToList()
                 })
                 .FirstOrDefaultAsync(search => search.KitId == $"{userChoice}");
-
-            //string selectCheck = _context.Set<ProductKitTbl>().Where(e => e.Name == $"{userInput}").Select(e => e.Name).FirstOrDefault()?.ToString();
-            //string selectCheck = _context.Set<ProductKitTbl>().Select(p => new ProductKitTbl{
-            //    Name = p.Name
-            //})
-            //   .FirstOrDefault(e => e.Name == $"{userInput}")?.ToString();
-
-            //Where(e => e.Name == $"{userInput}").Select(e => e.Name).ToListAsync()?.ToString()
             
             return searchedProducts;
         }
@@ -256,20 +248,22 @@ namespace KLM.Repository.Repositories
                 return (errors, oldImageUrl);
             }
 
+
+            //check existed kit name
             if (!string.IsNullOrWhiteSpace(nameCheck))
             {
                 errors = "Existed name";
                 return (errors, oldImageUrl);
             }
 
-            // Handle image update
+            //check if new image or old
             if (isNewImageUploaded)
             {
                 oldImageUrl = searchedProducts.Picture;
                 searchedProducts.Picture = pictureUrl;
             }
 
-            // Update other fields
+            //update other fields
             searchedProducts.Name = kitName;
             searchedProducts.Brand = brand;
             searchedProducts.Description = description;
