@@ -42,5 +42,11 @@ namespace KLM.APIService.Controllers
             return Ok(newOrder);
         }
 
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> GetOrderByAccountId(string accountId)
+        {
+            return Ok(await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId));
+        }
+
     }
 }

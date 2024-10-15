@@ -1,9 +1,7 @@
 using KLM.APIService;
 using KLM.Repository;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
 using System.Text.Json.Serialization;
-    
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
