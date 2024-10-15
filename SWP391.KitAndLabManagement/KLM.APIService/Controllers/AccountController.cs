@@ -24,7 +24,7 @@ namespace KLM.APIService.Controllers
                     return Ok(account[i]);
                 }
             }
-            return NotFound();
+            return null;
         }
 
         //get account for admin page
@@ -52,13 +52,13 @@ namespace KLM.APIService.Controllers
         }
 
 
-        [HttpPost("{userName},{fullName} ,{password},{email}")]
-        public async Task<bool> Register(string userName, string password, string email, string fullName)
+        [HttpPost("{userName},{fullName} ,{password},{email}, {phone}")]
+        public async Task<bool> Register(string userName, string password, string email, string fullName, string phone)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
             foreach (var account in listAccount)
             {
-                if (account.Email.Equals(email))
+                if (account.Email.Equals(email) || account.UserName.Equals(userName))
                 {
                     return false;
                 }
@@ -91,7 +91,7 @@ namespace KLM.APIService.Controllers
         }
 
         [HttpGet("{userName}")]
-        public async Task<IActionResult> ViewProfile(string userName)
+        public async Task<IActionResult?> ViewProfile(string userName)
         {
             var listAccount = await GetAccountTbls();
             foreach (var account in listAccount)
@@ -101,7 +101,7 @@ namespace KLM.APIService.Controllers
                     return Ok(account);
                 }
             }
-            return NotFound();
+            return null;
         }
 
         [HttpPut("{userName},{phoneNumber}, {address}")]
