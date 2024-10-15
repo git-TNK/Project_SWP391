@@ -110,7 +110,7 @@ function AdminLab() {
       if (response.status === 200) {
         fetchLabData();
         console.log("Success message: ", response.data);
-        setNotification({ message: `Đã xóa: ${labName}`, type: "success" });
+        setNotification({ message: `Đã xóa: ${labName}`, type: "err" });
       } else {
         throw new Error("Unexpected response status");
       }
@@ -124,7 +124,7 @@ function AdminLab() {
   const indexOfFirstLab = indexOfLastLab - labPerpage;
   const currentLabs = labData.slice(indexOfFirstLab, indexOfLastLab);
 
-  const getDisplayStatus = (status) => {
+  const getStatusTranslate = (status) => {
     switch (status.toLowerCase()) {
       case "new":
         return "Mới";
@@ -134,6 +134,17 @@ function AdminLab() {
         return "Đã xóa";
       default:
         return status;
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "changed":
+        return "bg-yellow-500";
+      case "deleted":
+        return "bg-red-500";
+      default:
+        return "bg-green-500";
     }
   };
 
@@ -177,7 +188,7 @@ function AdminLab() {
                     <th className="py-3 px-4 text-left">Ngày tạo</th>
                     <th className="py-3 px-4 text-left">Ngày chỉnh</th>
                     <th className="py-3 px-4 text-center">Trạng thái</th>
-                    <th className="py-3 px-4 text-center">Chức năng</th>
+                    <th className="py-3 px-1 text-center">Chức năng</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
@@ -228,8 +239,16 @@ function AdminLab() {
                           <span className="text-gray-400">Không</span>
                         )}
                       </td>
-                      <td className="py-2 px-4 text-center">
-                        {getDisplayStatus(lab.status)}
+                      <td className="py-2 px-4">
+                        <div className="flex items-center justify-center">
+                          <span
+                            className={`${getStatusColor(
+                              lab.status
+                            )} w-20 ml-2 inline-block py-2 px-4 text-center text-white rounded text-sm`}
+                          >
+                            {getStatusTranslate(lab.status)}
+                          </span>
+                        </div>
                       </td>
                       <td className="py-2 px-4">
                         <div className="flex items-center justify-center space-x-2">

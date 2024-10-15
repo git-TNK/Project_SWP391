@@ -54,7 +54,7 @@ const AdminProduct = () => {
       );
       if (response.status === 200) {
         fetchProduct(); // Refresh the product list
-        setNotification({ message: `Đã xóa ${name}`, type: "success" });
+        setNotification({ message: `Đã xóa ${name}`, type: "err" });
       } else {
         throw new Error("Unexpected response status");
       }
@@ -109,6 +109,28 @@ const AdminProduct = () => {
     setCurrentPage(1);
   };
 
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case "changed":
+        return "bg-yellow-500";
+      case "deleted":
+        return "bg-red-500";
+      default:
+        return "bg-green-500";
+    }
+  };
+
+  const getStatusTranslate = (status) => {
+    switch (status.toLowerCase()) {
+      case "changed":
+        return "Đã sửa";
+      case "deleted":
+        return "Đã xóa";
+      default:
+        return "Mới";
+    }
+  };
+
   const ProductItem = ({ item }) => {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -122,7 +144,14 @@ const AdminProduct = () => {
             isHovered ? "scale-110" : "scale-95"
           }`}
         >
-          <div className="bg-white p-4 rounded-md shadow flex flex-col h-[300px] relative overflow-hidden">
+          <div className="relative bg-white p-4 rounded-md shadow flex flex-col h-[300px] relative overflow-hidden">
+            <div
+              className={`${getStatusColor(
+                item.status
+              )} absolute top-0 right-0 text-white px-3 py-1 rounded text-sm`}
+            >
+              {getStatusTranslate(item.status)}
+            </div>
             <div className="h-[200px] overflow-hidden rounded-md mb-2">
               <img
                 className="object-contain h-48 w-96"

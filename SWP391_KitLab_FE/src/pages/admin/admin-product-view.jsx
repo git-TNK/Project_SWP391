@@ -38,6 +38,17 @@ function AdminViewProduct() {
     }
   };
 
+  const getStatusTranslate = (status) => {
+    switch (status.toLowerCase()) {
+      case "changed":
+        return "Đã sửa";
+      case "deleted":
+        return "Đã xóa";
+      default:
+        return "Mới";
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <AdminHeader />
@@ -70,7 +81,7 @@ function AdminViewProduct() {
                         product.status
                       )} text-white px-3 py-1 rounded text-sm`}
                     >
-                      {product.status}
+                      {getStatusTranslate(product.status)}
                     </span>
                   </div>
                   <h3 className="font-semibold mb-2">Hãng:</h3>

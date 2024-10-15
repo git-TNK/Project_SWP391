@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 function TransferMoneyPage() {
-  const urlQr = `https://qr.sepay.vn/img?acc=0373713955&bank=MBBank&amount=10000&des=ThanhToanTest`;
+  const urlQr = `https://qr.sepay.vn/img?acc=0961671129&bank=MBBank&amount=2000&des=ThanhToanTest`;
 
   const callApiWithToken = async () => {
     const accessToken =
