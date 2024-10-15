@@ -8,7 +8,7 @@ function LoginPage() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
-  const [account, setAccount] = useState(null);
+  const [account, setAccount] = useState();
   const navigate = useNavigate();
 
   const onFinish = (e) => {
@@ -23,6 +23,7 @@ function LoginPage() {
       const response = await axios.get(
         `http://localhost:5056/api/Account/${userName},${password}`
       );
+      localStorage.removeItem("account");
       setAccount(response.data);
       setRole(response.data.role);
       localStorage.setItem("account", JSON.stringify(response.data));
@@ -43,6 +44,10 @@ function LoginPage() {
       }
     }
   }, [account, role, navigate]);
+
+  if (account === undefined) {
+    alert("Sai thông tin đăng nhập");
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
