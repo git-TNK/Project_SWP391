@@ -34,7 +34,7 @@ namespace KLM.Repository.Repositories
                 Status = p.Status,
                 DateOfChange = p.DateOfChange,
                 TypeNames = p.Ktypes.Select(k => k.TypeName).ToList(),
-                LabNames = p.Labs.Select(l => l.Name).ToList()
+                Labs = p.Labs.ToList()
             })
                 .Where(search => EF.Functions.Like(search.Name, $"%{userInput}%")).ToListAsync();
             return searchedProducts;
@@ -84,7 +84,7 @@ namespace KLM.Repository.Repositories
             Status = p.Status,
             DateOfChange = p.DateOfChange,
             TypeNames = p.Ktypes.Select(k => k.TypeName).ToList(),
-            LabNames = p.Labs.Select(l => l.Name).ToList()
+            Labs = p.Labs.ToList()
         })
         .ToListAsync();
 
@@ -113,7 +113,7 @@ namespace KLM.Repository.Repositories
                     Status = p.Status,
                     DateOfChange = p.DateOfChange,
                     TypeNames = p.Ktypes.Select(k => k.TypeName).ToList(),
-                    LabNames = p.Labs.Select(l => l.Name).ToList()
+                    Labs = p.Labs.ToList()
                 })
                 .FirstOrDefaultAsync(search => search.KitId == $"{userChoice}");
             

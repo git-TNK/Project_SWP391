@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KLM.Repository.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,24 +36,6 @@ namespace KLM.Repository.ModelView
         public List<string> TypeNames { get; set; }
 
 
-        public List<string> LabNames { get; set; }
-        //public ProductDTO mapProductDTO (ProductKitTbl product)
-        //{
-        //    return new ProductDTO
-        //    {
-        //        KitId = product.KitId,
-        //        Name = product.Name,
-        //        Brand = product.Brand,
-        //        Price = product.Price,
-        //        Description = product.Description,
-        //        Picture = product.Picture,
-        //        Quantity = product.Quantity,
-        //        DateOfCreation = product.DateOfCreation,
-        //        DateOfChange = product.DateOfChange,
-        //        DateOfDeletion = product.DateOfDeletion,
-        //        Status = product.Status,
-        //        TypeNames = product.TypeNames
-        //    };
-        //}
+        public List<LabTbl> Labs { get; set; }
     }
 }
