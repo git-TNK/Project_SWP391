@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import Link from react-router-dom
 import axios from "axios";
 import Header from "../Header";
 import Footer from "../../Footer";
@@ -10,6 +10,22 @@ function ProductViewPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
+  const [account, setAccount] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    if (savedAccount) {
+      setAccount(savedAccount);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (account && account.role !== "Customer") {
+      navigate("*"); // Redirect if the user is not a Customer
+    }
+  }, [account, navigate]);
+
+  // Fetch products from the API
   async function fetchProduct() {
     try {
       const response = await axios.get(`http://localhost:5056/product`);

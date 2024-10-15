@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation
+import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useLocation
 import Header from "../Header";
 import Footer from "../../Footer";
 import axios from "axios";
@@ -8,6 +8,18 @@ function HomePage() {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
+
+  const [account, setAccount] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    if (savedAccount) {
+      setAccount(savedAccount);
+    }
+    if (savedAccount && savedAccount.role != "Customer") {
+      navigate("*");
+    }
+  }, [navigate]);
 
   const location = useLocation(); // Access the location object to get the search state
 
@@ -80,7 +92,7 @@ function HomePage() {
                     <div className="p-4 flex flex-col flex-grow">
                       <p className="text-lg font-semibold mb-2">{item.name}</p>
                       <p className="text-red-600 font-bold mb-4">
-                        {item.price} <span>VND</span>
+                        {item.price.toLocaleString()} VND
                       </p>
                       <button className="mt-auto w-full bg-gray-200 text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
                         MUA HÀNG

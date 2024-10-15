@@ -27,6 +27,7 @@ import AdminAddLab from "./pages/admin/admin-add-lab";
 import AdminNotFound from "./pages/admin/admin-not-found-page";
 import UpdateLab from "./pages/admin/admin-update-lab";
 import StaffPage from "./pages/staff/StaffPage";
+import TransferMoneyPage from "./pages/checkout/TransferMoneyPage";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
         <Route path="/checkout" element={<CheckoutPage />}></Route>
+        <Route path="/banking" element={<TransferMoneyPage />}></Route>
         <Route path="/cart" element={<CartPage />}></Route>
         <Route path="/products-view" element={<ProductViewPage />}></Route>
         <Route path="/product/:id" element={<ProductDetails />} />
