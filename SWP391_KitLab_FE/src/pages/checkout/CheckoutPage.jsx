@@ -146,7 +146,7 @@ function CheckoutPage() {
                         />
                         <div>
                           <p className="font-bold">{productCart.name}</p>
-                          <p>{productCart.price}₫</p>
+                          <p>{productCart.price.toLocaleString()}₫</p>
                         </div>
                         <div className="ml-auto bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
                           {productCart.quantity}
@@ -167,11 +167,13 @@ function CheckoutPage() {
                       <div className="flex justify-between">
                         <span>Tạm tính</span>
                         <span>
-                          {cart.reduce(
-                            (total, product) =>
-                              total + product.price * product.quantity,
-                            0
-                          )}
+                          {cart
+                            .reduce(
+                              (total, product) =>
+                                total + product.price * product.quantity,
+                              0
+                            )
+                            .toLocaleString()}
                           ₫
                         </span>
                       </div>
@@ -182,11 +184,13 @@ function CheckoutPage() {
                       <div className="flex justify-between font-bold">
                         <span>Tổng cộng</span>
                         <span>
-                          {cart.reduce(
-                            (total, product) =>
-                              total + product.price * product.quantity,
-                            0
-                          )}
+                          {cart
+                            .reduce(
+                              (total, product) =>
+                                total + product.price * product.quantity,
+                              0
+                            )
+                            .toLocaleString()}
                           ₫
                         </span>
                       </div>

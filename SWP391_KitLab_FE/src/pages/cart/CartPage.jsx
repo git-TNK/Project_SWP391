@@ -5,9 +5,16 @@ import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate
 import Cookies from "js-cookie";
 import axios from "axios";
 
+//Bình thêm
+import Notification from "../admin/notification";
+import { CircleX } from "lucide-react";
+
 function CartPage() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate(); // Initialize useNavigate
+
+  //Bình thêm
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -56,7 +63,9 @@ function CartPage() {
 
           // Check if new quantity exceeds available stock
           if (newQuantity > productInDb.quantity) {
-            alert("Vượt quá tồn kho");
+            //Bình sửa
+            // alert("Vượt quá tồn kho");
+            setNotification({ message: "Vượt quá hàng tồn kho!", type: "err" });
             return productCart; // Return unchanged productCart if stock limit exceeded
           }
 
@@ -70,6 +79,11 @@ function CartPage() {
       Cookies.set("cart", JSON.stringify(updatedCart), { expires: 2 });
       return updatedCart; // Return the updated cart
     });
+  };
+
+  //Bình thêm
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   const handleRemoveProduct = (productId) => {
@@ -120,7 +134,7 @@ function CartPage() {
                           className="text-gray-500 hover:text-red-500 transition duration-300"
                           onClick={() => handleRemoveProduct(productCart.kitId)}
                         >
-                          ×
+                          <CircleX />
                         </button>
                       </td>
                       <td className="p-2">
@@ -131,7 +145,9 @@ function CartPage() {
                         />
                       </td>
                       <td className="p-2">{productCart.name}</td>
-                      <td className="p-2 text-right">{productCart.price}đ</td>
+                      <td className="p-2 text-right">
+                        {productCart.price.toLocaleString()}đ
+                      </td>
                       <td className="p-2">
                         <div className="flex items-center justify-center">
                           <button
@@ -159,7 +175,10 @@ function CartPage() {
                         </div>
                       </td>
                       <td className="p-2 text-right">
-                        {productCart.price * productCart.quantity}đ
+                        {(
+                          productCart.price * productCart.quantity
+                        ).toLocaleString()}
+                        đ
                       </td>
                     </tr>
                   ))
@@ -185,11 +204,13 @@ function CartPage() {
                 </p>
                 <p className="font-bold text-lg">
                   TỔNG TIỀN THANH TOÁN:{" "}
-                  {listProductsInCart.reduce(
-                    (total, productCart) =>
-                      total + productCart.price * productCart.quantity,
-                    0
-                  )}
+                  {listProductsInCart
+                    .reduce(
+                      (total, productCart) =>
+                        total + productCart.price * productCart.quantity,
+                      0
+                    )
+                    .toLocaleString()}
                   đ
                 </p>
               </div>
@@ -204,6 +225,14 @@ function CartPage() {
           </div>
         </div>
       </main>
+      {/* Binh them */}
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={closeNotification}
+        />
+      )}
       <Footer />
     </div>
   );

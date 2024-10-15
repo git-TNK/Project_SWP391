@@ -5,9 +5,13 @@ import Header from "../Header";
 import Footer from "../../Footer";
 import Cookies from "js-cookie"; // npm install js-cookie
 
+//Bình thêm
+import Notification from "../admin/notification";
+
 function ProductDetails() {
   const { id } = useParams(); // Get the product ID from the URL params
   const [product, setProduct] = useState(null);
+  const [notification, setNotification] = useState(null); //Bình thêm
 
   // Fetch product details from the API
   useEffect(() => {
@@ -34,22 +38,47 @@ function ProductDetails() {
       // Check if we can increase the quantity without exceeding available stock
       if (product.quantity > existingProduct.quantity) {
         existingProduct.quantity += 1; // Increment quantity
-        alert(`Đã thêm sản phẩm ${product.name} vào giỏ hàng!`);
+        //Bình sửa
+        // alert(`Đã thêm sản phẩm ${product.name} vào giỏ hàng!`);
+        setNotification({
+          message: `Đã thêm sản phẩm vào giỏ hàng!`,
+          type: "success",
+        });
       } else {
-        alert("Bạn đã chọn quá số lượng tồn kho");
+        //Bình sửa
+        // alert("Bạn đã chọn quá số lượng tồn kho");
+        setNotification({
+          message: `Bạn đã chọn quá số lượng tồn kho`,
+          type: "err",
+        });
       }
     } else {
       // If not already in the cart, check stock before adding
       if (product.quantity > 0) {
         cart.push({ ...product, quantity: 1 }); // Add new product to cart
-        alert(`Đã thêm sản phẩm ${product.name} vào giỏ hàng!`);
+        //Bình sửa
+        // alert(`Đã thêm sản phẩm ${product.name} vào giỏ hàng!`);
+        setNotification({
+          message: `Đã thêm sản phẩm vào giỏ hàng!`,
+          type: "success",
+        });
       } else {
-        alert("Sản phẩm hiện tại không còn hàng trong kho");
+        //Bình sửa
+        // alert("Sản phẩm hiện tại không còn hàng trong kho");
+        setNotification({
+          message: `Bạn đã chọn quá số lượng tồn kho`,
+          type: "err",
+        });
       }
     }
 
     // Update the cart in cookies
     Cookies.set("cart", JSON.stringify(cart), { expires: 2 }); // Cart expires in 2 days
+  };
+
+  //Bình thêm
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   if (!product) {
@@ -78,7 +107,7 @@ function ProductDetails() {
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
             <p className="text-red-600 font-bold text-2xl mb-4">
-              {product.price} VND
+              {product.price.toLocaleString()} VND
             </p>
             <p className="mb-6">{product.description}</p>
 
@@ -117,9 +146,17 @@ function ProductDetails() {
               onClick={handleBuyNow}
               className="mt-6 w-full bg-black text-white py-2 px-6 rounded hover:bg-gray-900 transition duration-300 font-bold"
             >
-              MUA HÀNG
+              THÊM VÀO GIỎ HÀNG
             </button>
           </div>
+          {/* Bình thêm */}
+          {notification && (
+            <Notification
+              message={notification.message}
+              type={notification.type}
+              onClose={closeNotification}
+            />
+          )}
         </div>
       </div>
       <Footer />
