@@ -28,6 +28,9 @@ import AdminNotFound from "./pages/admin/admin-not-found-page";
 import UpdateLab from "./pages/admin/admin-update-lab";
 import StaffPage from "./pages/staff/StaffPage";
 import TransferMoneyPage from "./pages/checkout/TransferMoneyPage";
+import ProcessingOrder from "./pages/staff/ProcessingOrder";
+import AnswerQuesion from "./pages/staff/AnswerQuesion";
+import ViewHistorySupport from "./pages/staff/ViewHistorySupport";
 
 function App() {
   return (
@@ -47,7 +50,11 @@ function App() {
         <Route path="/cart" element={<CartPage />}></Route>
         <Route path="/products-view" element={<ProductViewPage />}></Route>
         <Route path="/product/:id" element={<ProductDetails />} />
+        {/*Staff*/}
+        <Route path="/processingOrder" element={<ProcessingOrder />}></Route>
         <Route path="/staff" element={<StaffPage />}></Route>
+        <Route path="/answerQuestion" element={<AnswerQuesion />}></Route>
+        <Route path="/historySupport" element={<ViewHistorySupport />}></Route>
         {/* <Route path="login/homepage" element={<HomePage />}></Route> */}
 
         <Route path="admin/product" element={<AdminProduct />}></Route>

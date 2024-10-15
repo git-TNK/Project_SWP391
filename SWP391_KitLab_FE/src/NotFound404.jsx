@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function NotFound404() {
   const [account, setAccount] = useState(null);
+  const navigate = useNavigate(); // Use the useNavigate hook
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -15,10 +16,10 @@ function NotFound404() {
     e.preventDefault();
     localStorage.removeItem("account");
     setAccount(null); // Update state to remove account
-    setTimeout(() => {
-      Navigate("/"); // Navigate after state change
-    }, 0);
+    // Navigate after state change
+    navigate("/");
   };
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="text-center">
@@ -30,11 +31,10 @@ function NotFound404() {
           {`Sorry, the page you are looking for doesn't exist.`}
         </p>
 
-        <Link to="/">
-          <button
-            className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition duration-300 font-medium"
-            onClick={handleLogout}
-          >
+        <Link to="/" onClick={handleLogout}>
+          {" "}
+          {/* Trigger logout on click */}
+          <button className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition duration-300 font-medium">
             Go back to Homepage
           </button>
         </Link>
