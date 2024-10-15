@@ -28,7 +28,7 @@ function ServicePage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission logic here
-    console.log({ applicationType, reason, file });
+    console.log({ labName: "bài lab", reason, file });
   };
 
   return (
@@ -42,7 +42,7 @@ function ServicePage() {
               htmlFor="applicationType"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Application type:
+              Chọn bài lab cần hỏi
             </label>
             <select
               id="applicationType"
@@ -50,7 +50,7 @@ function ServicePage() {
               onChange={(e) => setApplicationType(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Choose Application Type (Chọn loại đơn)</option>
+              <option value=""></option>
               {/* Add other options here */}
             </select>
           </div>

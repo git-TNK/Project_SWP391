@@ -36,7 +36,7 @@ function LoginPage() {
   useEffect(() => {
     if (account) {
       if (role === "Admin") {
-        navigate("/admin/product", { state: { account } });
+        navigate("/admin/product");
       } else if (role === "Staff") {
         navigate("/staff");
       } else if (role === "Customer") {
@@ -44,10 +44,6 @@ function LoginPage() {
       }
     }
   }, [account, role, navigate]);
-
-  if (account === undefined) {
-    alert("Sai thông tin đăng nhập");
-  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -95,6 +91,11 @@ function LoginPage() {
             className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors"
           >
             Đăng Nhập
+          </button>
+          <button className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors mt-4">
+            <NavLink to="/" className="text-white">
+              Quay về trang chủ
+            </NavLink>
           </button>
         </form>
       </div>
