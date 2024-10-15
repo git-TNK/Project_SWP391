@@ -23,5 +23,21 @@ namespace KLM.Repository.Repositories
                 OrderDetailTbls = o.OrderDetailTbls.ToList(),
             }).ToListAsync();
         }
+
+        public async Task<List<OrderTbl>> GetAllOrderTblByAccountId(string accountId)
+        {
+            return await _context.OrderTbls.Select(o => new OrderTbl
+            {
+                OrderId = o.OrderId,
+                OrderDate = o.OrderDate,
+                AccountId = o.AccountId,
+                Note = o.Note,
+                Price = o.Price,
+                Address = o.Address,
+                ReceiveDate = o.ReceiveDate,
+                Status = o.Status,
+                OrderDetailTbls = o.OrderDetailTbls.ToList(),
+            }).Where(o => o.AccountId.Equals(accountId)).ToListAsync();
+        }
     }
 }

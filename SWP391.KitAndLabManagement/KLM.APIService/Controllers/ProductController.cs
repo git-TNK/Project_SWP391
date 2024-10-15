@@ -192,5 +192,22 @@ namespace KLM.APIService.Controllers
 
         //    return Ok("Deleted");
         }*/
+
+        //update so luong kit con lai trong kho
+        [HttpPut("{kitId}, {quantity}")]
+        public async Task<IActionResult> UpdateQuantityOfKitProduct(string kitId, int quantity)
+        {
+            var updatingProduct = _unitOfWork.ProductKitTblRepository.GetById(kitId);
+            if (updatingProduct != null)
+            {
+                updatingProduct.Quantity = quantity;
+                _unitOfWork.ProductKitTblRepository.Update(updatingProduct);
+                return Ok(updatingProduct);
+            }
+            else
+            {
+                return BadRequest("Product not found");
+            }
+        }
     }
 }
