@@ -85,16 +85,16 @@ function HomePage() {
                 <Link to={`/product/${item.kitId}`}>
                   <div className="flex flex-col h-full">
                     <img
-                      className="w-full h-48 object-cover"
+                      className="w-full h-full object-contain"
                       src={item.picture}
                       alt={item.name}
                     />
                     <div className="p-4 flex flex-col flex-grow">
                       <p className="text-lg font-semibold mb-2">{item.name}</p>
                       <p className="text-red-600 font-bold mb-4">
-                        {item.price}
+                        {item.price} <span>VND</span>
                       </p>
-                      <button className="mt-auto w-full bg-white text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
+                      <button className="mt-auto w-full bg-gray-200 text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
                         MUA HÀNG
                       </button>
                     </div>
