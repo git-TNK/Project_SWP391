@@ -6,9 +6,9 @@ import Footer from "../../Footer";
 
 function ProductViewPage() {
   const [listProduct, setListProduct] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState(""); // Track the selected brand
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
-  const productsPerPage = 8; // Limit to 8 products per page
+  const [selectedBrand, setSelectedBrand] = useState("All"); // Default to "All"
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
 
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
@@ -42,58 +42,53 @@ function ProductViewPage() {
     fetchProduct();
   }, []);
 
-  // Function to handle brand selection
   const handleBrandClick = (brand) => {
-    setSelectedBrand(brand); // Update the selected brand
-    setCurrentPage(1); // Reset to the first page when a brand is selected
+    setSelectedBrand(brand);
+    setCurrentPage(1);
   };
 
-  // Filter products based on the selected brand
-  const filteredProducts = selectedBrand
-    ? listProduct.filter((item) => item.brand === selectedBrand)
-    : listProduct;
+  const filteredProducts =
+    selectedBrand === "All"
+      ? listProduct
+      : listProduct.filter((item) => item.brand === selectedBrand);
 
-  // Calculate the total pages based on the filtered products
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  // Get the products for the current page
   const currentProducts = filteredProducts.slice(
     (currentPage - 1) * productsPerPage,
     currentPage * productsPerPage
   );
 
-  // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  // Get unique brands and add "All" option
+  const brands = ["All", ...new Set(listProduct.map((item) => item.brand))];
 
   return (
     <>
       <Header />
       <div className="flex p-4">
-        {/* Sidebar */}
         <aside className="w-64 p-4 bg-white shadow-lg rounded-lg mr-6">
           <p className="w-full bg-black text-white p-3 mb-4 hover:bg-gray-800 transition-colors duration-200 text-center font-bold rounded-lg">
             Danh mục sản phẩm
           </p>
           <ul className="space-y-2">
-            {[...new Set(listProduct.map((item) => item.brand))].map(
-              (brand, index) => (
-                <li
-                  key={index}
-                  className={`cursor-pointer hover:bg-black hover:text-white p-3 rounded-lg transition-colors duration-500 font-medium border border-gray-200 ${
-                    brand === selectedBrand ? "bg-black text-white" : ""
-                  }`}
-                  onClick={() => handleBrandClick(brand)}
-                >
-                  {brand}
-                </li>
-              )
-            )}
+            {brands.map((brand, index) => (
+              <li
+                key={index}
+                className={`cursor-pointer hover:bg-black hover:text-white p-3 rounded-lg transition-colors duration-500 font-medium border border-gray-200 ${
+                  brand === selectedBrand ? "bg-black text-white" : ""
+                }`}
+                onClick={() => handleBrandClick(brand)}
+              >
+                {brand}
+              </li>
+            ))}
           </ul>
         </aside>
 
-        {/* Product list */}
         <div className="flex-1">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentProducts.map((item, index) => (
@@ -102,8 +97,6 @@ function ProductViewPage() {
                 className="border border-gray-300 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
               >
                 <Link to={`/product/${item.kitId}`}>
-                  {" "}
-                  {/* Link to ProductDetails with kitId */}
                   <div className="flex flex-col h-full">
                     <img
                       className="w-full h-full object-contain"
@@ -125,9 +118,7 @@ function ProductViewPage() {
             ))}
           </div>
 
-          {/* Pagination controls */}
           <div className="mt-8 flex justify-center space-x-2">
-            {/* Previous Button */}
             <button
               className={`px-4 py-2 rounded-lg border ${
                 currentPage === 1
@@ -140,7 +131,6 @@ function ProductViewPage() {
               Previous
             </button>
 
-            {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, index) => (
               <button
                 key={index}
@@ -155,7 +145,6 @@ function ProductViewPage() {
               </button>
             ))}
 
-            {/* Next Button */}
             <button
               className={`px-4 py-2 rounded-lg border ${
                 currentPage === totalPages
