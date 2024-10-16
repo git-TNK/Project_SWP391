@@ -75,7 +75,6 @@ namespace KLM.APIService.Controllers
             registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
             _unitOfWork.AccountTblRepository.Create(registerAccount);
             return true;
-
         }
         [HttpGet]
         public async Task<List<AccountTbl>> GetAccountTbls()
