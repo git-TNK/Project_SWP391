@@ -18,11 +18,11 @@ namespace KLM.APIService.Controllers
         [HttpGet("{orderId}")]
         public async Task<List<OrderDetailTbl>> GetOrderDetailTbls(string orderId)
         {
-            return await _unitOfWork.OrderDetailsRepository.getAllOrdersDetailsById(orderId);
+            return await _unitOfWork.OrderDetailsRepository.GetAllOrdersDetailsById(orderId);
         }
 
         [HttpPost("{orderId}, {kitId}, {kitName}, {kitQuantity}, {price}")]
-        public async Task<IActionResult> AddOrderDetails(string orderId, string kitId, string kitName, decimal price, int kitQuantity)
+        public IActionResult AddOrderDetails(string orderId, string kitId, string kitName, decimal price, int kitQuantity)
         {
             OrderDetailTbl orderDetail = new OrderDetailTbl();
             orderDetail.OrderId = orderId;

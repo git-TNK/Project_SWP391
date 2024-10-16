@@ -53,7 +53,7 @@ namespace KLM.APIService.Controllers
 
 
         [HttpPost("Register/{userName}/{password}/{email}/{fullName}/{phone}")]
-        public async Task<bool> Register(string userName, string password, string email, string fullName, string phone)
+        public bool Register(string userName, string password, string email, string fullName, string phone)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
             foreach (var account in listAccount)

@@ -195,7 +195,7 @@ namespace KLM.APIService.Controllers
 
         //update so luong kit con lai trong kho
         [HttpPut("{kitId}, {quantity}")]
-        public async Task<IActionResult> UpdateQuantityOfKitProduct(string kitId, int quantity)
+        public IActionResult UpdateQuantityOfKitProduct(string kitId, int quantity)
         {
             var updatingProduct = _unitOfWork.ProductKitTblRepository.GetById(kitId);
             if (updatingProduct != null)
