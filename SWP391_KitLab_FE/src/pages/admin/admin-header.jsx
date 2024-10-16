@@ -1,7 +1,19 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function AdminHeader() {
+  const [account, setAccount] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("account");
+    setAccount(null);
+    setTimeout(() => {
+      navigate("/");
+    }, 0);
+  };
+
   return (
     <div>
       <header
@@ -86,20 +98,22 @@ function AdminHeader() {
           </div> */}
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <NavLink
-              to="/"
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "black",
-                color: "white",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-            >
-              Đăng xuất
-            </NavLink>
+            <button onClick={handleLogOut}>
+              <NavLink
+                to="/"
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: "black",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                }}
+              >
+                Đăng xuất
+              </NavLink>
+            </button>
 
             <NavLink>
               <img

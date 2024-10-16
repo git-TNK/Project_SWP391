@@ -92,11 +92,11 @@ function LoginPage() {
           >
             Đăng Nhập
           </button>
-          <button className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors mt-4">
-            <NavLink to="/" className="text-white">
+          <NavLink to="/" className="text-white">
+            <button className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors mt-4">
               Quay về trang chủ
-            </NavLink>
-          </button>
+            </button>
+          </NavLink>
         </form>
       </div>
     </div>
