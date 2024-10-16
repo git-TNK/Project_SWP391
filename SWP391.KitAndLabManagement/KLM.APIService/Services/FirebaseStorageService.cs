@@ -6,6 +6,11 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
+using Firebase.Database;
+using Firebase.Database.Query;
+using Firebase.Database.Streaming;
+using System.Reactive.Linq;
+using KLM.APIService.Services;
 
 namespace KLM.APIService
 {
@@ -14,6 +19,7 @@ namespace KLM.APIService
         private readonly FirebaseStorage _firebaseStorage;
         private readonly StorageClient _storageClient;
         private readonly string _bucketName;
+        private readonly FirebaseClient _firebaseClient;
 
         //set up
         public FirebaseStorageService(IConfiguration configuration)
@@ -27,6 +33,10 @@ namespace KLM.APIService
             _firebaseStorage = new FirebaseStorage(bucketName);
             _storageClient = StorageClient.Create();
             _bucketName = bucketName;
+
+            //forgot lol
+            var databaseUrl = firebaseConfig["RealtimeDatabase"];
+            _firebaseClient = new FirebaseClient(databaseUrl);
         }
 
 
@@ -145,6 +155,70 @@ namespace KLM.APIService
         }
 
 
+        //Response QR dealer
 
+        /*Get transaction info*/
+        //public async Task<Payment> GetLatestPayment()
+        //{
+        //    var payments = await _firebaseClient
+        //        .Child("transactions")
+        //        .OrderByKey()
+        //        .LimitToLast(1)
+        //        .OnceAsync<Payment>();
+
+        //    var latestPayment = payments.FirstOrDefault()?.Object;
+
+        //    if (latestPayment != null)
+        //    {
+        //        return new Payment
+        //        {
+        //            AccountNumber = latestPayment.AccountNumber,
+        //            Accumulated = latestPayment.Accumulated,
+        //            Content = latestPayment.Content,
+        //            Description = latestPayment.Description,
+        //            Gateway = latestPayment.Gateway,
+        //            Id = latestPayment.Id,
+        //            ReferenceCode = latestPayment.ReferenceCode,
+        //            TransactionDate = latestPayment.TransactionDate,
+        //            TransferAmount = latestPayment.TransferAmount,
+        //            TransferType = latestPayment.TransferType
+        //        };
+        //    }
+
+        //    return null;
+        //}
+
+
+        /*check transaction exist*/
+        public async Task<bool> AnyTransactionExists()
+        {
+            var transactions = await _firebaseClient
+                .Child("transactions")
+                .OrderByKey()
+                .LimitToFirst(1)
+                .OnceAsync<object>();
+
+            if (transactions.Any())
+            {
+                return true;
+            }
+            else 
+            {
+                return false;
+            }
+        }
+
+        /*delete after each checking*/
+        public async Task DeleteAllTransactionsAsync()
+        {
+            try
+            {
+                await _firebaseClient.Child("transactions").DeleteAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while deleting all transactions: {ex.Message}", ex);
+            }
+        }
     }
 }
