@@ -1,8 +1,20 @@
 using KLM.APIService;
+using KLM.APIService.Services;
 using KLM.Repository;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+
+// dang ky cau hinh SmtpSettings tu appsettings.json
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+// dang ky EmailService
+builder.Services.AddTransient<EmailService>();
+
+
+
 
 // Add services to the container.
 builder.Services.AddControllers();
