@@ -14,7 +14,7 @@ namespace KLM.APIService.Controllers
         public AccountController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet("{userName},{password}")]
-        public async Task<IActionResult?> CheckExistAccount(string userName, string password)
+        public async Task<IActionResult> CheckExistAccount(string userName, string password)
         {
             List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
@@ -24,7 +24,7 @@ namespace KLM.APIService.Controllers
                     return Ok(account[i]);
                 }
             }
-            return NotFound();
+            return BadRequest();
         }
 
         //get account for admin page
@@ -52,37 +52,29 @@ namespace KLM.APIService.Controllers
         }
 
 
-        [HttpPost("{userName},{fullName} ,{password},{email}")]
-        public async Task<bool> Register(string userName, string password, string email, string fullName)
+        [HttpPost("Register/{userName}/{password}/{email}/{fullName}/{phone}")]
+        public async Task<bool> Register(string userName, string password, string email, string fullName, string phone)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
             foreach (var account in listAccount)
             {
-                if (account.Email.Equals(email))
+                if (account.Email.Equals(email) || account.UserName.Equals(userName))
                 {
                     return false;
                 }
             }
             string accountId = "ACC" + (new Random().Next(000, 999));
-            if (await CheckExistAccount(userName, password) != null)
-            {
-                return false;
-            }
-            else
-            {
-                AccountTbl registerAccount = new AccountTbl();
-                registerAccount.AccountId = accountId;
-                registerAccount.FullName = fullName;
-                registerAccount.UserName = userName;
-                registerAccount.Password = password;
-                registerAccount.Email = email;
-                registerAccount.Role = "Member";
-                registerAccount.Status = "Active";
-                registerAccount.DateOfCreation = DateOnly.MaxValue;
-                _unitOfWork.AccountTblRepository.Create(registerAccount);
-                return true;
-            }
-
+            AccountTbl registerAccount = new AccountTbl();
+            registerAccount.AccountId = accountId;
+            registerAccount.FullName = fullName;
+            registerAccount.UserName = userName;
+            registerAccount.Password = password;
+            registerAccount.Email = email;
+            registerAccount.Role = "Customer";
+            registerAccount.Status = "Active";
+            registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
+            _unitOfWork.AccountTblRepository.Create(registerAccount);
+            return true;
         }
         [HttpGet]
         public async Task<List<AccountTbl>> GetAccountTbls()
@@ -91,7 +83,7 @@ namespace KLM.APIService.Controllers
         }
 
         [HttpGet("{userName}")]
-        public async Task<IActionResult> ViewProfile(string userName)
+        public async Task<IActionResult?> ViewProfile(string userName)
         {
             var listAccount = await GetAccountTbls();
             foreach (var account in listAccount)
@@ -101,7 +93,7 @@ namespace KLM.APIService.Controllers
                     return Ok(account);
                 }
             }
-            return NotFound();
+            return null;
         }
 
         [HttpPut("{userName},{phoneNumber}, {address}")]

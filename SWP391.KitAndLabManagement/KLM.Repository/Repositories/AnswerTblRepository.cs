@@ -22,5 +22,20 @@ namespace KLM.Repository.Repositories
                 Status = x.Status,
             }).ToListAsync();
         }
+
+        public async Task<List<AnswerTbl>> GetAllAnswerByAccId(string accountId)
+        {
+            return await _context.AnswerTbls.Select(a => new AnswerTbl
+            {
+                LabName = a.LabName,
+                AnswerId = a.AnswerId,
+                QuestionId = a.QuestionId,
+                AccountId = a.AccountId,
+                Answer = a.Answer,
+                AttachedFile = a.AttachedFile,
+                DateOfAnswer = a.DateOfAnswer,
+                Status = a.Status,
+            }).Where(a => a.AccountId.Equals(accountId)).ToListAsync();
+        }
     }
 }

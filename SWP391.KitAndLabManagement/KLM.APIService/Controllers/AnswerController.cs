@@ -53,5 +53,16 @@ namespace KLM.APIService.Controllers
             return Ok(result);
         }
 
+        [HttpGet("getAnswerById/{accountId}")]
+        public async Task<IActionResult?> GetAnswerById(string accountId)
+        {
+            var check = _unitOfWork.AnswerTblRepository.GetAllAnswerByAccId(accountId);
+            if (check != null)
+            {
+                return Ok(await _unitOfWork.AnswerTblRepository.GetAllAnswerByAccId(accountId));
+            }
+            return NotFound();
+        }
+
     }
 }
