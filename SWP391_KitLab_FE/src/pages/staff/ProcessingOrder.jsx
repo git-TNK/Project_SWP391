@@ -36,7 +36,6 @@ function ProcessingOrder() {
     fetchListOrders();
   }, []);
 
-  console.log(listOrders);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -57,13 +56,13 @@ function ProcessingOrder() {
                   <th className="border px-4 py-2 text-left">Tổng tiền</th>
                   <th className="border px-4 py-2 text-left">Ngày đặt</th>
                   <th className="border px-4 py-2 text-left">Địa chỉ</th>
-                  <th className="border px-4 py-2 text-center">Thao tác</th>
+                  <th className="border px-4 py-2 text-center">Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
                 {listOrders.map((order) => (
                   <tr
-                    key={order.id}
+                    key={order.orderId}
                     className="hover:bg-gray-50 transition-colors duration-200"
                   >
                     <td className="border px-4 py-2">{order.orderId}</td>

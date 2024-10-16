@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import Header from "../Header";
-import Cookies from "js-cookie";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function CheckoutPage() {
-  const cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+  const [cart, setCart] = useState([]);
   const [listProvince, setListProvince] = useState([]);
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
@@ -20,6 +19,12 @@ function CheckoutPage() {
     district: "",
     notes: "",
   });
+
+  // Fetch cart from sessionStorage
+  useEffect(() => {
+    const cartData = sessionStorage.getItem("cart");
+    setCart(cartData ? JSON.parse(cartData) : []);
+  }, []);
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -41,7 +46,7 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (account && account.role !== "Customer") {
-      navigate("*"); // Redirect if the user is not a Customer
+      navigate("*");
     }
   }, [account, navigate]);
 
@@ -67,9 +72,7 @@ function CheckoutPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add submission logic here
     console.log("Submitting order:", formData);
-    // For example, navigate to a confirmation page or handle payment processing
   };
 
   return (
@@ -154,7 +157,6 @@ function CheckoutPage() {
                   </button>
                 </form>
               </div>
-              {/* Order Summary */}
               <div className="flex-1 space-y-8">
                 <h2 className="text-xl font-bold mb-4">Đơn Hàng</h2>
                 <div className="bg-white p-4 rounded border">
@@ -169,7 +171,7 @@ function CheckoutPage() {
                         <p className="font-bold">{productCart.name}</p>
                         <p>{productCart.price.toLocaleString()}₫</p>
                       </div>
-                      <div className="ml-auto bg-black text-white rounded-md  w-6 h-6 flex items-center justify-center">
+                      <div className="ml-auto bg-black text-white rounded-md w-6 h-6 flex items-center justify-center">
                         {productCart.quantity}
                       </div>
                     </div>
@@ -212,8 +214,6 @@ function CheckoutPage() {
                     </Link>
                   </div>
                   <div className="ml-auto">
-                    {" "}
-                    {/* Added this div */}
                     <Link to="/banking">
                       <button className="bg-black text-white px-4 py-2 rounded">
                         Thanh toán
