@@ -34,7 +34,7 @@ function StaffHeader() {
         </div>
         <div className="flex items-center space-x-2">
           <button className="px-4 py-1 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
-            Nhân viên
+            {account ? account.fullName : <img src="" />}
           </button>
           <span className="text-gray-400">hoặc</span>
           <button
