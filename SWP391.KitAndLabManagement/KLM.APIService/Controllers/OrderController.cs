@@ -48,5 +48,21 @@ namespace KLM.APIService.Controllers
             return Ok(await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId));
         }
 
+        [HttpPut("UpdateOrder/{orderId}")]
+        public async Task<IActionResult> UpdateOrderStats(string orderId)
+        {
+            List<OrderTbl> orderUpdate = await _unitOfWork.OrderTblRepository.GetAllOrderTbl();
+            foreach (var o in orderUpdate)
+            {
+                if (o.OrderId.Equals(orderId))
+                {
+                    o.Status = "Shipped";
+                    _unitOfWork.OrderTblRepository.Update(o);
+                    return Ok(o);
+                }
+            }
+            return BadRequest("Not Found");
+        }
+
     }
 }

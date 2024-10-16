@@ -39,5 +39,10 @@ namespace KLM.Repository.Repositories
                 OrderDetailTbls = o.OrderDetailTbls.ToList(),
             }).Where(o => o.AccountId.Equals(accountId)).ToListAsync();
         }
+
+        public void UpdateOrder(OrderTbl orderUpdate)
+        {
+            _context.OrderTbls.Update(orderUpdate);
+        }
     }
 }
