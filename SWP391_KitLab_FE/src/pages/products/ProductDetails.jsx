@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import Header from "../Header";
 import Footer from "../../Footer";
-import Cookies from "js-cookie"; // npm install js-cookie
-
-//Bình thêm
-import Notification from "../admin/notification";
+import Notification from "../admin/notification"; // Bình thêm
 import Modal from "./Modal-description";
 
 function ProductDetails() {
   const { id } = useParams(); // Get the product ID from the URL params
   const [product, setProduct] = useState(null);
 
-  //Bình thêm
+  // Bình thêm
   const [notification, setNotification] = useState(null);
   const [selectedLab, setSelectedLab] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +17,7 @@ function ProductDetails() {
   const [account, setAccount] = useState(null);
   const [labList, setLabList] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
@@ -38,11 +35,12 @@ function ProductDetails() {
   useEffect(() => {
     async function fetchProductDetails() {
       try {
-        const response = await axios.get(`http://localhost:5056/product/${id}`);
-        setProduct(response.data);
-        setLabList(response.data.labs);
+        const response = await fetch(`http://localhost:5056/product/${id}`);
+        const data = await response.json();
+        setProduct(data);
+        setLabList(data.labs);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
 
@@ -51,24 +49,22 @@ function ProductDetails() {
 
   // Placeholder action for "Mua hàng" button
   const handleBuyNow = () => {
-    const cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+    const cart = sessionStorage.getItem("cart")
+      ? JSON.parse(sessionStorage.getItem("cart"))
+      : [];
 
-    // Check if product is already in the cart
+    // Check if the product is already in the cart
     const existingProduct = cart.find((item) => item.kitId === product.kitId);
 
     if (existingProduct) {
       // Check if we can increase the quantity without exceeding available stock
       if (product.quantity > existingProduct.quantity) {
         existingProduct.quantity += 1; // Increment quantity
-        //Bình sửa
-        // alert(`Đã thêm sản phẩm ${product.name} vào giỏ hàng!`);
         setNotification({
           message: `Đã thêm sản phẩm vào giỏ hàng!`,
           type: "success",
         });
       } else {
-        //Bình sửa
-        // alert("Bạn đã chọn quá số lượng tồn kho");
         setNotification({
           message: `Bạn đã chọn quá số lượng tồn kho`,
           type: "err",
@@ -78,27 +74,22 @@ function ProductDetails() {
       // If not already in the cart, check stock before adding
       if (product.quantity > 0) {
         cart.push({ ...product, quantity: 1 }); // Add new product to cart
-        //Bình sửa
-        // alert(`Đã thêm sản phẩm ${product.name} vào giỏ hàng!`);
         setNotification({
           message: `Đã thêm sản phẩm vào giỏ hàng!`,
           type: "success",
         });
       } else {
-        //Bình sửa
-        // alert("Sản phẩm hiện tại không còn hàng trong kho");
         setNotification({
-          message: `Bạn đã chọn quá số lượng tồn kho`,
+          message: `Sản phẩm hiện tại không còn hàng trong kho`,
           type: "err",
         });
       }
     }
 
-    // Update the cart in cookies
-    Cookies.set("cart", JSON.stringify(cart), { expires: 2 }); // Cart expires in 2 days
+    // Update the cart in sessionStorage
+    sessionStorage.setItem("cart", JSON.stringify(cart));
   };
 
-  //Bình thêm
   const closeNotification = () => {
     setNotification(null);
   };
@@ -120,9 +111,7 @@ function ProductDetails() {
     <>
       <Header />
       <div className="container mx-auto px-4 py-8">
-        {/* Horizontal Layout Container */}
         <div className="flex lg:flex-row gap-8">
-          {/* Product Image Fixed on the Left */}
           <div
             className="w-1/2 h-[400px] flex-shrink-0 sticky top-8"
             style={{ position: "sticky", alignSelf: "flex-start" }}
@@ -134,7 +123,6 @@ function ProductDetails() {
             />
           </div>
 
-          {/* Product Information */}
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
             <p className="text-red-600 font-bold text-2xl mb-4">
@@ -142,13 +130,11 @@ function ProductDetails() {
             </p>
             <p className="mb-6">{product.description}</p>
 
-            {/* Quantity */}
             <div className="mb-4">
               <span className="font-semibold">Số lượng còn lại: </span>
               <span className="text-gray-800">{product.quantity}</span>
             </div>
 
-            {/* Product Types */}
             <div className="mb-4">
               <span className="font-semibold">Nhóm sản phẩm: </span>
               <ul className="list-disc list-inside">
@@ -160,7 +146,6 @@ function ProductDetails() {
               </ul>
             </div>
 
-            {/* Labs */}
             <div className="mb-4">
               <span className="font-semibold">Danh sách Labs: </span>
               {labList.length > 0 ? (
@@ -184,7 +169,6 @@ function ProductDetails() {
               )}
             </div>
 
-            {/* Buy Now Button */}
             <button
               onClick={handleBuyNow}
               className="mt-6 w-full bg-black text-white py-2 px-6 rounded hover:bg-gray-900 transition duration-300 font-bold"
@@ -192,7 +176,7 @@ function ProductDetails() {
               THÊM VÀO GIỎ HÀNG
             </button>
           </div>
-          {/* Bình thêm */}
+
           {notification && (
             <Notification
               message={notification.message}
@@ -201,7 +185,6 @@ function ProductDetails() {
             />
           )}
 
-          {/* Modal */}
           <Modal
             isOpen={isModalOpen}
             onClose={closeLabModal}

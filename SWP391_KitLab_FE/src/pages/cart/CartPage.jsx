@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../../Footer";
-import { NavLink, useNavigate, useNavigationType } from "react-router-dom"; // Import useNavigate
-import Cookies from "js-cookie";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-//Bình thêm
+// Bình thêm
 import Notification from "../admin/notification";
 import { CircleX } from "lucide-react";
 
 function CartPage() {
   const [account, setAccount] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  //Bình thêm
   const [notification, setNotification] = useState(null);
+  const [listProductsInCart, setListProductsInCart] = useState([]);
+  const [listProduct, setListProduct] = useState([]);
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -25,17 +25,13 @@ function CartPage() {
 
   useEffect(() => {
     if (account && account.role !== "Customer") {
-      navigate("*"); // Redirect if the user is not a Customer
+      navigate("*");
     }
   }, [account, navigate]);
-
-  const [listProductsInCart, setListProductsInCart] = useState([]);
-  const [listProduct, setListProduct] = useState([]);
 
   async function fetchProduct() {
     try {
       const response = await axios.get(`http://localhost:5056/product`);
-      // Filter out products with status 'Deleted'
       const filteredProducts = response.data.filter(
         (item) => item.status !== "Deleted"
       );
@@ -49,45 +45,35 @@ function CartPage() {
     fetchProduct();
   }, []);
 
-  console.log(listProduct);
-
   useEffect(() => {
-    const cart = Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : [];
+    const cart = sessionStorage.getItem("cart")
+      ? JSON.parse(sessionStorage.getItem("cart"))
+      : [];
     setListProductsInCart(cart);
   }, []);
 
   const handleQuantityChange = (productId, change) => {
-    // Find the product in the database by kitId
-    var productInDb = listProduct.find((item) => item.kitId == productId);
-    console.log(productInDb);
+    const productInDb = listProduct.find((item) => item.kitId === productId);
 
     setListProductsInCart((prevCart) => {
       const updatedCart = prevCart.map((productCart) => {
-        // Make sure you use kitId here if that's what identifies your cart items
         if (productCart.kitId === productId) {
           const newQuantity = productCart.quantity + change;
 
-          // Check if new quantity exceeds available stock
           if (newQuantity > productInDb.quantity) {
-            //Bình sửa
-            // alert("Vượt quá tồn kho");
             setNotification({ message: "Vượt quá hàng tồn kho!", type: "err" });
-            return productCart; // Return unchanged productCart if stock limit exceeded
+            return productCart;
           }
-
-          // Update the quantity, making sure it doesn't go below 1
           return { ...productCart, quantity: Math.max(1, newQuantity) };
         }
-        return productCart; // Return unchanged productCart for other items
+        return productCart;
       });
 
-      // Update cookies
-      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 2 });
-      return updatedCart; // Return the updated cart
+      sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
     });
   };
 
-  //Bình thêm
   const closeNotification = () => {
     setNotification(null);
   };
@@ -98,8 +84,7 @@ function CartPage() {
         (productCart) => productCart.kitId !== productId
       );
 
-      // Update cookies
-      Cookies.set("cart", JSON.stringify(updatedCart), { expires: 2 });
+      sessionStorage.setItem("cart", JSON.stringify(updatedCart));
       return updatedCart;
     });
   };
@@ -107,9 +92,9 @@ function CartPage() {
   const handleCheckout = () => {
     if (!account) {
       alert("Đăng nhập để thanh toán");
-      navigate("/login"); // Redirect to LoginPage
+      navigate("/login");
     } else {
-      navigate("/checkout"); // Redirect to CheckOutPage
+      navigate("/checkout");
     }
   };
 
@@ -231,7 +216,6 @@ function CartPage() {
           </div>
         </div>
       </main>
-      {/* Binh them */}
       {notification && (
         <Notification
           message={notification.message}
