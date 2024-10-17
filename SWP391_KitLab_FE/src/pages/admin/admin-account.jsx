@@ -1,15 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
 import Footer from "../../Footer";
 import axios from "axios";
 import Notification from "./notification";
+import SearchBar from "./search-bar";
+import { ChevronDown, Filter } from "lucide-react";
 
 function AdminAccount() {
   const [accountList, setAccountList] = useState([]);
   const [notification, setNotification] = useState(null);
   const [selectedAccount, setselectedAccount] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //search
+  const [searchTerm, setSearchTerm] = useState("");
+
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const accountsPerPage = 10;
+
+  //Filter
+  const [filterRole, setFilterRole] = useState("All");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -22,9 +36,31 @@ function AdminAccount() {
     }
   };
 
-  const fitlerAccount = accountList.filter(
-    (account) => account.role !== "Admin"
+  const filteredAccounts = useMemo(() => {
+    return accountList
+      .filter((account) => account.role !== "Admin")
+      .filter((account) => {
+        const nameMatch = account.fullName
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const roleMatch = filterRole === "All" || account.role === filterRole;
+        return nameMatch && roleMatch;
+      });
+  }, [accountList, searchTerm, filterRole]);
+
+  const indexOfLastAccount = currentPage * accountsPerPage;
+  const indexOfFirstAccount = indexOfLastAccount - accountsPerPage;
+  const currentAccounts = filteredAccounts.slice(
+    indexOfFirstAccount,
+    indexOfLastAccount
   );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     fetchData();
@@ -72,6 +108,16 @@ function AdminAccount() {
     setIsModalOpen(false);
   };
 
+  const handleFilterClick = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleFilterSelect = (role) => {
+    setFilterRole(role);
+    setIsFilterOpen(false);
+    setCurrentPage(1);
+  };
+
   const renderModalContent = () => {
     if (!selectedAccount) return null;
 
@@ -111,6 +157,49 @@ function AdminAccount() {
           <div className="flex-1 p-8 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Quản lý tài khoản</h1>
+              <SearchBar
+                searchTerm={searchTerm}
+                onSearchChange={handleSearch}
+                placeholder="Tìm kiếm theo tên"
+              />
+
+              <div className="relative z-50">
+                <button
+                  onClick={handleFilterClick}
+                  className="bg-black text-white px-4 py-2 rounded-md flex items-center"
+                >
+                  <Filter size={20} className="mr-2" />
+                  Lọc
+                  <ChevronDown size={20} className="ml-2" />
+                </button>
+                {isFilterOpen && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      {["All", "Customer", "Staff"].map((role) => (
+                        <button
+                          key={role}
+                          onClick={() => handleFilterSelect(role)}
+                          className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium
+                            ${
+                              role === filterRole
+                                ? "text-white bg-black"
+                                : "text-black bg-white"
+                            }
+                            `}
+                          role="menuitem"
+                        >
+                          {role}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/*Table content*/}
@@ -130,7 +219,7 @@ function AdminAccount() {
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
-                  {fitlerAccount.map((account) => (
+                  {currentAccounts.map((account) => (
                     <tr
                       key={account.accountId}
                       className="border-b border-gray-200 hover:bg-gray-50"
@@ -187,6 +276,25 @@ function AdminAccount() {
                 </tbody>
               </table>
             </div>
+            {/* Pagination */}
+            <div className="flex justify-center mt-8">
+              {[
+                ...Array(Math.ceil(filteredAccounts.length / accountsPerPage)),
+              ].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={`mx-1 px-3 py-1 rounded ${
+                    currentPage === index + 1
+                      ? "bg-black text-white"
+                      : "bg-white text-black"
+                  } `}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+
             {isModalOpen && renderModalContent()}
             {notification && (
               <Notification

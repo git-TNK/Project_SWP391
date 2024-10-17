@@ -128,22 +128,33 @@ function ProductDetails() {
             <p className="text-red-600 font-bold text-2xl mb-4">
               {product.price.toLocaleString()} VND
             </p>
-            <p className="mb-6">{product.description}</p>
 
+            <div className="mb-4">
+              <span className="font-semibold">Hãng: </span>
+              <span className="mb-6">{product.brand}</span>
+            </div>
+
+            <div className="mb-4">
+              <span className="font-semibold">Mô tả: </span>
+              <p className="mb-6">{product.description}</p>
+            </div>
             <div className="mb-4">
               <span className="font-semibold">Số lượng còn lại: </span>
               <span className="text-gray-800">{product.quantity}</span>
             </div>
 
             <div className="mb-4">
-              <span className="font-semibold">Nhóm sản phẩm: </span>
-              <ul className="list-disc list-inside">
+              <p className="font-semibold mb-2">Nhóm sản phẩm: </p>
+              <div className="flex flex-wrap gap-2">
                 {product.typeNames.map((type, index) => (
-                  <li key={index} className="text-gray-800">
+                  <span
+                    key={index}
+                    className="inline-block bg-black text-white rounded-lg px-3 py-1 text-sm font-semibold min-w-[80px] text-center"
+                  >
                     {type}
-                  </li>
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
 
             <div className="mb-4">
@@ -163,9 +174,7 @@ function ProductDetails() {
                   ))}
                 </ul>
               ) : (
-                <span className="text-gray-800">
-                  Không có lab nào được liên kết
-                </span>
+                <p className="text-gray-800">Không có lab nào được liên kết</p>
               )}
             </div>
 
