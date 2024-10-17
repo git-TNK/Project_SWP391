@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import Header from "../Header";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 function CheckoutPage() {
   const [cart, setCart] = useState([]);
-  const [listProvince, setListProvince] = useState([]);
   const [account, setAccount] = useState(null);
+  const [formSubmitted, setFormSubmitted] = useState(false); // Track form submission
   const navigate = useNavigate();
+  const shippingFee = 30000; // Example shipping fee
 
   const [formData, setFormData] = useState({
     email: "",
@@ -18,19 +18,43 @@ function CheckoutPage() {
     city: "",
     district: "",
     notes: "",
+    totalCart: "",
   });
 
-  // Fetch cart from sessionStorage
+  const [errors, setErrors] = useState({});
+
+  // Store buyer's data in session storage
+  useEffect(() => {
+    sessionStorage.setItem("dataBuyer", JSON.stringify(formData));
+  }, [formData]);
+
+  // Calculate subtotal
+  const calculateTotalCart = (cartItems) =>
+    cartItems.reduce(
+      (total, product) => total + product.price * product.quantity,
+      0
+    );
+
+  // Retrieve cart data and calculate totals
   useEffect(() => {
     const cartData = sessionStorage.getItem("cart");
-    setCart(cartData ? JSON.parse(cartData) : []);
+    const parsedCart = cartData ? JSON.parse(cartData) : [];
+    setCart(parsedCart);
+
+    const subtotal = calculateTotalCart(parsedCart);
+    setFormData((prevData) => ({
+      ...prevData,
+      totalCart: subtotal,
+    }));
   }, []);
 
+  // Retrieve account details from localStorage
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
       setAccount(savedAccount);
-      setFormData({
+      setFormData((prevData) => ({
+        ...prevData,
         email: savedAccount.email || "",
         name: savedAccount.fullName || "",
         phone: savedAccount.phoneNumber || "",
@@ -38,41 +62,41 @@ function CheckoutPage() {
         city: savedAccount.city || "",
         district: savedAccount.district || "",
         notes: savedAccount.notes || "",
-      });
+      }));
     } else {
       navigate("*");
     }
   }, [navigate]);
 
+  // Ensure only 'Customer' role users can access the page
   useEffect(() => {
     if (account && account.role !== "Customer") {
       navigate("*");
     }
   }, [account, navigate]);
 
-  const fetchProvince = async () => {
-    try {
-      const response = await axios.get(
-        `https://provinces.open-api.vn/api/?depth=2`
-      );
-      setListProvince(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchProvince();
-  }, []);
-
+  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  // Validate form input
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.phone) newErrors.phone = "Số điện thoại là bắt buộc.";
+    if (!formData.address) newErrors.address = "Địa chỉ là bắt buộc.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitting order:", formData);
+    if (validateForm()) {
+      console.log("Submitting order:", formData);
+      setFormSubmitted(true); // Mark form as submitted
+    }
   };
 
   return (
@@ -92,6 +116,7 @@ function CheckoutPage() {
               <div className="flex-1">
                 <h2 className="text-xl font-bold mb-4">Thông tin nhận hàng</h2>
                 <form className="space-y-4" onSubmit={handleSubmit}>
+                  {/* Input fields */}
                   <input
                     type="email"
                     name="email"
@@ -114,41 +139,49 @@ function CheckoutPage() {
                     type="text"
                     name="phone"
                     placeholder="Số điện thoại"
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      errors.phone ? "border-red-500" : ""
+                    }`}
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm">{errors.phone}</p>
+                  )}
                   <input
                     type="text"
                     name="address"
                     placeholder="Địa chỉ"
-                    className="w-full p-2 border rounded"
+                    className={`w-full p-2 border rounded ${
+                      errors.address ? "border-red-500" : ""
+                    }`}
                     value={formData.address}
                     onChange={handleInputChange}
                     required
                   />
-                  <select
-                    name="city"
-                    className="flex-1 p-2 border rounded"
-                    onChange={handleInputChange}
-                    required
-                  >
-                    <option value="">Chọn tỉnh/thành phố</option>
-                    {listProvince.map((province) => (
-                      <option key={province.code} value={province.name}>
-                        {province.name}
-                      </option>
-                    ))}
-                  </select>
+                  {errors.address && (
+                    <p className="text-red-500 text-sm">{errors.address}</p>
+                  )}
                   <textarea
                     name="notes"
-                    placeholder="Ghi chú (tùy chọn)"
+                    placeholder="Ghi chú (Bắt buộc) nếu không thì ghi `không`"
                     className="w-full p-2 border rounded"
                     rows="3"
                     value={formData.notes}
                     onChange={handleInputChange}
+                    required
                   />
+                  <div className="font-bold">
+                    Tạm Tính: {formData.totalCart.toLocaleString()}₫
+                  </div>
+                  <div className="font-bold">
+                    Phí Vận Chuyển: {shippingFee.toLocaleString()}₫
+                  </div>
+                  <div className="font-bold">
+                    Tổng Cộng:{" "}
+                    {(formData.totalCart + shippingFee).toLocaleString()}₫
+                  </div>
                   <button
                     type="submit"
                     className="bg-black text-white px-4 py-2 rounded"
@@ -157,6 +190,8 @@ function CheckoutPage() {
                   </button>
                 </form>
               </div>
+
+              {/* Cart Summary */}
               <div className="flex-1 space-y-8">
                 <h2 className="text-xl font-bold mb-4">Đơn Hàng</h2>
                 <div className="bg-white p-4 rounded border">
@@ -176,49 +211,21 @@ function CheckoutPage() {
                       </div>
                     </div>
                   ))}
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span>Tạm tính</span>
-                      <span>
-                        {cart
-                          .reduce(
-                            (total, product) =>
-                              total + product.price * product.quantity,
-                            0
-                          )
-                          .toLocaleString()}
-                        ₫
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Phí vận chuyển</span>
-                      <span>Miễn phí</span>
-                    </div>
-                    <div className="flex justify-between font-bold">
-                      <span>Tổng cộng</span>
-                      <span>
-                        {cart
-                          .reduce(
-                            (total, product) =>
-                              total + product.price * product.quantity,
-                            0
-                          )
-                          .toLocaleString()}
-                        ₫
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex justify-between items-center">
-                    <Link to="/cart" className="text-blue-500">
-                      ‹ Quay về giỏ hàng
-                    </Link>
-                  </div>
-                  <div className="ml-auto">
+                  <div className="mt-4">
                     <Link to="/banking">
-                      <button className="bg-black text-white px-4 py-2 rounded">
+                      <button
+                        className="bg-black text-white px-4 py-2 rounded"
+                        disabled={!formSubmitted}
+                      >
                         Thanh toán
                       </button>
                     </Link>
+                    <NavLink
+                      to="/"
+                      className="block mt-2 text-center text-blue-500"
+                    >
+                      Quay về trang chủ
+                    </NavLink>
                   </div>
                 </div>
               </div>
