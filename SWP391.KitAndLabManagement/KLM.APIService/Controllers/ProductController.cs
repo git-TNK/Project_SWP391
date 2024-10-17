@@ -24,7 +24,6 @@ namespace KLM.APIService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProductKitDTO()
         {
-
             return await _unitOfWork.ProductKitTblRepository.GetProductDTO();
         }
 

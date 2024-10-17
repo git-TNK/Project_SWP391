@@ -42,7 +42,7 @@ namespace KLM.APIService.Controllers
             newOrder.Note = note;
             newOrder.Address = address;
             newOrder.Price = price;
-            newOrder.OrderDate = DateOnly.FromDateTime(DateTime.Today.Date);
+            newOrder.OrderDate = DateTime.Today.Date;
             newOrder.Status = "Processing";
             _unitOfWork.OrderTblRepository.Create(newOrder);
             return Ok(newOrder);
@@ -80,13 +80,14 @@ namespace KLM.APIService.Controllers
                 await _firebaseService.DeleteAllTransactionsAsync();
                 if (latestPayment)
                 {
-                    
+
                     return Ok("Success");
-                }else
+                }
+                else
                 {
                     return BadRequest("Failed");
                 }
-                
+
             }
             catch (Exception ex)
             {

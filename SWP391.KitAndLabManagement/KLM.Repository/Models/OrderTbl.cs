@@ -18,9 +18,9 @@ public partial class OrderTbl
 
     public string Address { get; set; }
 
-    public DateOnly OrderDate { get; set; }
+    public DateTime OrderDate { get; set; }
 
-    public DateOnly? ReceiveDate { get; set; }
+    public DateTime? ReceiveDate { get; set; }
 
     public string Status { get; set; }
 
