@@ -15,6 +15,22 @@ import axios from "axios";
 
 import Notification from "./notification";
 import LoadingSpinner from "./loading";
+import FilterType from "./filter";
+import SearchBar from "./search-bar";
+
+const typeOptions = [
+  "Wifi",
+  "Wireless",
+  "Bluetooth",
+  "Led",
+  "Actuator",
+  "AI",
+  "Automatic",
+  "Connector",
+  "Controller",
+  "Memory",
+  "Manual",
+];
 
 function AdminLab() {
   const [labData, setLabData] = useState([]);
@@ -22,17 +38,32 @@ function AdminLab() {
   const [modalContent, setModalContent] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+
+  //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [notification, setNotification] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
   const labPerpage = 5;
 
+  //notification
+  const [notification, setNotification] = useState(null);
+
+  //search
+  const [searchTerm, setSearchTerm] = useState("");
+
+  //filter
+  const [selectedTypes, setSelectedTypes] = useState([]);
+
   const fetchLabData = async () => {
+    setLoading(true);
+
     try {
       const response = await axios.get("http://localhost:5056/Lab");
       setLabData(response.data);
+      setLoading(false);
       console.log(response.data);
     } catch (error) {
+      setLoading(false);
       setError("Failed to fetch lab data");
     }
   };
@@ -96,6 +127,7 @@ function AdminLab() {
 
   const handleDeleteLab = async (labId, labName) => {
     const labToDelete = labData.find((lab) => lab.labId === labId);
+    setLoading(true);
 
     if (labToDelete) {
       console.log(labToDelete);
@@ -112,12 +144,15 @@ function AdminLab() {
         fetchLabData();
         console.log("Success message: ", response.data);
         setNotification({ message: `Đã xóa: ${labName}`, type: "error" });
+        setLoading(false);
       } else {
+        setLoading(false);
         throw new Error("Unexpected response status");
       }
     } catch (err) {
       console.error("error while deleting lab: ", err);
       setNotification({ message: "Xóa thất bại", type: "error" });
+      setLoading(false);
     }
   };
 
@@ -126,14 +161,23 @@ function AdminLab() {
       const nameMatch = lab.labName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-
-      return nameMatch;
+      const typeMatch =
+        selectedTypes.length === 0 ||
+        selectedTypes.every(
+          (type) => lab.labTypes && lab.labTypes.includes(type)
+        );
+      return nameMatch && typeMatch;
     });
-  }, [labData, searchTerm]);
+  }, [labData, searchTerm, selectedTypes]);
 
   const indexOfLastLab = currentPage * labPerpage;
   const indexOfFirstLab = indexOfLastLab - labPerpage;
   const currentLabs = filteredLab.slice(indexOfFirstLab, indexOfLastLab);
+
+  const handleFilterChange = (newSelectedTypes) => {
+    setSelectedTypes(newSelectedTypes);
+    setCurrentPage(1);
+  };
 
   const getStatusTranslate = (status) => {
     switch (status.toLowerCase()) {
@@ -162,8 +206,9 @@ function AdminLab() {
   const closeNotification = () => {
     setNotification(null);
   };
+
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event);
     setCurrentPage(1); // Reset to first page when searching
   };
 
@@ -181,13 +226,13 @@ function AdminLab() {
           <div className="flex-1 p-4 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Quản lý lab</h1>
-              <input
-                type="text"
-                placeholder="Tìm kiếm lab..."
-                value={searchTerm}
-                onChange={handleSearch}
-                style={{ width: "600px" }}
-                className="py-2 px-3 rounded-lg mr-[30px]  h-[35px] border-2 border-black text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              <SearchBar
+                searchTerm={searchTerm}
+                onSearchChange={handleSearch}
+              />
+              <FilterType
+                options={typeOptions}
+                onFilterChange={handleFilterChange}
               />
               <NavLink to="/admin/addLab">
                 <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
@@ -329,6 +374,7 @@ function AdminLab() {
         </div>
       </div>
       <Footer />
+      {loading && <LoadingSpinner />}
     </div>
   );
 }
