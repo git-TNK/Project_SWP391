@@ -1,14 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Footer from "../../Footer";
 import AdminHeader from "./admin-header";
-import {
-  Filter,
-  PlusCircle,
-  Wrench,
-  Trash2,
-  Eye,
-  ChevronDown,
-} from "lucide-react";
+import { PlusCircle, Wrench, Trash2, Eye } from "lucide-react";
 import "../../tailwindstyle.css";
 import axios from "axios";
 import Sidebar from "./sidebar";
@@ -18,21 +11,45 @@ import { NavLink, useLocation } from "react-router-dom";
 
 import Notification from "./notification";
 import LoadingSpinner from "./loading";
+import FilterType from "./filter";
+import SearchBar from "./search-bar";
+
+const typeOptions = [
+  "Wifi",
+  "Wireless",
+  "Bluetooth",
+  "Led",
+  "Actuator",
+  "AI",
+  "Automatic",
+  "Connector",
+  "Controller",
+  "Memory",
+  "Manual",
+];
 
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
+
+  //pagination
   const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
+
+  //search bar
   const [searchTerm, setSearchTerm] = useState("");
 
   //
   const location = useLocation();
   const account = location.state?.account;
 
+  //notification
   const [notification, setNotification] = useState(null);
-  const [filterStatus, setFilterStatus] = useState("All");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  //filter
+  const [selectedTypes, setSelectedTypes] = useState([]);
+
+  //loading animation
   const [isLoading, setIsLoading] = useState(false);
-  const productsPerPage = 8;
 
   async function fetchProduct() {
     setIsLoading(true);
@@ -76,11 +93,14 @@ const AdminProduct = () => {
       const nameMatch = product.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      const statusMatch =
-        filterStatus === "All" || product.status === filterStatus;
-      return nameMatch && statusMatch;
+      const typeMatch =
+        selectedTypes.length === 0 ||
+        selectedTypes.every(
+          (type) => product.typeNames && product.typeNames.includes(type)
+        );
+      return nameMatch && typeMatch;
     });
-  }, [listProduct, searchTerm, filterStatus]);
+  }, [listProduct, searchTerm, selectedTypes]);
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -95,17 +115,12 @@ const AdminProduct = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event);
     setCurrentPage(1); // Reset to first page when searching
   };
 
-  const handleFilterClick = () => {
-    setIsFilterOpen(!isFilterOpen);
-  };
-
-  const handleFilterSelect = (status) => {
-    setFilterStatus(status);
-    setIsFilterOpen(false);
+  const handleFilterChange = (newSelectedTypes) => {
+    setSelectedTypes(newSelectedTypes);
     setCurrentPage(1);
   };
 
@@ -209,20 +224,6 @@ const AdminProduct = () => {
       status: PropTypes.string.isRequired,
     }).isRequired,
   };
-  const handleStatusTranslate = (status) => {
-    switch (status.toLowerCase()) {
-      case "all":
-        return "Tất cả";
-      case "new":
-        return "Mới";
-      case "changed":
-        return "Đã sửa";
-      case "deleted":
-        return "Đã xóa";
-      default:
-        return status;
-    }
-  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -236,46 +237,16 @@ const AdminProduct = () => {
           <div className="flex-1 p-8 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Quản lý sản phẩm</h1>
-              <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm"
-                value={searchTerm}
-                onChange={handleSearch}
-                style={{ width: "600px" }}
-                className="py-2 px-3 rounded-lg mr-[30px]  h-[35px] border-2 border-black text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              <SearchBar
+                searchTerm={searchTerm}
+                onSearchChange={handleSearch}
               />
 
-              <div className="relative z-50">
-                <button
-                  onClick={handleFilterClick}
-                  className="bg-black text-white px-4 py-2 rounded-md flex items-center"
-                >
-                  <Filter size={20} className="mr-2" />
-                  Lọc
-                  <ChevronDown size={20} className="ml-2" />
-                </button>
-                {isFilterOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
-                    <div
-                      className="py-1"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="options-menu"
-                    >
-                      {["All", "New", "Changed", "Deleted"].map((status) => (
-                        <button
-                          key={status}
-                          onClick={() => handleFilterSelect(status)}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                          role="menuitem"
-                        >
-                          {handleStatusTranslate(status)}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <FilterType
+                options={typeOptions}
+                onFilterChange={handleFilterChange}
+              />
+
               <NavLink to="/admin/addProduct">
                 <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
                   <PlusCircle size={20} className="mr-2" />
