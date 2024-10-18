@@ -25,15 +25,13 @@ function StaffSlideBar() {
                 }`
               }
             >
-              <span className="flex-1 text-left">{item.label}</span>
-              {({ isActive }) => (
-                <ChevronRight
-                  size={16}
-                  className={`transition-transform duration-300 ${
-                    isActive ? "text-white transform rotate-90" : "text-gray-400"
-                  }`}
-                />
-              )}
+              <span className="text-left font-semibold text-lg">{item.label}</span> {/* Tăng kích thước chữ */}
+              <ChevronRight
+                size={16}
+                className={({ isActive }) =>
+                  isActive ? "text-white" : "text-gray-400"
+                }
+              />
             </NavLink>
           </li>
         ))}
