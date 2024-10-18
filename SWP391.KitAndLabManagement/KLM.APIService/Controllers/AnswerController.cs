@@ -36,6 +36,15 @@ namespace KLM.APIService.Controllers
                     documentUrl = uploadUrl;
                 }
             }
+            var listQuestion = _unitOfWork.QuestionTblRepository.GetAllQuestions();
+            foreach (var x in await listQuestion)
+            {
+                if (x.QuestionId.Equals(questionId))
+                {
+                    x.Status = "Answered";
+                    _unitOfWork.QuestionTblRepository.Update(x);
+                }
+            }
             var result = new AnswerTbl();
             result.AnswerId = questionId;
             result.QuestionId = questionId;
