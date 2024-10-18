@@ -36,7 +36,7 @@ function OrderHistoryPage() {
   useEffect(() => {
     fetchListOrder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, 1);
 
   console.log(listorder);
 
