@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import Header from "../Header";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Modal } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 function OrderHistoryPage() {
   const [account, setAccount] = useState(null);
   const [listOrderDetail, setListOrderDetail] = useState([]);
   const [listOrder, setListOrder] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State quản lý Modal
-  const [selectedOrderId, setSelectedOrderId] = useState(null); // Lưu orderId đang chọn
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [productDetails, setProductDetails] = useState(null);
 
   const navigate = useNavigate();
 
@@ -20,25 +19,34 @@ function OrderHistoryPage() {
     return savedAccount;
   };
 
-  // Lấy danh sách đơn hàng dựa trên accountId
   async function fetchListOrder(account) {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `http://localhost:5056/Order/${account.accountId}`
       );
-      setListOrder(response.data);
+      const data = await response.json();
+      setListOrder(data);
     } catch (err) {
       console.log(err);
     }
   }
 
-  // Lấy chi tiết đơn hàng dựa trên orderId
   async function fetchListOrderDetail(orderId) {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `http://localhost:5056/api/OrderDetail/${orderId}`
       );
-      setListOrderDetail(response.data);
+      const data = await response.json();
+      setListOrderDetail(data);
+
+      // Fetch product details for each kit in the order details
+      if (data.length > 0) {
+        const productResponse = await fetch(
+          `http://localhost:5056/Product/${data[0].kitId}`
+        );
+        const productData = await productResponse.json();
+        setProductDetails(productData);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -50,18 +58,31 @@ function OrderHistoryPage() {
 
   useEffect(() => {
     if (account && account.role !== "Customer") {
-      navigate("*"); // Redirect nếu người dùng không phải Customer
+      navigate("*");
     }
   }, [account, navigate]);
 
-  // Xử lý khi nhấn "Xem chi tiết đơn hàng"
   const handleViewOrderDetail = (orderId) => {
-    setSelectedOrderId(orderId); // Lưu orderId
-    fetchListOrderDetail(orderId); // Gọi API để lấy chi tiết đơn hàng
-    setIsModalOpen(true); // Mở Modal
+    setSelectedOrderId(orderId);
+    fetchListOrderDetail(orderId);
+    setIsModalOpen(true);
   };
 
-  console.log(listOrderDetail);
+  async function handleConfirmReceived(orderId) {
+    try {
+      const response = await fetch(
+        `http://localhost:5056/Order/CustomerUpdateOrder/${orderId}`,
+        { method: "PUT" }
+      );
+      if (response.ok) {
+        // Update order list after confirmation
+        fetchListOrder(getAccount());
+        alert("Đã xác nhận nhận hàng thành công!");
+      }
+    } catch (error) {
+      console.error("Error confirming order:", error);
+    }
+  }
 
   return (
     <div>
@@ -94,7 +115,15 @@ function OrderHistoryPage() {
                   </td>
                   <td className="py-2 px-4">{order.price} đ</td>
                   <td>
-                    <button className="bg-green-100 text-green-800 py-1 px-2 rounded-full text-sm">
+                    <button
+                      className={`${
+                        order.status === "Shipping"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      } py-1 px-2 rounded-full text-sm`}
+                      disabled={order.status !== "Shipping"}
+                      onClick={() => handleConfirmReceived(order.orderId)}
+                    >
                       Xác nhận đã nhận hàng
                     </button>
                   </td>
@@ -113,42 +142,75 @@ function OrderHistoryPage() {
         </div>
       </div>
 
-      {/* Modal hiển thị chi tiết đơn hàng */}
-      <Modal
-        title={`Chi tiết đơn hàng #${selectedOrderId}`}
-        visible={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-      >
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="py-2 px-4 text-left">Tên Kit</th>
-                <th className="py-2 px-4 text-left">Giá Tiền</th>
-                <th className="py-2 px-4 text-left">Số Lượng</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listOrderDetail.length > 0 ? (
-                listOrderDetail.map((detail, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="py-2 px-4">{detail.kitName}</td>
-                    <td className="py-2 px-4">{detail.price} đ</td>
-                    <td className="py-2 px-4">{detail.kitQuantity}</td>
+      {/* Modal Tailwind */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-3/4 md:w-1/2">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-bold">
+                Chi tiết đơn hàng {selectedOrderId}
+              </h3>
+              <button
+                className="text-gray-500 hover:text-gray-800"
+                onClick={() => setIsModalOpen(false)}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-96">
+              <table className="min-w-full bg-white">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="py-2 px-4 text-left">Tên Kit</th>
+                    <th className="py-2 px-4 text-left">Giá Tiền</th>
+                    <th className="py-2 px-4 text-left">Số Lượng</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="py-2 px-4" colSpan="3">
-                    Không có chi tiết đơn hàng.
-                  </td>
-                </tr>
+                </thead>
+                <tbody>
+                  {listOrderDetail.map((detail, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="py-2 px-4">{detail.kitName}</td>
+                      <td className="py-2 px-4">{detail.price} đ</td>
+                      <td className="py-2 px-4">{detail.kitQuantity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {productDetails && (
+                <div className="mt-6">
+                  <h4 className="text-lg font-bold mb-2">Labs:</h4>
+                  <ul>
+                    {productDetails.labs.map((lab) => (
+                      <li key={lab.labId} className="mb-2">
+                        <p className="font-bold">{lab.name}</p>
+                        <p>{lab.description}</p>
+                        <Link
+                          to={lab.document}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 underline"
+                        >
+                          Xem tài liệu
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
-            </tbody>
-          </table>
+            </div>
+            <div className="p-4 border-t flex justify-end">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
         </div>
-      </Modal>
+      )}
+
       <Footer />
     </div>
   );

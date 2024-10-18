@@ -85,7 +85,7 @@ function ProcessingOrder() {
                         onClick={() => handleUpdateOrderStatus(order.orderId)}
                         disabled={order.status === "Shipped"}
                       >
-                        {order.status === "Shipped"
+                        {order.status === "Shipping"
                           ? "Đã Xác Nhận"
                           : "Xác Nhận"}
                       </button>
