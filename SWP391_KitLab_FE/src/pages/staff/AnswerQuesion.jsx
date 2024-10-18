@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
+import Footer from "../../Footer";
 
 function AnswerQuestion() {
   const [listQuestion, setListQuestion] = useState([]);
   const [answer, setAnswer] = useState('');
   const [attachment, setAttachment] = useState(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const navigate = useNavigate(); // Khởi tạo useNavigate
+  const [accountEmail, setAccountEmail] = useState(''); // State để lưu email
+  const navigate = useNavigate();
 
+  // Hàm fetch câu hỏi từ API, bao gồm cả email
   const fetchQuestion = async () => {
     try {
       const response = await fetch(`http://localhost:5056/api/Question`);
@@ -20,45 +23,99 @@ function AnswerQuestion() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  if (!selectedQuestion) return; // Nếu không có câu hỏi nào được chọn thì không làm gì cả
-
-  try {
-    const formData = new FormData();
-    formData.append('acctachFile', attachment); // Tệp đính kèm
-    
-    // API call với URL params và body là FormData
-    const response = await fetch(
-      `http://localhost:5056/api/Answer/answerQuestion/${selectedQuestion.questionId}/${selectedQuestion.accountId}/${answer}/${selectedQuestion.labName}`,
-      {
-        method: 'POST',
-        body: formData,
-      }
-    );
-
-    const data = await response.json();
-    console.log("Submitted answer:", data);
-
-    // Cập nhật lại danh sách câu hỏi sau khi gửi thành công
-    fetchQuestion();
-    setAnswer('');
-    setAttachment(null);
-    setSelectedQuestion(null);
-
-    // Điều hướng tới trang lịch sử hỗ trợ
-    navigate('/historySupport');
-  } catch (error) {
-    console.error("Failed to submit answer:", error);
-  }
+  // Hàm fetch thông tin tài khoản từ API
+  const fetchAccountEmail = async (accountId) => {
+    try {
+      const response = await fetch(`http://localhost:5056/api/Account/${accountId}`);
+      const data = await response.json();
+      setAccountEmail(data.email); // Giả sử API trả về đối tượng có thuộc tính email
+    } catch (err) {
+      console.error("Failed to fetch account email:", err);
+    }
   };
 
+  // Hàm gửi câu trả lời và email
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedQuestion) return; // Kiểm tra nếu chưa chọn câu hỏi thì không thực hiện gì
+
+    try {
+      const formData = new FormData();
+      formData.append('acctachFile', attachment); // Đính kèm file nếu có
+
+      // Gửi câu trả lời qua API
+      const response = await fetch(
+        `http://localhost:5056/api/Answer/answerQuestion/${selectedQuestion.questionId}/${selectedQuestion.accountId}/${answer}/${selectedQuestion.labName}`,
+        {
+          method: 'POST',
+          body: formData, // Đưa FormData chứa câu trả lời và file đính kèm vào API
+        }
+      );
+
+      const data = await response.json();
+      console.log("Submitted answer:", data);
+
+      // Sau khi gửi câu trả lời thành công, tiếp tục gửi email chứa thông tin
+      await sendEmail(selectedQuestion, answer, attachment);
+
+      // Cập nhật lại danh sách câu hỏi và reset form
+      fetchQuestion();
+      setAnswer(''); // Reset câu trả lời
+      setAttachment(null); // Reset tệp đính kèm
+      setSelectedQuestion(null); // Reset câu hỏi được chọn
+      setAccountEmail(''); // Reset email
+
+      // Điều hướng người dùng đến trang lịch sử hỗ trợ
+      navigate('/historySupport');
+    } catch (error) {
+      console.error("Failed to submit answer:", error);
+    }
+  };
+
+  // Hàm gửi email
+  const sendEmail = async (question, answer, attachment) => {
+    try {
+      // Kiểm tra xem accountEmail có hợp lệ không
+      if (!accountEmail) {
+        console.error("Không có địa chỉ email để gửi.");
+        return; // Ngừng hàm nếu không có email
+      }
+
+      const emailBody = `
+        Câu hỏi: ${question.question}\n
+        Câu trả lời: ${answer}\n
+        Bài Lab: ${question.labName}\n
+        File đính kèm: ${attachment ? attachment.name : 'Không có tệp đính kèm'}
+      `;
+
+      const emailData = {
+        to: accountEmail, // Sử dụng email từ API của tài khoản
+        subject: `Trả lời câu hỏi cho bài lab: ${question.labName}`,
+        body: emailBody,
+      };
+
+      // Gọi API gửi email
+      const emailResponse = await fetch(`http://localhost:5056/api/Email/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(emailData), // Chuyển object email thành JSON
+      });
+
+      const emailResult = await emailResponse.json();
+      console.log("Email sent:", emailResult);
+    } catch (err) {
+      console.error("Failed to send email:", err);
+    }
+  };
+
+  // Hàm chọn câu hỏi
   const handleSelectQuestion = (question) => {
     setSelectedQuestion(question);
-    console.log(question.questionId);
-     // Lưu câu hỏi đã chọn
-    setAnswer(''); // Reset phần trả lời
+    setAnswer(''); // Reset câu trả lời
     setAttachment(null); // Reset tệp đính kèm
+    fetchAccountEmail(question.accountId); // Fetch email của tài khoản đã chọn
   };
 
   useEffect(() => {
@@ -67,17 +124,19 @@ function AnswerQuestion() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* StaffHeader at the top */}
+      {/* StaffHeader */}
       <header>
         <StaffHeader />
       </header>
 
       <div className="flex flex-grow">
-        {/* Sidebar on the left */}
+        {/* Sidebar */}
         <aside>
           <StaffSlideBar />
         </aside>
+        
         <main className="flex-grow p-6">
+        <h1 className="text-2xl font-bold mb-6 text-center">Yêu cầu Hỗ Trợ</h1>
           <h3 className="text-lg font-semibold mb-4">Danh Sách Câu Hỏi:</h3>
           <table className="w-full border-collapse border border-gray-300 mt-4">
             <thead>
@@ -111,16 +170,16 @@ function AnswerQuestion() {
             </tbody>
           </table>
 
-          {/* Hiển thị phần trả lời nếu có câu hỏi được chọn */}
+          {/* Hiển thị form trả lời nếu có câu hỏi được chọn */}
           {selectedQuestion && (
             <div className="mt-6">
               <h2 className="text-xl font-bold mb-2">Trả Lời Câu Hỏi</h2>
               
-              {/* Hiển thị thông tin ID Tài Khoản và Tên Bài Lab */}
+              {/* Thông tin câu hỏi */}
               <div className="mb-4">
                 <h3 className="text-lg font-semibold">ID Tài Khoản: {selectedQuestion.accountId}</h3>
                 <h3 className="text-lg font-semibold">Tên Bài Lab: {selectedQuestion.labName}</h3>
-                <h3 className="text-lg font-semibold">Câu Hỏi: {selectedQuestion.question}</h3> {/* Hiển thị câu hỏi */}
+                <h3 className="text-lg font-semibold">Câu Hỏi: {selectedQuestion.question}</h3>
               </div>
 
               <form onSubmit={handleSubmit} className="mb-6">
@@ -151,6 +210,7 @@ function AnswerQuestion() {
           )}
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

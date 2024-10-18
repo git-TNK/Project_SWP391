@@ -18,7 +18,7 @@ function StaffSlideBar() {
             <NavLink
               to={item.path} // Change href to to
               className={({ isActive }) =>
-                `flex items-center justify-between px-4 py-3 text-md ${
+                `flex items-center justify-between px-6 py-4 text-lg ${
                   isActive
                     ? "bg-gray-800 text-white font-semibold rounded-md"
                     : "text-gray-700 hover:bg-gray-200 transition-colors duration-200"
@@ -26,12 +26,14 @@ function StaffSlideBar() {
               }
             >
               <span className="flex-1 text-left">{item.label}</span>
-              <ChevronRight
-                size={16}
-                className={({ isActive }) =>
-                  isActive ? "text-white" : "text-gray-400"
-                }
-              />
+              {({ isActive }) => (
+                <ChevronRight
+                  size={16}
+                  className={`transition-transform duration-300 ${
+                    isActive ? "text-white transform rotate-90" : "text-gray-400"
+                  }`}
+                />
+              )}
             </NavLink>
           </li>
         ))}

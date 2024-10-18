@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
+import Footer from "../../Footer";
 import axios from "axios";
 
 function ProcessingOrder() {
@@ -97,6 +98,7 @@ function ProcessingOrder() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
