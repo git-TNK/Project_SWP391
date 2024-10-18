@@ -20,7 +20,7 @@ function ProcessingOrder() {
   async function handleUpdateOrderStatus(orderId) {
     try {
       const response = await axios.put(
-        `http://localhost:5056/Order/UpdateOrder/${orderId}`
+        `http://localhost:5056/Order/StaffUpdateOrder/${orderId}`
       );
 
       if (response.status === 200) {
@@ -35,7 +35,6 @@ function ProcessingOrder() {
   useEffect(() => {
     fetchListOrders();
   }, []);
-
 
   return (
     <div className="flex flex-col min-h-screen">
