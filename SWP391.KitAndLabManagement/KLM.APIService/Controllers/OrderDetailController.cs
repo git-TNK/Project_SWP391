@@ -35,11 +35,14 @@ namespace KLM.APIService.Controllers
                 {
                     DateOrder.Add(x.OrderDate);
                 }
-                DateTime latestDate = listOrder.Max(x => x.OrderDate);
+                DateTime currentDateTime = DateTime.Now;
+                DateTime nearestDateTime = DateOrder
+            .OrderBy(dt => Math.Abs((dt - currentDateTime).TotalMilliseconds))
+            .First();
                 string orderId = "";
                 foreach (var item in listOrder)
                 {
-                    if (item.OrderDate.Equals(latestDate))
+                    if (item.OrderDate.Equals(nearestDateTime))
                     {
                         orderId = item.OrderId;
                     }

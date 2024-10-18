@@ -42,7 +42,7 @@ namespace KLM.APIService.Controllers
             newOrder.Note = note;
             newOrder.Address = address;
             newOrder.Price = price;
-            newOrder.OrderDate = DateTime.Today.Date;
+            newOrder.OrderDate = DateTime.Now;
             newOrder.Status = "Processing";
             _unitOfWork.OrderTblRepository.Create(newOrder);
             return Ok(newOrder);
