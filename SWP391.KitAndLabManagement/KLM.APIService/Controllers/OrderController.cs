@@ -54,8 +54,8 @@ namespace KLM.APIService.Controllers
             return Ok(await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId));
         }
 
-        [HttpPut("UpdateOrder/{orderId}")]
-        public async Task<IActionResult> UpdateOrderStats(string orderId)
+        [HttpPut($"StaffUpdateOrder/{{orderId}}")]
+        public async Task<IActionResult> UpdateOrderStatus(string orderId)
         {
             List<OrderTbl> orderUpdate = await _unitOfWork.OrderTblRepository.GetAllOrderTbl();
             foreach (var o in orderUpdate)
@@ -70,6 +70,21 @@ namespace KLM.APIService.Controllers
             return BadRequest("Not Found");
         }
 
+        [HttpPut($"CustomerUpdateOrder/{{orderId}}")]
+        public async Task<IActionResult> ConfirmRecivedOrder(string orderId)
+        {
+            List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTbl();
+            foreach (var x in listOrder)
+            {
+                if (x.OrderId.Equals(orderId))
+                {
+                    x.Status = "Done";
+                    _unitOfWork.OrderTblRepository.Update(x);
+                    return Ok();
+                }
+            }
+            return BadRequest("Not Found");
+        }
 
         [HttpGet("QrResponse")]
         public async Task<IActionResult> QrResponse()

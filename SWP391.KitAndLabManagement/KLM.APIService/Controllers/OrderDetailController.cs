@@ -1,6 +1,7 @@
 ﻿using KLM.Repository;
 using KLM.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,8 +12,13 @@ namespace KLM.APIService.Controllers
     public class OrderDetailController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
+        private readonly FirebaseStorageService _firebaseService;
 
-        public OrderDetailController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public OrderDetailController(UnitOfWork unitOfWork, FirebaseStorageService firebaseService)
+        {
+            _unitOfWork = unitOfWork;
+            _firebaseService = firebaseService;
+        }
 
 
         [HttpGet("{orderId}")]
@@ -24,7 +30,6 @@ namespace KLM.APIService.Controllers
         [HttpPost("{accounId}/{kitId}/{kitName}/{kitQuantity}/{price}")]
         public async Task<IActionResult> AddOrderDetails(string accounId, string kitId, string kitName, decimal price, int kitQuantity)
         {
-
             List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accounId);
             List<ProductKitTbl> productKits = _unitOfWork.ProductKitTblRepository.GetAll();
             if (listOrder != null)
@@ -35,14 +40,15 @@ namespace KLM.APIService.Controllers
                 {
                     DateOrder.Add(x.OrderDate);
                 }
-                DateTime currentDateTime = DateTime.Now;
-                DateTime nearestDateTime = DateOrder
-            .OrderBy(dt => Math.Abs((dt - currentDateTime).TotalMilliseconds))
-            .First();
+                if (DateOrder.IsNullOrEmpty())
+                {
+                    return BadRequest();
+                }
+                DateTime newestTime = DateOrder.Max();
                 string orderId = "";
                 foreach (var item in listOrder)
                 {
-                    if (item.OrderDate.Equals(nearestDateTime))
+                    if (item.OrderDate.Equals(newestTime))
                     {
                         orderId = item.OrderId;
                     }
@@ -64,6 +70,11 @@ namespace KLM.APIService.Controllers
                     }
                 }
                 return Ok(orderDetail);
+            }
+            else if (listOrder == null)
+            {
+                //for if Account first order
+                return Ok(await AddOrderDetails(accounId, kitId, kitName, price, kitQuantity));
             }
             else { return BadRequest(); }
         }
