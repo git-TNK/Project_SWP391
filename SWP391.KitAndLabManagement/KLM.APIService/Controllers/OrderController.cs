@@ -62,7 +62,7 @@ namespace KLM.APIService.Controllers
             {
                 if (o.OrderId.Equals(orderId))
                 {
-                    o.Status = "Shipped";
+                    o.Status = "Shipping";
                     _unitOfWork.OrderTblRepository.Update(o);
                     return Ok(o);
                 }
