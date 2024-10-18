@@ -8,7 +8,7 @@ namespace KLM.Repository.Repositories
     {
         public OrderDetailsRepository(Swp391Context context) => _context ??= context;
 
-        public async Task<List<OrderDetailTbl>> getAllOrdersDetailsById(string orderId)
+        public async Task<List<OrderDetailTbl>> GetAllOrdersDetailsById(string orderId)
         {
             return await _context.OrderDetailTbls.Select(o => new OrderDetailTbl
             {
@@ -17,7 +17,7 @@ namespace KLM.Repository.Repositories
                 KitName = o.KitName,
                 KitQuantity = o.KitQuantity,
                 Price = o.Price,
-            }).Where(ordId => ordId.Equals(orderId)).ToListAsync();
+            }).Where(o => o.OrderId.Equals(orderId)).ToListAsync();
         }
     }
 }

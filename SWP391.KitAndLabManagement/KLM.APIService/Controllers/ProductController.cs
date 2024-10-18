@@ -24,7 +24,6 @@ namespace KLM.APIService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProductKitDTO()
         {
-
             return await _unitOfWork.ProductKitTblRepository.GetProductDTO();
         }
 
@@ -195,7 +194,7 @@ namespace KLM.APIService.Controllers
 
         //update so luong kit con lai trong kho
         [HttpPut("{kitId}, {quantity}")]
-        public async Task<IActionResult> UpdateQuantityOfKitProduct(string kitId, int quantity)
+        public IActionResult UpdateQuantityOfKitProduct(string kitId, int quantity)
         {
             var updatingProduct = _unitOfWork.ProductKitTblRepository.GetById(kitId);
             if (updatingProduct != null)

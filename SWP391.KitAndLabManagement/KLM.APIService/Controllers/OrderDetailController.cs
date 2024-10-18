@@ -18,20 +18,54 @@ namespace KLM.APIService.Controllers
         [HttpGet("{orderId}")]
         public async Task<List<OrderDetailTbl>> GetOrderDetailTbls(string orderId)
         {
-            return await _unitOfWork.OrderDetailsRepository.getAllOrdersDetailsById(orderId);
+            return await _unitOfWork.OrderDetailsRepository.GetAllOrdersDetailsById(orderId);
         }
 
-        [HttpPost("{orderId}, {kitId}, {kitName}, {kitQuantity}, {price}")]
-        public async Task<IActionResult> AddOrderDetails(string orderId, string kitId, string kitName, decimal price, int kitQuantity)
+        [HttpPost("{accounId}/{kitId}/{kitName}/{kitQuantity}/{price}")]
+        public async Task<IActionResult> AddOrderDetails(string accounId, string kitId, string kitName, decimal price, int kitQuantity)
         {
-            OrderDetailTbl orderDetail = new OrderDetailTbl();
-            orderDetail.OrderId = orderId;
-            orderDetail.KitId = kitId;
-            orderDetail.KitName = kitName;
-            orderDetail.KitQuantity = kitQuantity;
-            orderDetail.Price = price;
-            _unitOfWork.OrderDetailsRepository.Create(orderDetail);
-            return Ok(orderDetail);
+
+            List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accounId);
+            List<ProductKitTbl> productKits = _unitOfWork.ProductKitTblRepository.GetAll();
+            if (listOrder != null)
+            {
+                List<DateTime> DateOrder = new List<DateTime>();
+
+                foreach (OrderTbl x in listOrder)
+                {
+                    DateOrder.Add(x.OrderDate);
+                }
+                DateTime currentDateTime = DateTime.Now;
+                DateTime nearestDateTime = DateOrder
+            .OrderBy(dt => Math.Abs((dt - currentDateTime).TotalMilliseconds))
+            .First();
+                string orderId = "";
+                foreach (var item in listOrder)
+                {
+                    if (item.OrderDate.Equals(nearestDateTime))
+                    {
+                        orderId = item.OrderId;
+                    }
+                }
+
+                OrderDetailTbl orderDetail = new OrderDetailTbl();
+                orderDetail.OrderId = orderId;
+                orderDetail.KitId = kitId;
+                orderDetail.KitName = kitName;
+                orderDetail.KitQuantity = kitQuantity;
+                orderDetail.Price = price;
+                _unitOfWork.OrderDetailsRepository.Create(orderDetail);
+                foreach (var item in productKits)
+                {
+                    if (orderDetail.KitId.Equals(item.KitId))
+                    {
+                        item.Quantity = item.Quantity - kitQuantity;
+                        _unitOfWork.ProductKitTblRepository.Update(item);
+                    }
+                }
+                return Ok(orderDetail);
+            }
+            else { return BadRequest(); }
         }
 
     }

@@ -9,7 +9,13 @@ namespace KLM.APIService.Controllers
     public class OrderController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;
-        public OrderController() => _unitOfWork ??= new UnitOfWork();
+        private readonly FirebaseStorageService _firebaseService;
+        public OrderController(UnitOfWork unitOfWork, FirebaseStorageService firebaseService)
+        {
+            _unitOfWork = unitOfWork;
+            _firebaseService = firebaseService;
+        }
+
 
 
         //get all order, khi staff bam vao Quan li don hang de proccess cac don hang
@@ -36,7 +42,7 @@ namespace KLM.APIService.Controllers
             newOrder.Note = note;
             newOrder.Address = address;
             newOrder.Price = price;
-            newOrder.OrderDate = DateOnly.FromDateTime(DateTime.Today.Date);
+            newOrder.OrderDate = DateTime.Now;
             newOrder.Status = "Processing";
             _unitOfWork.OrderTblRepository.Create(newOrder);
             return Ok(newOrder);
@@ -62,6 +68,31 @@ namespace KLM.APIService.Controllers
                 }
             }
             return BadRequest("Not Found");
+        }
+
+
+        [HttpGet("QrResponse")]
+        public async Task<IActionResult> QrResponse()
+        {
+            try
+            {
+                bool latestPayment = await _firebaseService.AnyTransactionExists();
+                await _firebaseService.DeleteAllTransactionsAsync();
+                if (latestPayment)
+                {
+
+                    return Ok("Success");
+                }
+                else
+                {
+                    return BadRequest("Failed");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Something wrong, line 92 - orderController : {ex}");
+            }
         }
 
     }

@@ -34,6 +34,26 @@ namespace KLM.APIService.Controllers
             string labName = request.labName;
             DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
             string? documentUrl = null;
+            int productBuying = 0;
+            bool? isBuying = false;
+
+
+            List<OrderTbl> checkOrderOfAccount = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId);
+            foreach (var x in checkOrderOfAccount)
+            {
+
+                if (x.AccountId.Equals(accountId))
+                {
+                    List<OrderDetailTbl> checkOrderDetailsOfAccount = await _unitOfWork.OrderDetailsRepository.GetAllOrdersDetailsById(x.OrderId);
+                    isBuying = true;
+                    foreach (var y in checkOrderDetailsOfAccount)
+                    {
+                        productBuying++;
+                    }
+                }
+            }
+
+
             if (request.File != null && request.File.Length > 0)
             {
                 using (var stream = request.File.OpenReadStream())
@@ -43,85 +63,89 @@ namespace KLM.APIService.Controllers
                 }
             }
 
-            Task<List<QuestionTbl>> listQuestions = _unitOfWork.QuestionTblRepository.GetAllQuestions();
-            //Check turn con lai neu Account da hoi roi
-            var result = new QuestionTbl();
-            List<QuestionTbl> listCheckTurn = new();
-            foreach (var x in await listQuestions)
+            if ((bool)isBuying)
             {
-                if (x.AccountId.Equals(accountId))
+                Task<List<QuestionTbl>> listQuestions = _unitOfWork.QuestionTblRepository.GetAllQuestions();
+                //Check turn con lai neu Account da hoi roi
+                var result = new QuestionTbl();
+                List<QuestionTbl> listCheckTurn = new();
+                foreach (var x in await listQuestions)
                 {
-                    listCheckTurn.Add(x);
-                }
-            }
-            //==================================================================            
-            foreach (var item in await listQuestions)
-            {
-                if (item.AccountId.Equals(accountId))
-                {
-                    int min = 100;
-                    int checkTurn = 0;
-                    foreach (var x in listCheckTurn)
+                    if (x.AccountId.Equals(accountId))
                     {
-                        if (x.Turn <= min)
-                        {
-                            min = x.Turn;
-                            checkTurn = min;
-                        }
+                        listCheckTurn.Add(x);
                     }
-                    if (checkTurn > 0)
+                }
+                //==================================================================            
+                foreach (var item in await listQuestions)
+                {
+                    if (item.AccountId.Equals(accountId))
                     {
-                        result.QuestionId = "Q" + (new Random().Next(0, 999));
-
-                        if (result.QuestionId.Equals(item.QuestionId))
+                        int min = 100;
+                        int checkTurn = 0;
+                        foreach (var x in listCheckTurn)
+                        {
+                            if (x.Turn <= min)
+                            {
+                                min = x.Turn;
+                                checkTurn = min;
+                            }
+                        }
+                        if (checkTurn > 0)
                         {
                             result.QuestionId = "Q" + (new Random().Next(0, 999));
+
+                            if (result.QuestionId.Equals(item.QuestionId))
+                            {
+                                result.QuestionId = "Q" + (new Random().Next(0, 999));
+                            }
+                            result.AccountId = accountId;
+                            result.Question = question;
+                            result.LabName = labName;
+                            result.AttachedFile = documentUrl;
+                            result.Status = "Active";
+                            result.Turn = min - 1;
+                            result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
+                            if (documentUrl != null)
+                            {
+                                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                            }
+                            _unitOfWork.QuestionTblRepository.Create(result);
+                            return Ok(result);
                         }
-                        result.AccountId = accountId;
-                        result.Question = question;
-                        result.LabName = labName;
-                        result.AttachedFile = documentUrl;
-                        result.Status = "Active";
-                        result.Turn = min - 1;
-                        result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
-                        if (documentUrl != null)
+                        else if (checkTurn == 0)
                         {
-                            await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                            return BadRequest("You end of turn to ask");
                         }
-                        _unitOfWork.QuestionTblRepository.Create(result);
-                        return Ok(result);
-                    }
-                    else if (checkTurn == 0)
-                    {
-                        return BadRequest("You end of turn to ask");
                     }
                 }
-            }
-            //Neu Account lan dau hoi thi khong can check turn nua
+                //Neu Account lan dau hoi thi khong can check turn nua
 
-            result = new QuestionTbl();
-            result.QuestionId = "Q" + (new Random().Next(0, 999));
+                result = new QuestionTbl();
+                result.QuestionId = "Q" + (new Random().Next(0, 999));
 
-            foreach (var item in await listQuestions)
-            {
-                if (result.QuestionId.Equals(item.QuestionId))
+                foreach (var item in await listQuestions)
                 {
-                    result.QuestionId = "Q" + (new Random().Next(0, 999));
+                    if (result.QuestionId.Equals(item.QuestionId))
+                    {
+                        result.QuestionId = "Q" + (new Random().Next(0, 999));
+                    }
                 }
+                result.AccountId = accountId;
+                result.Question = question;
+                result.LabName = labName;
+                result.AttachedFile = documentUrl;
+                result.Status = "Active";
+                result.Turn = productBuying * 2;
+                result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
+                if (documentUrl != null)
+                {
+                    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                }
+                _unitOfWork.QuestionTblRepository.Create(result);
+                return Ok(result);
             }
-            result.AccountId = accountId;
-            result.Question = question;
-            result.LabName = labName;
-            result.AttachedFile = documentUrl;
-            result.Status = "Active";
-            result.Turn = 3;
-            result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
-            if (documentUrl != null)
-            {
-                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-            }
-            _unitOfWork.QuestionTblRepository.Create(result);
-            return Ok(result);
+            else return BadRequest("Fail");
         }
 
     }
