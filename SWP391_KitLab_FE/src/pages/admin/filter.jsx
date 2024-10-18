@@ -41,10 +41,10 @@ const FilterType = ({ options, onFilterChange }) => {
               <button
                 key={type}
                 onClick={() => handleFilterSelect(type)}
-                className={`block px-4 py-2 text-sm w-full text-left ${
+                className={`block items-center w-5/6 my-2 mx-4 px-4 py-2 text-sm text-center rounded-lg font-medium transition-colors duration-300 ${
                   selectedTypes.includes(type)
                     ? "bg-black text-white"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    : "text-black bg-white hover:bg-black hover:text-white"
                 }`}
                 role="menuitem"
               >

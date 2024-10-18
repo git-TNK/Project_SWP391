@@ -1,17 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import Link from react-router-dom
 import axios from "axios";
 import Header from "../Header";
 import Footer from "../../Footer";
+import FilterType from "../admin/filter";
+
+const typeOptions = [
+  "Wifi",
+  "Wireless",
+  "Bluetooth",
+  "Led",
+  "Actuator",
+  "AI",
+  "Automatic",
+  "Connector",
+  "Controller",
+  "Memory",
+  "Manual",
+];
 
 function ProductViewPage() {
   const [listProduct, setListProduct] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState("All"); // Default to "All"
+  const [selectedBrand, setSelectedBrand] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
+  //filter
+  const [selectedTypes, setSelectedTypes] = useState([]);
+
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
@@ -47,10 +66,28 @@ function ProductViewPage() {
     setCurrentPage(1);
   };
 
-  const filteredProducts =
-    selectedBrand === "All"
-      ? listProduct
-      : listProduct.filter((item) => item.brand === selectedBrand);
+  const handleFilterChange = (newSelectedTypes) => {
+    setSelectedTypes(newSelectedTypes);
+    setCurrentPage(1);
+  };
+
+  const filteredProducts = useMemo(() => {
+    return listProduct.filter((product) => {
+      const brandMatch =
+        selectedBrand === "All" || product.brand === selectedBrand;
+      const typeMatch =
+        selectedTypes.length === 0 ||
+        selectedTypes.every(
+          (type) => product.typeNames && product.typeNames.includes(type)
+        );
+      return brandMatch && typeMatch;
+    });
+  }, [listProduct, selectedBrand, selectedTypes]);
+
+  // const filteredProducts =
+  // selectedBrand === "All"
+  //   ? listProduct
+  //   : listProduct.filter((item) => item.brand === selectedBrand);
 
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
@@ -90,6 +127,15 @@ function ProductViewPage() {
         </aside>
 
         <div className="flex-1">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Sản phẩm</h2>
+            <div className="flex items-center">
+              <FilterType
+                options={typeOptions}
+                onFilterChange={handleFilterChange}
+              />
+            </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentProducts.map((item, index) => (
               <div
