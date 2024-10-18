@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Notification from "../admin/notification";
 import Header from "../Header";
@@ -12,8 +12,20 @@ function TransferMoneyPage() {
   const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [listOrder, setListOrder] = useState([]);
   const navigate = useNavigate();
   const account = JSON.parse(localStorage.getItem("account"));
+
+  const fetchListOrder = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5056/Order/${account.accountId}`
+      );
+      setListOrder(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const fetchResult = async () => {
     try {
@@ -35,7 +47,6 @@ function TransferMoneyPage() {
     //   setLoading(true);
     // }
     //clear gio hang
-    sessionStorage.clear();
   };
 
   useEffect(() => {
@@ -76,7 +87,7 @@ function TransferMoneyPage() {
 
   console.log(buyerData);
 
-  const createOrder = async () => {
+  const createOrder = useCallback(async () => {
     try {
       const { notes, totalCart, address } = buyerData;
       const response = await fetch(
@@ -93,35 +104,41 @@ function TransferMoneyPage() {
     } catch (e) {
       console.log(e);
     }
-  };
+  }, [buyerData, account.accountId]);
 
-  const createOrderDetails = async (item) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5056/api/OrderDetail/${account.accountId}/${item.kitId}/${item.name}/${item.quantity}/${item.price}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) throw new Error("Failed to create order detail");
-      console.log(await response.json());
-    } catch (e) {
-      console.log(e);
+  const createOrderDetails = useCallback(
+    async (item) => {
+      try {
+        const response = await fetch(
+          `http://localhost:5056/api/OrderDetail/${account.accountId}/${
+            item.kitId
+          }/${encodeURIComponent(item.name)}/${item.quantity}/${item.price}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) throw new Error("Failed to create order detail");
+        console.log(await response.json());
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [account.accountId]
+  );
+
+  useEffect(() => {
+    if (isSuccess) {
+      createOrder()
+        .then(() => {
+          return Promise.all(cart.map((item) => createOrderDetails(item)));
+        })
+        .then(() => console.log("All order details created"))
+        .catch((error) => console.log(error));
     }
-  };
-
-  if (isSuccess) {
-    createOrder();
-  }
-
-  if (isSuccess) {
-    Promise.all(cart.map((item) => createOrderDetails(item)))
-      .then(() => console.log("All order details created"))
-      .catch((e) => console.log(e));
-  }
+  }, [isSuccess, cart, listOrder, createOrder, createOrderDetails]);
   // const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=${buyerData.totalCart}&addInfo=Testing&accountName=Tran Nam Khanh`;
   //o tren la dung so tien hien thi o duoi la so tien nho de test
   const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=2000&addInfo=Testing&accountName=Tran Nam Khanh`;
