@@ -38,7 +38,7 @@ namespace KLM.APIService.Controllers
             string accountId = request.accounId;
             string question = request.question;
             string labName = request.labName;
-            DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
+            //DateTime DateOfCreation = DateTime.Now;
             string? documentUrl = null;
             int productBuying = 0;
             bool? isBuying = false;
@@ -112,7 +112,7 @@ namespace KLM.APIService.Controllers
                             result.AttachedFile = documentUrl;
                             result.Status = "Active";
                             result.Turn = min - 1;
-                            result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
+                            result.DateOfQuestion = DateTime.Now;
                             if (documentUrl != null)
                             {
                                 await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
@@ -143,8 +143,8 @@ namespace KLM.APIService.Controllers
                 result.LabName = labName;
                 result.AttachedFile = documentUrl;
                 result.Status = "Active";
-                result.Turn = productBuying * 2;
-                result.DateOfQuestion = DateOnly.FromDateTime(DateTime.Today.Date);
+                result.Turn = productBuying * 2 - 1;
+                result.DateOfQuestion = DateTime.Now;
                 if (documentUrl != null)
                 {
                     await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
