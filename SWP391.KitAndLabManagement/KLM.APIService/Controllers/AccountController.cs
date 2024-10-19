@@ -64,6 +64,13 @@ namespace KLM.APIService.Controllers
                 }
             }
             string accountId = "ACC" + (new Random().Next(000, 999));
+            foreach (var x in listAccount)
+            {
+                if (x.AccountId.Equals(accountId))
+                {
+                    accountId = "ACC" + (new Random().Next(000, 999));
+                }
+            }
             AccountTbl registerAccount = new AccountTbl();
             registerAccount.AccountId = accountId;
             registerAccount.FullName = fullName;

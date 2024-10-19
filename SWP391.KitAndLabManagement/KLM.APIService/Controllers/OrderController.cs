@@ -42,7 +42,7 @@ namespace KLM.APIService.Controllers
             newOrder.Note = note;
             newOrder.Address = address;
             newOrder.Price = price;
-            newOrder.OrderDate = DateTime.Today.Date;
+            newOrder.OrderDate = DateTime.Now;
             newOrder.Status = "Processing";
             _unitOfWork.OrderTblRepository.Create(newOrder);
             return Ok(newOrder);
@@ -54,15 +54,15 @@ namespace KLM.APIService.Controllers
             return Ok(await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId));
         }
 
-        [HttpPut("UpdateOrder/{orderId}")]
-        public async Task<IActionResult> UpdateOrderStats(string orderId)
+        [HttpPut($"StaffUpdateOrder/{{orderId}}")]
+        public async Task<IActionResult> UpdateOrderStatus(string orderId)
         {
             List<OrderTbl> orderUpdate = await _unitOfWork.OrderTblRepository.GetAllOrderTbl();
             foreach (var o in orderUpdate)
             {
                 if (o.OrderId.Equals(orderId))
                 {
-                    o.Status = "Shipped";
+                    o.Status = "Shipping";
                     _unitOfWork.OrderTblRepository.Update(o);
                     return Ok(o);
                 }
@@ -70,6 +70,21 @@ namespace KLM.APIService.Controllers
             return BadRequest("Not Found");
         }
 
+        [HttpPut($"CustomerUpdateOrder/{{orderId}}")]
+        public async Task<IActionResult> ConfirmRecivedOrder(string orderId)
+        {
+            List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTbl();
+            foreach (var x in listOrder)
+            {
+                if (x.OrderId.Equals(orderId))
+                {
+                    x.Status = "Done";
+                    _unitOfWork.OrderTblRepository.Update(x);
+                    return Ok();
+                }
+            }
+            return BadRequest("Not Found");
+        }
 
         [HttpGet("QrResponse")]
         public async Task<IActionResult> QrResponse()
