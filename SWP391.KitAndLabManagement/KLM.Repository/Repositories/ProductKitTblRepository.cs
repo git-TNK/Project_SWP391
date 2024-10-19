@@ -311,5 +311,19 @@ namespace KLM.Repository.Repositories
             return (errors, oldImageUrl);
         }
 
+
+        //Get kit for adding and updating lab
+        public async Task<List<KitForLab>> GetKitForAddUpdate()
+        {
+            var product = await _context.Set<ProductKitTbl>()
+                .Select(p => new KitForLab
+                {
+                    KitId = p.KitId,
+                    Name = p.Name,
+                    Status = p.Status,
+                    TypeNames = p.Ktypes.Select(l => l.TypeName).ToList()
+                }).ToListAsync();
+            return product;
+        }
     }
 }
