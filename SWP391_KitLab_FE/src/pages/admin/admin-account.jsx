@@ -118,6 +118,17 @@ function AdminAccount() {
     setCurrentPage(1);
   };
 
+  const handleTranslate = (role) => {
+    switch (role) {
+      case "All":
+        return "Tất cả";
+      case "Customer":
+        return "Khách hàng";
+      default:
+        return "Nhân viên";
+    }
+  };
+
   const renderModalContent = () => {
     if (!selectedAccount) return null;
 
@@ -184,7 +195,7 @@ function AdminAccount() {
                         <button
                           key={role}
                           onClick={() => handleFilterSelect(role)}
-                          className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium
+                          className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium text-left
                             ${
                               role === filterRole
                                 ? "text-white bg-black"
@@ -193,7 +204,7 @@ function AdminAccount() {
                             `}
                           role="menuitem"
                         >
-                          {role}
+                          {handleTranslate(role)}
                         </button>
                       ))}
                     </div>
@@ -208,14 +219,14 @@ function AdminAccount() {
                 <thead className="bg-gray-200 text-gray-700">
                   <tr>
                     <th className="py-3 px-4 text-center">ID</th>
-                    <th className="py-3 px-4 text-center">Username</th>
-                    <th className="py-3 px-4 text-center">Password</th>
-                    <th className="py-3 px-4 text-center">Full name</th>
-                    <th className="py-3 px-4 text-center">Phone number</th>
+                    <th className="py-3 px-4 text-center">Tài khoản</th>
+                    <th className="py-3 px-4 text-center">Mật khẩu</th>
+                    <th className="py-3 px-4 text-center">Họ tên</th>
+                    <th className="py-3 px-4 text-center">Số điện thoại</th>
                     <th className="py-3 px-4 text-center">Email</th>
-                    <th className="py-3 px-4 text-center">Address</th>
-                    <th className="py-3 px-4 text-center">Role</th>
-                    <th className="py-3 px-4 text-center">Promotion</th>
+                    <th className="py-3 px-4 text-center">Địa chỉ</th>
+                    <th className="py-3 px-4 text-center ">Chức vụ</th>
+                    <th className="py-3 px-4 text-center">Thăng/Giáng cấp</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
@@ -226,17 +237,13 @@ function AdminAccount() {
                     >
                       <td className="py-2 px-4">{account.accountId}</td>
                       <td className="py-2 px-4">{account.username}</td>
-                      <td className="py-2 px-4 text-center">
-                        {account.password}
-                      </td>
-                      <td className="py-2 px-4 text-center">
-                        {account.fullName}
-                      </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4 ">{account.password}</td>
+                      <td className="py-2 px-4 ">{account.fullName}</td>
+                      <td className="py-2 px-4 text-right">
                         {account.phoneNumber}
                       </td>
-                      <td className="py-2 px-4 text-center">{account.email}</td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4 ">{account.email}</td>
+                      <td className="py-2 px-4 ">
                         {account.address ? (
                           <button
                             onClick={() => handleModalOpen(account)}
@@ -248,9 +255,11 @@ function AdminAccount() {
                           <span className="text-gray-400">-</span>
                         )}
                       </td>
-                      <td className="py-2 px-4 text-center">
-                        <span className="inline-block w-20">
-                          {account.role}
+                      <td className="py-2 pl-4 pr-1">
+                        <span className="inline-block w-24">
+                          {account.role === "Staff"
+                            ? "Nhân viên"
+                            : "Khách hàng"}
                         </span>
                       </td>
 
@@ -260,14 +269,14 @@ function AdminAccount() {
                             className="w-24 py-1 px-2 bg-black text-white rounded"
                             onClick={() => handlePromote(account)}
                           >
-                            Demote
+                            Giáng cấp
                           </button>
                         ) : (
                           <button
                             className="w-24 py-1 px-2 bg-black text-white rounded"
                             onClick={() => handlePromote(account)}
                           >
-                            Promote
+                            Thăng cấp
                           </button>
                         )}
                       </td>

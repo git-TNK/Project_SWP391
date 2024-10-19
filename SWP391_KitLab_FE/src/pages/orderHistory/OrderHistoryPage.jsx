@@ -7,11 +7,17 @@ import axios from "axios";
 function OrderHistoryPage() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
-  useEffect(() => {
+  const [listorder, setListOrder] = useState([]);
+
+  const getAccount = () => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
-    if (savedAccount) {
-      setAccount(savedAccount);
-    }
+    setAccount(savedAccount);
+    // console.log(savedAccount);
+    return savedAccount;
+  };
+
+  useEffect(() => {
+    fetchListOrder(getAccount());
   }, []);
 
   useEffect(() => {
@@ -20,9 +26,7 @@ function OrderHistoryPage() {
     }
   }, [account, navigate]);
 
-  const [listorder, setListOrder] = useState([]);
-
-  async function fetchListOrder() {
+  async function fetchListOrder(account) {
     try {
       const response = await axios.get(
         `http://localhost:5056/Order/${account.accountId}`
@@ -33,15 +37,12 @@ function OrderHistoryPage() {
     }
   }
 
-  useEffect(() => {
-    fetchListOrder();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // fetchListOrder();
 
-  console.log(listorder);
+  // console.log(listorder);
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Lịch sử đặt hàng</h2>

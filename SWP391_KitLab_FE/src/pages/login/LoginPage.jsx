@@ -10,9 +10,16 @@ function LoginPage() {
   const [role, setRole] = useState("");
   const [account, setAccount] = useState();
   const navigate = useNavigate();
+  const [error, setError] = useState({});
 
-  const onFinish = (e) => {
+  const onFinish = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      console.log("Form has errors. Please correct them.");
+      return;
+    }
+
     console.log("Username: ", userName);
     console.log("Password: ", password);
     fetchAccount(userName, password);
@@ -32,6 +39,17 @@ function LoginPage() {
       alert("Sai tài khoản hoặc mật khẩu");
     }
   }
+
+  const validateForm = () => {
+    let formError = {};
+
+    if (!userName.trim()) formError.userName = "Tên không được để trống";
+    if (!password.trim()) formError.password = "Password không được để trống";
+
+    setError(formError);
+
+    return Object.keys(formError).length === 0;
+  };
 
   useEffect(() => {
     if (account) {
@@ -63,8 +81,10 @@ function LoginPage() {
               placeholder="Tên đăng nhập"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              required
             />
+            {error.userName && (
+              <p className="text-red-500 text-sm mt-1">{error.userName}</p>
+            )}
           </div>
           <div className="custom-user-box mb-6">
             <label htmlFor="password" className="text-sm text-gray-600">
@@ -77,8 +97,10 @@ function LoginPage() {
               placeholder="Nhập mật khẩu"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
+            {error.password && (
+              <p className="text-red-500 text-sm mt-1">{error.password}</p>
+            )}
           </div>
           <NavLink
             to="/forgotpassword"

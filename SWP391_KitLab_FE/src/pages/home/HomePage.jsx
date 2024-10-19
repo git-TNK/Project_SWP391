@@ -3,11 +3,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom"; // Import use
 import Header from "../Header";
 import Footer from "../../Footer";
 import axios from "axios";
+import LoadingSpinner from "../admin/loading";
 
 function HomePage() {
   const [listProduct, setListProduct] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
@@ -28,6 +31,7 @@ function HomePage() {
 
   // Fetch products from the API
   async function fetchProduct() {
+    setIsLoading(true);
     try {
       const response = await axios.get(`http://localhost:5056/product`);
       // Filter out products with status 'Deleted'
@@ -35,7 +39,9 @@ function HomePage() {
         (item) => item.status !== "Deleted"
       );
       setListProduct(filteredProducts);
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
   }
@@ -147,6 +153,7 @@ function HomePage() {
         </section>
       </main>
       <Footer />
+      {isLoading && <LoadingSpinner />}
     </div>
   );
 }

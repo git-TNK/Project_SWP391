@@ -287,7 +287,7 @@ function AdminLab() {
                           ))}
                         </div>
                       </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4">
                         {lab.kits && lab.kits.length > 0 ? (
                           <button
                             onClick={() => handleModalOpen(lab, "kits")}
@@ -299,10 +299,8 @@ function AdminLab() {
                           <span className="text-gray-400">-</span>
                         )}
                       </td>
-                      <td className="py-2 px-4 text-center">
-                        {lab.dateOfCreationLab}
-                      </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4">{lab.dateOfCreationLab}</td>
+                      <td className="py-2 px-4 ">
                         {lab.dateOfDeletionLab || lab.dateOfChangeLab || (
                           <span className="text-gray-400">Không</span>
                         )}

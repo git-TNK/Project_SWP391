@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../Footer";
 import Header from "../Header";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import Notification from "../admin/notification";
 
 function CheckoutPage() {
   const [cart, setCart] = useState([]);
@@ -9,6 +10,7 @@ function CheckoutPage() {
   const [formSubmitted, setFormSubmitted] = useState(false); // Track form submission
   const navigate = useNavigate();
   const shippingFee = 30000; // Example shipping fee
+  const [notification, setNotification] = useState(null);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -93,10 +95,16 @@ function CheckoutPage() {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (validateForm()) {
       console.log("Submitting order:", formData);
-      setFormSubmitted(true); // Mark form as submitted
+      setFormSubmitted(true);
+      setNotification({ message: "Xác nhận thành công", type: "success" }); // Mark form as submitted
     }
+  };
+
+  const closeNotification = () => {
+    setNotification(null);
   };
 
   return (
@@ -164,6 +172,7 @@ function CheckoutPage() {
                     <p className="text-red-500 text-sm">{errors.address}</p>
                   )}
                   <textarea
+                    type="text"
                     name="notes"
                     placeholder="Ghi chú (Bắt buộc) nếu không thì ghi `không`"
                     className="w-full p-2 border rounded"
@@ -234,6 +243,14 @@ function CheckoutPage() {
         </div>
       </main>
       <Footer />
+
+      {notification && (
+        <Notification
+          message={notification.message}
+          type={notification.type}
+          onClose={closeNotification}
+        />
+      )}
     </div>
   );
 }

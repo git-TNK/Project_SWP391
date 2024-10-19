@@ -27,7 +27,7 @@ function TransferMoneyPage() {
   };
 
   const handleOnClick = () => {
-    //setIsSuccess(true);
+    // setIsSuccess(true);
     if (isSuccess) {
       navigate("/");
     } else {
@@ -124,7 +124,7 @@ function TransferMoneyPage() {
   }
   // const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=${buyerData.totalCart}&addInfo=Testing&accountName=Tran Nam Khanh`;
   //o tren la dung so tien hien thi o duoi la so tien nho de test
-  const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=2000&addInfo=Testing&accountName=Tran Nam Khanh`;
+  const urlQr = `https://img.vietqr.io/image/MB-0961671129-print.jpg?amount=2000&addInfo=Testing&accountName=Le Sy Binh`;
 
   console.log(buyerData.totalCart);
 

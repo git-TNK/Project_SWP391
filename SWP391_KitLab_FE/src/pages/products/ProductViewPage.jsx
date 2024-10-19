@@ -4,6 +4,7 @@ import axios from "axios";
 import Header from "../Header";
 import Footer from "../../Footer";
 import FilterType from "../admin/filter";
+import LoadingSpinner from "../admin/loading";
 
 const typeOptions = [
   "Wifi",
@@ -24,6 +25,7 @@ function ProductViewPage() {
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
+  const [isLoading, setIsLoading] = useState(false);
 
   //filter
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -46,14 +48,17 @@ function ProductViewPage() {
 
   // Fetch products from the API
   async function fetchProduct() {
+    setIsLoading(true);
     try {
       const response = await axios.get(`http://localhost:5056/product`);
       const filteredProducts = response.data.filter(
         (item) => item.status !== "Deleted"
       );
       setListProduct(filteredProducts);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
   }
 
@@ -206,6 +211,7 @@ function ProductViewPage() {
         </div>
       </div>
       <Footer />
+      {isLoading && <LoadingSpinner />}
     </>
   );
 }
