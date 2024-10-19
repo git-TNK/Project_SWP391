@@ -1,6 +1,7 @@
 import React from "react";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
+import Footer from "../../Footer";
 
 function StaffPage() {
   const rules = [
@@ -41,6 +42,7 @@ function StaffPage() {
           </ol>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

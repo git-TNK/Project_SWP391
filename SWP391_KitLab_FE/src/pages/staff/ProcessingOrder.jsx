@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
+import Footer from "../../Footer";
 import axios from "axios";
 
 function ProcessingOrder() {
@@ -20,7 +21,7 @@ function ProcessingOrder() {
   async function handleUpdateOrderStatus(orderId) {
     try {
       const response = await axios.put(
-        `http://localhost:5056/Order/UpdateOrder/${orderId}`
+        `http://localhost:5056/Order/StaffUpdateOrder/${orderId}`
       );
 
       if (response.status === 200) {
@@ -35,7 +36,6 @@ function ProcessingOrder() {
   useEffect(() => {
     fetchListOrders();
   }, []);
-
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -85,7 +85,7 @@ function ProcessingOrder() {
                         onClick={() => handleUpdateOrderStatus(order.orderId)}
                         disabled={order.status === "Shipped"}
                       >
-                        {order.status === "Shipped"
+                        {order.status === "Shipping"
                           ? "Đã Xác Nhận"
                           : "Xác Nhận"}
                       </button>
@@ -97,6 +97,7 @@ function ProcessingOrder() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

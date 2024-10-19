@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
 import axios from "axios";
+import Footer from "../../Footer";
 
 function ViewHistorySupport() {
   const [listAnswers, setListAnswers] = useState([]);
@@ -75,6 +76,7 @@ function ViewHistorySupport() {
 
         {/* Main content area with the table */}
         <main className="flex-grow p-6">
+        <h1 className="text-2xl font-bold mb-6 text-center">Lịch Sử Hỗ Trợ</h1>
           <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr>
@@ -111,6 +113,7 @@ function ViewHistorySupport() {
           </table>
         </main>
       </div>
+      <Footer />
     </div>
   );
 }

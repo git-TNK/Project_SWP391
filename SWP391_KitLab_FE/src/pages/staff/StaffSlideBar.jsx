@@ -18,14 +18,14 @@ function StaffSlideBar() {
             <NavLink
               to={item.path} // Change href to to
               className={({ isActive }) =>
-                `flex items-center justify-between px-4 py-3 text-md ${
+                `flex items-center justify-between px-6 py-4 text-lg ${
                   isActive
                     ? "bg-gray-800 text-white font-semibold rounded-md"
                     : "text-gray-700 hover:bg-gray-200 transition-colors duration-200"
                 }`
               }
             >
-              <span className="flex-1 text-left">{item.label}</span>
+              <span className="text-left font-semibold text-lg">{item.label}</span> {/* Tăng kích thước chữ */}
               <ChevronRight
                 size={16}
                 className={({ isActive }) =>

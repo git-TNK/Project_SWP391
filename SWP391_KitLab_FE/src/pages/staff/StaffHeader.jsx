@@ -18,23 +18,33 @@ function StaffHeader() {
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("account");
-    setAccount(null); // Update state to remove account
-    navigate("/"); // Navigate immediately
+    setAccount(null);
+    navigate("/");
   };
 
   return (
-    <header className="bg-gray-900 text-white shadow-md">
+    <header className="shadow-md" style={{ backgroundColor: "rgb(31, 41, 55)", color: "white" }}>
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-gray-800 text-xl font-bold">◯</span>
+          {/* Logo hình vuông bo cạnh tròn với màu nền gray */}
+          <div className="w-20 h-20 bg-gray-500 rounded-lg flex items-center justify-center">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/swp391-2004.appspot.com/o/Logo%2Flogo.jpg?alt=media&token=7ec2c0f7-bebb-4c69-ab1d-0e70fc821d99"
+              alt="KitCentral Logo"
+              className="rounded-lg shadow-md w-full h-full object-cover"
+            />
           </div>
-          <span className="text-xl font-bold">KitCentral</span>
-          <span className="text-sm">Linh Kiện Điện Tử</span>
+          {/* Tên và Slogan */}
+          <div className="pl-3">
+            <span className="text-xl font-bold">KitCentral</span>
+            <span className="block text-sm text-white">Linh Kiện Điện Tử</span>
+          </div>
         </div>
+
+        {/* Thông tin tài khoản và Đăng xuất */}
         <div className="flex items-center space-x-2">
           <button className="px-4 py-1 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
-            {account ? account.fullName : <img src="" />}
+            {account ? account.fullName : <img src="" alt="Avatar" />}
           </button>
           <span className="text-gray-400">hoặc</span>
           <button
