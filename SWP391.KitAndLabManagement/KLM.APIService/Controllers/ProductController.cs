@@ -208,5 +208,13 @@ namespace KLM.APIService.Controllers
                 return BadRequest("Product not found");
             }
         }
+
+        //lay kit cho add voi update lab
+        [HttpGet("GetKit")]
+
+        public async Task<ActionResult<IEnumerable<KitForLab>>> GetKitForLab()
+        {
+            return await _unitOfWork.ProductKitTblRepository.GetKitForAddUpdate();
+        }
     }
 }
