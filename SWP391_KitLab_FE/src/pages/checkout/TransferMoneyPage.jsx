@@ -47,6 +47,7 @@ function TransferMoneyPage() {
     //   setLoading(true);
     // }
     //clear gio hang
+    sessionStorage.clear("cart");
   };
 
   useEffect(() => {

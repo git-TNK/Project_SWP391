@@ -26,6 +26,7 @@ function OrderHistoryPage() {
       );
       const data = await response.json();
       setListOrder(data);
+      return data.orderId;
     } catch (err) {
       console.log(err);
     }
@@ -46,6 +47,17 @@ function OrderHistoryPage() {
         );
         const productData = await productResponse.json();
         setProductDetails(productData);
+
+        const existingLabNames = JSON.parse(
+          localStorage.getItem("labNames") || "[]"
+        );
+
+        const newLabNames = productData.labs.map((lab) => lab.name);
+        const uniqueLabNames = Array.from(
+          new Set([...existingLabNames, ...newLabNames])
+        );
+
+        localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
       }
     } catch (err) {
       console.log(err);
@@ -54,6 +66,7 @@ function OrderHistoryPage() {
 
   useEffect(() => {
     fetchListOrder(getAccount());
+    fetchListOrderDetail(fetchListOrder(getAccount()));
   }, []);
 
   useEffect(() => {
