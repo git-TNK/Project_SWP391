@@ -12,8 +12,6 @@ function OrderHistoryPage() {
   const [productDetails, setProductDetails] = useState(null);
 
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const [listorder, setListOrder] = useState([]);
 
   const getAccount = () => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -32,15 +30,6 @@ function OrderHistoryPage() {
     }
   }, [account, navigate]);
 
-=======
-
-  const getAccount = () => {
-    const savedAccount = JSON.parse(localStorage.getItem("account"));
-    if (savedAccount) setAccount(savedAccount);
-    return savedAccount;
-  };
-
->>>>>>> 509517823bb369bdb10f0e467c2b99cd01ddd608
   async function fetchListOrder(account) {
     try {
       const response = await fetch(
@@ -86,11 +75,9 @@ function OrderHistoryPage() {
     }
   }
 
-<<<<<<< HEAD
   // fetchListOrder();
 
   // console.log(listorder);
-=======
   useEffect(() => {
     fetchListOrder(getAccount());
     fetchListOrderDetail(fetchListOrder(getAccount()));
@@ -123,7 +110,6 @@ function OrderHistoryPage() {
       console.error("Error confirming order:", error);
     }
   }
->>>>>>> 509517823bb369bdb10f0e467c2b99cd01ddd608
 
   return (
     <div className="flex flex-col min-h-screen">
