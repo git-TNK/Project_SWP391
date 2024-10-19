@@ -39,7 +39,6 @@ function TransferMoneyPage() {
   };
 
   const handleOnClick = () => {
-<<<<<<< HEAD
     // setIsSuccess(true);
     if (isSuccess) {
       navigate("/");
@@ -47,15 +46,6 @@ function TransferMoneyPage() {
       fetchResult();
       setLoading(true);
     }
-=======
-    setIsSuccess(true);
-    // if (isSuccess) {
-    //   navigate("/");
-    // } else {
-    //   fetchResult();
-    //   setLoading(true);
-    // }
->>>>>>> 509517823bb369bdb10f0e467c2b99cd01ddd608
     //clear gio hang
   };
 

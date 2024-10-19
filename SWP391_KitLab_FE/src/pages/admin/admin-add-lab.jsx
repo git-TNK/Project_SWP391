@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
@@ -6,6 +6,7 @@ import Footer from "../../Footer";
 import { File } from "lucide-react";
 import LoadingSpinner from "./loading";
 import FeedbackModal from "./feedback-modal";
+import axios from "axios";
 
 const AdminAddLab = () => {
   const [labName, setLabName] = useState("");
@@ -19,6 +20,8 @@ const AdminAddLab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewPdf, setPreviewPdf] = useState(null);
   const navigate = useNavigate();
+  const [listOfKit, setListOfKit] = useState([]);
+  // const [selectedKit, setSelectedKit] = useState([]);
 
   const typeOptions = [
     "Wifi",
@@ -34,11 +37,33 @@ const AdminAddLab = () => {
     "Manual",
   ];
 
+  const fetchKitData = useCallback(async () => {
+    try {
+      const response = await axios.get("http://localhost:5056/Product/GetKit");
+      if (response.status === 200) {
+        setListOfKit(response.data);
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.log(`error: ${err}`);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchKitData();
+  }, [fetchKitData]);
+
   const handleTypeToggle = (type) => {
     setTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
+
+  const filteredList = useMemo(() => {
+    return listOfKit.filter((kit) =>
+      types.some((type) => kit.typeNames.includes(type))
+    );
+  }, [listOfKit, types]);
 
   const handlePdfUpload = (e) => {
     const file = e.target.files[0];
@@ -116,6 +141,15 @@ const AdminAddLab = () => {
       navigate("/admin/lab");
     }
   };
+
+  const handleStatusTranslate = (status) => {
+    switch (status) {
+      case "Changed":
+        return "Đã sửa";
+      default:
+        return "Mới";
+    }
+  };
   return (
     <div className="flex flex-col min-h-screen">
       <AdminHeader />
@@ -144,27 +178,68 @@ const AdminAddLab = () => {
               {errors.labName && (
                 <p className="text-red-500 text-sm">{errors.labName}</p>
               )}
-              <div className="mb-4">
-                <p className="font-semibold mb-2">Loại</p>
-                <div className="flex flex-wrap gap-2">
-                  {typeOptions.map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => handleTypeToggle(type)}
-                      className={`px-4 py-2 rounded-full text-sm ${
-                        types.includes(type)
-                          ? "bg-black text-white"
-                          : "bg-gray-200 text-black"
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
+              <div className="flex mb-4">
+                <div className="w-1/2">
+                  <p className="font-semibold mb-2">Loại</p>
+                  <div className="flex flex-wrap gap-2">
+                    {typeOptions.map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => handleTypeToggle(type)}
+                        className={`px-4 py-2 rounded-lg text-sm ${
+                          types.includes(type)
+                            ? "bg-black text-white"
+                            : "bg-gray-200 text-black"
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                  {errors.types && (
+                    <p className="text-red-500 text-sm mt-1">{errors.types}</p>
+                  )}
                 </div>
-                {errors.types && (
-                  <p className="text-red-500 text-sm mt-1">{errors.types}</p>
-                )}
+                {/* kit table */}
+                <div className="w-1/2">
+                  <p className="font-semibold mb-2">Kit</p>
+                  <div className="overflow-y-auto h-48">
+                    <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                      <thead className="bg-gray-200 text-gray-700">
+                        <tr>
+                          <th className="w-2/3 py-2 px-4 text-left">Tên kit</th>
+                          <th className="w-1/3 py-2 text-left">Trạng thái</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-gray-600">
+                        {filteredList.map((kit) => (
+                          <tr
+                            key={kit.kitId}
+                            className="border-b border-gray-200 hover:bg-gray-50"
+                          >
+                            {kit.status !== "Deleted" && (
+                              <>
+                                <td className="py-2 px-4 text-left">
+                                  {kit.name}
+                                </td>
+                                <td
+                                  className={`w-20 inline-block my-3 py-2 text-center text-white rounded text-sm ${
+                                    kit.status === "Changed"
+                                      ? "bg-yellow-300"
+                                      : "bg-green-500"
+                                  }`}
+                                >
+                                  {handleStatusTranslate(kit.status)}
+                                </td>
+                              </>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
               <div>
                 <p className="block text-gray-700 text-sm font-bold mb-2">

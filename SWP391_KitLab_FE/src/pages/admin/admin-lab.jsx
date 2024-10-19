@@ -91,7 +91,7 @@ function AdminLab() {
         title = "Lab Kits";
         content =
           selectedLab.kits && selectedLab.kits.length > 0 ? (
-            <ul className="list-disc pl-5 mb-4">
+            <ul className="h-32 list-disc pl-5 mb-4 overflow-y-auto">
               {selectedLab.kits.map((kit, index) => (
                 <li key={index}>{kit}</li>
               ))}
@@ -179,6 +179,24 @@ function AdminLab() {
     setCurrentPage(1);
   };
 
+  const getLabNameFromLink = (url) => {
+    const parts = url.split("/");
+    const fileNameWithParams = parts[parts.length - 1];
+    const fileName = fileNameWithParams.split("?")[0];
+
+    // Decode the filename to handle any URL encoding
+    const decodedFileName = decodeURIComponent(fileName);
+
+    // Remove the timestamp if it exists (assuming it's separated by an underscore)
+    const nameWithoutTimestamp = decodedFileName.split("_")[0];
+
+    const finalName = nameWithoutTimestamp.split("/").pop();
+
+    const nameWithoutFileType = finalName.split(".")[0];
+
+    return nameWithoutFileType;
+  };
+
   const getStatusTranslate = (status) => {
     switch (status.toLowerCase()) {
       case "new":
@@ -250,13 +268,14 @@ function AdminLab() {
                   <tr>
                     <th className="py-3 px-4 text-left">ID</th>
                     <th className="py-3 px-4 text-left">Tên bài lab</th>
-                    <th className="py-3 px-4 text-center">Mô tả</th>
+                    <th className="py-3 px-4 text-left">Mô tả</th>
                     <th className="py-3 px-4 text-center">Loại</th>
-                    <th className="py-3 px-4 text-center">Kits</th>
+                    <th className="py-3 px-4 text-left">Kits</th>
+                    <th className="py-3 px-4 text-left">Lab link</th>
                     <th className="py-3 px-4 text-left">Ngày tạo</th>
                     <th className="py-3 px-4 text-left">Ngày chỉnh</th>
                     <th className="py-3 px-4 text-center">Trạng thái</th>
-                    <th className="py-3 px-1 text-center">Chức năng</th>
+                    <th className="py-3 px-2 text-center">Chức năng</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
@@ -298,6 +317,17 @@ function AdminLab() {
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
+                      </td>
+                      <td className="py-2 px-4">
+                        <a
+                          href={lab.document}
+                          className="text-blue-500 hover:text-blue-800"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={getLabNameFromLink(lab.document)}
+                        >
+                          Link của lab
+                        </a>
                       </td>
                       <td className="py-2 px-4">{lab.dateOfCreationLab}</td>
                       <td className="py-2 px-4 ">

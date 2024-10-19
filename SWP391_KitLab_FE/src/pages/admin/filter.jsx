@@ -30,7 +30,7 @@ const FilterType = ({ options, onFilterChange }) => {
         <ChevronDown size={20} className="ml-2" />
       </button>
       {isFilterOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 h-96 overflow-y-auto">
           <div
             className="py-1"
             role="menu"

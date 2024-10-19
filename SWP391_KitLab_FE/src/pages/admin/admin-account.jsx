@@ -218,14 +218,14 @@ function AdminAccount() {
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-gray-200 text-gray-700">
                   <tr>
-                    <th className="py-3 px-4 text-center">ID</th>
-                    <th className="py-3 px-4 text-center">Tài khoản</th>
-                    <th className="py-3 px-4 text-center">Mật khẩu</th>
-                    <th className="py-3 px-4 text-center">Họ tên</th>
+                    <th className="py-3 px-4 text-left">ID</th>
+                    <th className="py-3 px-4 text-left">Tài khoản</th>
+                    <th className="py-3 px-4 text-left">Mật khẩu</th>
+                    <th className="py-3 px-4 text-left">Họ tên</th>
                     <th className="py-3 px-4 text-center">Số điện thoại</th>
-                    <th className="py-3 px-4 text-center">Email</th>
-                    <th className="py-3 px-4 text-center">Địa chỉ</th>
-                    <th className="py-3 px-4 text-center ">Chức vụ</th>
+                    <th className="py-3 px-4 text-left">Email</th>
+                    <th className="py-3 px-4 text-left">Địa chỉ</th>
+                    <th className="py-3 px-4 text-left ">Chức vụ</th>
                     <th className="py-3 px-4 text-center">Thăng/Giáng cấp</th>
                   </tr>
                 </thead>
