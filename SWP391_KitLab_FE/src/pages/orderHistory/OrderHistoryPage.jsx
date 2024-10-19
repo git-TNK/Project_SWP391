@@ -15,9 +15,20 @@ function OrderHistoryPage() {
 
   const getAccount = () => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
-    if (savedAccount) setAccount(savedAccount);
+    setAccount(savedAccount);
+    // console.log(savedAccount);
     return savedAccount;
   };
+
+  useEffect(() => {
+    fetchListOrder(getAccount());
+  }, []);
+
+  useEffect(() => {
+    if (account && account.role !== "Customer") {
+      navigate("*"); // Redirect if the user is not a Customer
+    }
+  }, [account, navigate]);
 
   async function fetchListOrder(account) {
     try {
@@ -26,6 +37,7 @@ function OrderHistoryPage() {
       );
       const data = await response.json();
       setListOrder(data);
+      return data.orderId;
     } catch (err) {
       console.log(err);
     }
@@ -46,14 +58,29 @@ function OrderHistoryPage() {
         );
         const productData = await productResponse.json();
         setProductDetails(productData);
+
+        const existingLabNames = JSON.parse(
+          localStorage.getItem("labNames") || "[]"
+        );
+
+        const newLabNames = productData.labs.map((lab) => lab.name);
+        const uniqueLabNames = Array.from(
+          new Set([...existingLabNames, ...newLabNames])
+        );
+
+        localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
       }
     } catch (err) {
       console.log(err);
     }
   }
 
+  // fetchListOrder();
+
+  // console.log(listorder);
   useEffect(() => {
     fetchListOrder(getAccount());
+    fetchListOrderDetail(fetchListOrder(getAccount()));
   }, []);
 
   useEffect(() => {

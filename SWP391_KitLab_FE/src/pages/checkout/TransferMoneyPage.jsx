@@ -39,14 +39,15 @@ function TransferMoneyPage() {
   };
 
   const handleOnClick = () => {
-    // setIsSuccess(true);
-    if (isSuccess) {
-      navigate("/");
-    } else {
-      fetchResult();
-      setLoading(true);
-    }
+    setIsSuccess(true);
+    // if (isSuccess) {
+    //   navigate("/");
+    // } else {
+    //   fetchResult();
+    //   setLoading(true);
+    // }
     //clear gio hang
+    sessionStorage.clear("cart");
   };
 
   useEffect(() => {

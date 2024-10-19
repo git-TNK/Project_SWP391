@@ -31,6 +31,7 @@ import TransferMoneyPage from "./pages/checkout/TransferMoneyPage";
 import ProcessingOrder from "./pages/staff/ProcessingOrder";
 import AnswerQuesion from "./pages/staff/AnswerQuesion";
 import ViewHistorySupport from "./pages/staff/ViewHistorySupport";
+import ViewHistoryQuestion from "./pages/services/ViewHistoryQuestion";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
 
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
+        <Route path="/viewQuestion" element={<ViewHistoryQuestion />}></Route>
         <Route path="/checkout" element={<CheckoutPage />}></Route>
         <Route path="/banking" element={<TransferMoneyPage />}></Route>
         <Route path="/cart" element={<CartPage />}></Route>

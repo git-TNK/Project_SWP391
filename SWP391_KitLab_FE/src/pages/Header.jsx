@@ -17,6 +17,7 @@ function Header() {
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("account");
+    localStorage.removeItem("labNames");
     setAccount(null); // Update state to remove account
     setTimeout(() => {
       navigate("/"); // Navigate after state change
@@ -281,6 +282,18 @@ function Header() {
             }
           >
             Yêu Cầu Hỗ Trợ
+          </NavLink>
+          <NavLink
+            to="/viewQuestion"
+            style={({ isActive }) =>
+              account
+                ? isActive
+                  ? activeNavLinkStyle
+                  : navLinkStyle
+                : { ...navLinkStyle, color: "gray", pointerEvents: "none" }
+            }
+          >
+            Xem câu hỏi và trả lời
           </NavLink>
           <NavLink
             to="/checkout"
