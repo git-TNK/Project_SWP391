@@ -39,19 +39,20 @@ namespace KLM.APIService.Controllers
 
 
             List<OrderTbl> checkOrderOfAccount = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId);
-            foreach (var x in checkOrderOfAccount)
+            if (checkOrderOfAccount != null)
             {
-
-                if (x.AccountId.Equals(accountId))
+                isBuying = true;
+                foreach (var x in checkOrderOfAccount)
                 {
                     List<OrderDetailTbl> checkOrderDetailsOfAccount = await _unitOfWork.OrderDetailsRepository.GetAllOrdersDetailsById(x.OrderId);
-                    isBuying = true;
                     foreach (var y in checkOrderDetailsOfAccount)
                     {
-                        productBuying++;
+                        productBuying += y.KitQuantity;
                     }
                 }
             }
+            else { isBuying = false; }
+
 
 
             if (request.File != null && request.File.Length > 0)
