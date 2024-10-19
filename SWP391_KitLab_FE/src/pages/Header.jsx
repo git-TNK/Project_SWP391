@@ -293,7 +293,7 @@ function Header() {
                 : { ...navLinkStyle, color: "gray", pointerEvents: "none" }
             }
           >
-            Xem lịch sử câu hỏi
+            Xem câu hỏi và trả lời
           </NavLink>
           <NavLink
             to="/checkout"
