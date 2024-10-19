@@ -96,14 +96,14 @@ function UpdateProduct() {
   const validateForm = () => {
     let formErrors = {};
 
-    if (!kitName.trim()) formErrors.kitName = "Kit name is required";
-    if (!brand) formErrors.brand = "Brand is required";
-    if (!description.trim()) formErrors.description = "Description is required";
-    if (!price || price <= 0) formErrors.price = "Valid price is required";
+    if (!kitName.trim()) formErrors.kitName = "Tên kit không được để trống";
+    if (!brand) formErrors.brand = "Hãng không được để trống";
+    if (!description.trim())
+      formErrors.description = "Mô tả không được để trống";
+    if (!price || price <= 0) formErrors.price = "Số tiền không hợp lệ";
     if (!quantity || quantity <= 0)
-      formErrors.quantity = "Valid quantity is required";
-    if (types.length === 0)
-      formErrors.types = "At least one type must be selected";
+      formErrors.quantity = "Số lượng không hợp lệ";
+    if (types.length === 0) formErrors.types = "Ít nhất phải chọn 1 loại";
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;

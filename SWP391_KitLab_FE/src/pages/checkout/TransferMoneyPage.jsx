@@ -39,6 +39,15 @@ function TransferMoneyPage() {
   };
 
   const handleOnClick = () => {
+<<<<<<< HEAD
+    // setIsSuccess(true);
+    if (isSuccess) {
+      navigate("/");
+    } else {
+      fetchResult();
+      setLoading(true);
+    }
+=======
     setIsSuccess(true);
     // if (isSuccess) {
     //   navigate("/");
@@ -46,6 +55,7 @@ function TransferMoneyPage() {
     //   fetchResult();
     //   setLoading(true);
     // }
+>>>>>>> 509517823bb369bdb10f0e467c2b99cd01ddd608
     //clear gio hang
     sessionStorage.clear("cart");
   };
@@ -142,7 +152,7 @@ function TransferMoneyPage() {
   }, [isSuccess, cart, listOrder, createOrder, createOrderDetails]);
   // const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=${buyerData.totalCart}&addInfo=Testing&accountName=Tran Nam Khanh`;
   //o tren la dung so tien hien thi o duoi la so tien nho de test
-  const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=2000&addInfo=Testing&accountName=Tran Nam Khanh`;
+  const urlQr = `https://img.vietqr.io/image/MB-0961671129-print.jpg?amount=2000&addInfo=Testing&accountName=Le Sy Binh`;
 
   console.log(buyerData.totalCart);
 

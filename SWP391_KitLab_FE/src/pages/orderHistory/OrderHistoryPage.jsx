@@ -12,6 +12,27 @@ function OrderHistoryPage() {
   const [productDetails, setProductDetails] = useState(null);
 
   const navigate = useNavigate();
+<<<<<<< HEAD
+  const [listorder, setListOrder] = useState([]);
+
+  const getAccount = () => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+    setAccount(savedAccount);
+    // console.log(savedAccount);
+    return savedAccount;
+  };
+
+  useEffect(() => {
+    fetchListOrder(getAccount());
+  }, []);
+
+  useEffect(() => {
+    if (account && account.role !== "Customer") {
+      navigate("*"); // Redirect if the user is not a Customer
+    }
+  }, [account, navigate]);
+
+=======
 
   const getAccount = () => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -19,6 +40,7 @@ function OrderHistoryPage() {
     return savedAccount;
   };
 
+>>>>>>> 509517823bb369bdb10f0e467c2b99cd01ddd608
   async function fetchListOrder(account) {
     try {
       const response = await fetch(
@@ -64,6 +86,11 @@ function OrderHistoryPage() {
     }
   }
 
+<<<<<<< HEAD
+  // fetchListOrder();
+
+  // console.log(listorder);
+=======
   useEffect(() => {
     fetchListOrder(getAccount());
     fetchListOrderDetail(fetchListOrder(getAccount()));
@@ -96,9 +123,10 @@ function OrderHistoryPage() {
       console.error("Error confirming order:", error);
     }
   }
+>>>>>>> 509517823bb369bdb10f0e467c2b99cd01ddd608
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Lịch sử đặt hàng</h2>

@@ -5,7 +5,7 @@ const menuItems = [
   { name: "Quản Lý Sản Phẩm", route: "/admin/product" },
   { name: "Quản Lý Lab", route: "/admin/lab" },
   { name: "Quản Lý Tài Khoản", route: "/admin/account" },
-  { name: "Lịch Sử Đơn Hàng", route: "/admin/order" },
+  { name: "Đơn Hàng", route: "/admin/order" },
   { name: "Thống Kê", route: "/admin/dashboard" },
 ];
 

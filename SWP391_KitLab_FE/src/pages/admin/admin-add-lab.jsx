@@ -53,11 +53,11 @@ const AdminAddLab = () => {
   const validateForm = () => {
     let formErrors = {};
 
-    if (!labName.trim()) formErrors.labName = "Lab name is required";
-    if (!description.trim()) formErrors.description = "Description is required";
-    if (!pdfFile) formErrors.pdfFile = "PDF file is required";
-    if (types.length === 0)
-      formErrors.types = "At least one type must be selected";
+    if (!labName.trim()) formErrors.labName = "Tên lab không được để trống";
+    if (!description.trim())
+      formErrors.description = "Mô tả không được để trống";
+    if (!pdfFile) formErrors.pdfFile = "File pdf không được để trống";
+    if (types.length === 0) formErrors.types = "Ít nhất 1 loại phải được chọn";
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
