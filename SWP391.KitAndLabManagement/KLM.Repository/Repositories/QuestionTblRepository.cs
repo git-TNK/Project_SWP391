@@ -22,5 +22,10 @@ namespace KLM.Repository.Repositories
                 Status = q.Status,
             }).ToListAsync();
         }
+
+        public async Task<List<QuestionTbl>> GetQuestionByAccountId(string accountId)
+        {
+            return await _context.QuestionTbls.Where(q => q.AccountId == accountId).ToListAsync();
+        }
     }
 }

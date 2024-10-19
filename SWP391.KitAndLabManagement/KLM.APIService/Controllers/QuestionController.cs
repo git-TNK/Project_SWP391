@@ -26,6 +26,12 @@ namespace KLM.APIService.Controllers
             return await _unitOfWork.QuestionTblRepository.GetAllQuestions();
         }
 
+        [HttpGet("GetQuestionByAccountId/{accountId}")]
+        public async Task<List<QuestionTbl>> GetQuestionByAccId(string accountId)
+        {
+            return await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(accountId);
+        }
+
         [HttpPost("AddQuestion")]
         public async Task<IActionResult> CreateQuestion(AddQuestionRequest request)
         {

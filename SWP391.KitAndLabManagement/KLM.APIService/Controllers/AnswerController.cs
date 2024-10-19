@@ -72,6 +72,11 @@ namespace KLM.APIService.Controllers
             }
             return NotFound();
         }
+        [HttpGet("getAnswerByQuestionId/{questionId}")]
+        public async Task<List<AnswerTbl>> GetAnswerByQuestId(string questionId)
+        {
+            return await _unitOfWork.AnswerTblRepository.GetAnswerByQuestionId(questionId);
+        }
 
     }
 }

@@ -37,5 +37,10 @@ namespace KLM.Repository.Repositories
                 Status = a.Status,
             }).Where(a => a.AccountId.Equals(accountId)).ToListAsync();
         }
+
+        public async Task<List<AnswerTbl>> GetAnswerByQuestionId(string questionId)
+        {
+            return await _context.AnswerTbls.Where(a => a.QuestionId == questionId).ToListAsync();
+        }
     }
 }
