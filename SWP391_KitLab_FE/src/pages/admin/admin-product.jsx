@@ -26,6 +26,7 @@ const typeOptions = [
   "Controller",
   "Memory",
   "Manual",
+  "Sensor",
 ];
 
 const AdminProduct = () => {

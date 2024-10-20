@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
@@ -24,6 +24,7 @@ const AdminAddLab = () => {
   // const [selectedKit, setSelectedKit] = useState([]);
 
   const typeOptions = [
+    "Sensor",
     "Wifi",
     "Wireless",
     "Bluetooth",
@@ -37,7 +38,7 @@ const AdminAddLab = () => {
     "Manual",
   ];
 
-  const fetchKitData = useCallback(async () => {
+  const fetchKitData = async () => {
     try {
       const response = await axios.get("http://localhost:5056/Product/GetKit");
       if (response.status === 200) {
@@ -47,11 +48,11 @@ const AdminAddLab = () => {
     } catch (err) {
       console.log(`error: ${err}`);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchKitData();
-  }, [fetchKitData]);
+  }, []);
 
   const handleTypeToggle = (type) => {
     setTypes((prev) =>
@@ -204,6 +205,7 @@ const AdminAddLab = () => {
                 {/* kit table */}
                 <div className="w-1/2">
                   <p className="font-semibold mb-2">Kit</p>
+                  {/* table */}
                   <div className="overflow-y-auto h-48">
                     <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                       <thead className="bg-gray-200 text-gray-700">

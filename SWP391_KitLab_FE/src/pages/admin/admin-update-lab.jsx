@@ -20,6 +20,7 @@ const typeOptions = [
   "Controller",
   "Memory",
   "Manual",
+  "Sensor",
 ];
 
 function UpdateLab() {
@@ -121,8 +122,11 @@ function UpdateLab() {
 
   //thực hiện 2 thằng fetch trong lượt chạy đầu
   useEffect(() => {
-    fetchLabData();
-    fetchListOfKit();
+    const fetchData = async () => {
+      await fetchLabData();
+      await fetchListOfKit();
+    };
+    fetchData();
   }, [fetchLabData, fetchListOfKit]);
 
   //xử lí chọn type

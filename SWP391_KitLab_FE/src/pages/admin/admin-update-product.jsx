@@ -21,6 +21,7 @@ const typeOptions = [
   "Controller",
   "Memory",
   "Manual",
+  "Sensor",
 ];
 
 function UpdateProduct() {
@@ -90,8 +91,11 @@ function UpdateProduct() {
 
   //Call fetch để lấy dữ liệu trong lần chạy đầu
   useEffect(() => {
-    fetchProductData();
-    fetchListOfLab();
+    const fetchData = async () => {
+      await fetchProductData();
+      await fetchListOfLab();
+    };
+    fetchData();
   }, [fetchProductData, fetchListOfLab]);
 
   //Xử lý up ảnh

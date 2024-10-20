@@ -21,6 +21,7 @@ const typeOptions = [
   "Controller",
   "Memory",
   "Manual",
+  "Sensor",
 ];
 
 function AddProduct() {
@@ -141,7 +142,7 @@ function AddProduct() {
   };
 
   //Xử lý fetch lab data để khi chọn type thì hiển thị lab tương ứng
-  const fetchLabData = useCallback(async () => {
+  const fetchLabData = async () => {
     try {
       const response = await axios.get("http://localhost:5056/Lab/GetLab");
       if (response.status === 200) {
@@ -151,12 +152,12 @@ function AddProduct() {
     } catch (err) {
       console.log(`Messup line 147: ${err}`);
     }
-  }, []);
+  };
 
   //Khi vào trang thì sẽ fetch data của lab 1 lần
   useEffect(() => {
     fetchLabData();
-  }, [fetchLabData]);
+  }, []);
 
   //Tính toán useMemo dùng để lưu các kết quả tính toán phức tạp
   //Trả về listOfLab sau khi đã lọc
