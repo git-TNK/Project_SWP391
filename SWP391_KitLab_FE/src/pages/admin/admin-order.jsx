@@ -4,6 +4,8 @@ import Footer from "../../Footer";
 import Sidebar from "./sidebar";
 import axios from "axios";
 import LoadingSpinner from "./loading";
+import SearchBar from "./search-bar";
+import { ChevronDown, Filter } from "lucide-react";
 
 function AdminOrder() {
   const [orderList, setOrderList] = useState([]);
@@ -14,6 +16,12 @@ function AdminOrder() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [listAccount, setListAccount] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  //search
+  const [searchTerm, setSearchTerm] = useState("");
+  //filter
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const fetchOrderList = async () => {
     setIsLoading(true);
@@ -47,10 +55,46 @@ function AdminOrder() {
     }
   };
 
-  //Cần có useMemo vì nếu ko có useMemo thì sẽ lỗi, chưa render mà đã đọc userName
   const findAccById = (id) => {
     const account = listAccount.find((acc) => acc.accountId === id);
     return account ? account.userName : "Unknown User";
+  };
+
+  const filterOrder = useMemo(() => {
+    return orderList
+      .filter((order) => {
+        return listAccount.some(
+          (account) =>
+            account.userName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            account.accountId === order.accountId
+        );
+      })
+      .filter((order) => {
+        const statusMatch =
+          filterStatus === "All" || order.status === filterStatus;
+        return statusMatch;
+      });
+  }, [orderList, searchTerm, listAccount, filterStatus]);
+
+  const handleFilterClick = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
+
+  const handleTranslateOrderStatus = (status) => {
+    switch (status) {
+      case "Processing":
+        return "Đang xử lí";
+      case "Done":
+        return "Đã xong";
+      default:
+        return "Tất cả";
+    }
+  };
+
+  const handleFilterSelect = (status) => {
+    setFilterStatus(status);
+    setIsFilterOpen(false);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -71,9 +115,14 @@ function AdminOrder() {
     setIsModalOpen(false);
   };
 
+  const handleSearch = (event) => {
+    setSearchTerm(event);
+    setCurrentPage(1);
+  };
+
   const indexOfLastOrder = currentPage * orderPerpage;
   const indexOfFirstOrder = indexOfLastOrder - orderPerpage;
-  const currentOrder = orderList.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrder = filterOrder.slice(indexOfFirstOrder, indexOfLastOrder);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -170,7 +219,7 @@ function AdminOrder() {
   return (
     <div className="flex flex-col min-h-screen">
       <AdminHeader />
-      <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
+      <hr className="w-full h-px border-0 bg-black" />
       <div className="flex-grow flex overflow-hidden">
         <div className="flex flex-grow bg-gray-100 overflow-hidden">
           <Sidebar />
@@ -179,6 +228,48 @@ function AdminOrder() {
           <div className="flex-1 p-8 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Đơn hàng</h1>
+              <SearchBar
+                searchTerm={searchTerm}
+                onSearchChange={handleSearch}
+              />
+              {/* filter */}
+              <div className="relative z-50">
+                <button
+                  onClick={handleFilterClick}
+                  className="bg-black text-white px-4 py-2 rounded-md flex items-center"
+                >
+                  <Filter size={20} className="mr-2" />
+                  Lọc
+                  <ChevronDown size={20} className="ml-2" />
+                </button>
+                {isFilterOpen && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      {["All", "Processing", "Done"].map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => handleFilterSelect(status)}
+                          className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium text-left
+                            ${
+                              status === filterStatus
+                                ? "text-white bg-black"
+                                : "text-black bg-white"
+                            }
+                            `}
+                          role="menuitem"
+                        >
+                          {handleTranslateOrderStatus(status)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="overflow-y-auto">
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -196,7 +287,7 @@ function AdminOrder() {
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
-                  {orderList.map((order) => (
+                  {currentOrder.map((order) => (
                     <tr
                       key={order.orderId}
                       className="border-b border-gray-200 hover:bg-gray-50"
@@ -262,7 +353,7 @@ function AdminOrder() {
             {isModalOpen && renderModalContent()}
             {/* Pagination */}
             <div className="flex justify-center mt-8">
-              {[...Array(Math.ceil(currentOrder.length / orderPerpage))].map(
+              {[...Array(Math.ceil(filterOrder.length / orderPerpage))].map(
                 (_, index) => (
                   <button
                     key={index}
