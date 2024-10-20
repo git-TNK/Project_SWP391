@@ -160,5 +160,12 @@ namespace KLM.APIService.Controllers
                 return BadRequest($"{errors}");
             }
         }
+
+        //get lab for kit's add and update
+        [HttpGet("GetLab")]
+        public async Task<ActionResult<IEnumerable<LabForKit>>> GetLabForKit()
+        {
+            return await _unitOfWork.LabTblRepository.GetLabForAddUpdate();
+        }
     }
 }
