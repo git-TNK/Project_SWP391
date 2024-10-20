@@ -19,6 +19,7 @@ import FilterType from "./filter";
 import SearchBar from "./search-bar";
 
 const typeOptions = [
+  "Sensor",
   "Wifi",
   "Wireless",
   "Bluetooth",

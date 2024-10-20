@@ -20,6 +20,7 @@ const typeOptions = [
   "Controller",
   "Memory",
   "Manual",
+  "Sensor",
 ];
 
 function UpdateLab() {
@@ -44,22 +45,32 @@ function UpdateLab() {
   const [isLoading, setIsLoading] = useState(false);
   const [listOfKit, setListOfKit] = useState([]);
 
+  //Lấy tên của document để cho vô ô add
   const extractDocumentName = (url) => {
+    //https://firebasestorage.googleapis.com/v0/b/swp391-2004.appspot.com/o/Images%2Fkit18.jpg_08052920241011?alt=media&token=1ed84150-6366-4ab0-bb5e-051b7fbd3b47
+
+    //chẻ từ các / và cho vô array string
     const parts = url.split("/");
+
+    //Lấy giá trị cuối: Images%2Fkit18.jpg_08052920241011?alt=media&token=1ed84150-6366-4ab0-bb5e-051b7fbd3b47
     const fileNameWithParams = parts[parts.length - 1];
+
+    //Cắt từ ? và lấy giá trị đầu: Images%2Fkit18.jpg_08052920241011
     const fileName = fileNameWithParams.split("?")[0];
 
-    // Decode the filename to handle any URL encoding
+    //Decode cái %2F thành / từ Images%2Fkit18.jpg_08052920241011 thành Images/kit18.jpg_08052920241011
     const decodedFileName = decodeURIComponent(fileName);
 
-    // Remove the timestamp if it exists (assuming it's separated by an underscore)
+    //Cắt từ _ và lấy giá trị đầu: Images/kit18.jpg
     const nameWithoutTimestamp = decodedFileName.split("_")[0];
 
+    //Cắt từ / và lấy giá trị cuối (pop()): kit18.jpg
     const finalName = nameWithoutTimestamp.split("/").pop();
 
     return finalName;
   };
 
+  //Lấy dữ liệu kit để show
   const fetchListOfKit = useCallback(async () => {
     try {
       const response = await axios.get("http://localhost:5056/Product/GetKit");
@@ -72,12 +83,14 @@ function UpdateLab() {
     }
   }, []);
 
+  //lọc kit liên quan
   const filteredList = useMemo(() => {
     return listOfKit.filter((kit) =>
       types.some((type) => kit.typeNames.includes(type))
     );
   }, [listOfKit, types]);
 
+  //Lấy dữ liệu lab hiện tại để show
   const fetchLabData = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -107,17 +120,23 @@ function UpdateLab() {
     }
   }, [labId]);
 
+  //thực hiện 2 thằng fetch trong lượt chạy đầu
   useEffect(() => {
-    fetchLabData();
-    fetchListOfKit();
+    const fetchData = async () => {
+      await fetchLabData();
+      await fetchListOfKit();
+    };
+    fetchData();
   }, [fetchLabData, fetchListOfKit]);
 
+  //xử lí chọn type
   const handleTypeToggle = (type) => {
     setTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
 
+  //xử lý up file
   const handlePdfUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type === "application/pdf") {
@@ -128,6 +147,7 @@ function UpdateLab() {
     }
   };
 
+  //dịch status
   const handleStatusTranslate = (status) => {
     switch (status) {
       case "Changed":
@@ -137,6 +157,7 @@ function UpdateLab() {
     }
   };
 
+  //check lỗi
   const validateForm = () => {
     let formErrors = {};
     if (!labName.trim()) formErrors.labName = "Tên Lab không được để trống";
@@ -147,6 +168,7 @@ function UpdateLab() {
     return Object.keys(formErrors).length === 0;
   };
 
+  //xử lí submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
