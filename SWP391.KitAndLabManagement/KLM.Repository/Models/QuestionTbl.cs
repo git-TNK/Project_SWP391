@@ -19,7 +19,7 @@ public partial class QuestionTbl
 
     public string AttachedFile { get; set; }
 
-    public DateOnly DateOfQuestion { get; set; }
+    public DateTime DateOfQuestion { get; set; }
 
     public string Status { get; set; }
 
