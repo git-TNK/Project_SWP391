@@ -32,7 +32,7 @@ namespace KLM.APIService.Controllers
             {
                 using (var stream = acctachFile.OpenReadStream())
                 {
-                    var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, acctachFile.FileName, acctachFile.ContentType);
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsyncAnswer(stream, acctachFile.FileName, acctachFile.ContentType);
                     documentUrl = uploadUrl;
                 }
             }
@@ -54,10 +54,12 @@ namespace KLM.APIService.Controllers
             result.AttachedFile = documentUrl;
             result.DateOfAnswer = DateOnly.FromDateTime(DateTime.Now.Date);
             result.Status = "Answered";
-            if (documentUrl != null)
-            {
-                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-            }
+
+            //if (documentUrl != null)
+            //{
+            //    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+            //}
+
             _unitOfWork.AnswerTblRepository.Create(result);
             return Ok(result);
         }
@@ -78,5 +80,36 @@ namespace KLM.APIService.Controllers
             return await _unitOfWork.AnswerTblRepository.GetAnswerByQuestionId(questionId);
         }
 
+
+        //Test dang file len answer folder firebase
+        /*
+        [HttpPost("UploadAnswerPDF")]
+        
+        public async Task<IActionResult> UploadQuestionFile(IFormFile formFile)
+        {
+            string? documentUrl;
+            try
+            {
+
+                using (var stream = formFile.OpenReadStream())
+                {
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsyncAnswer(stream, formFile.FileName, formFile.ContentType);
+                    documentUrl = uploadUrl;
+                }
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest("No file uploaded");
+            }
+            if (documentUrl != null) 
+            {
+                return Ok($"Success uploaded: {documentUrl}");
+            } else
+            {
+                return BadRequest("No file uploaded");
+            }
+
+        }
+        */
     }
 }

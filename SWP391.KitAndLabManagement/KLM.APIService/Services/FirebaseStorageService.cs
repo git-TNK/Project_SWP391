@@ -155,6 +155,34 @@ namespace KLM.APIService
         }
 
 
+        //Upload file cho customer question
+        public async Task<string> UploadPDFAsyncQuestion(Stream fileStream, string fileName, string contentType)
+        {
+            string folderName = "QuestionFile";
+            var pdfName = $"{fileName}_{DateTime.UtcNow:HHmmssyyyyMMdd}";
+            var fullPath = $"{folderName.Trim('/')}/{pdfName}";
+
+            var uploadTask = _firebaseStorage.Child(fullPath).PutAsync(fileStream, default);
+
+            var downloadUrl = await uploadTask;
+
+            return downloadUrl;
+        }
+
+        //Upload file cho staff answer
+        public async Task<string> UploadPDFAsyncAnswer(Stream fileStream, string fileName, string contentType)
+        {
+            string folderName = "AnswerFile";
+            var pdfName = $"{fileName}_{DateTime.UtcNow:HHmmssyyyyMMdd}";
+            var fullPath = $"{folderName.Trim('/')}/{pdfName}";
+
+            var uploadTask = _firebaseStorage.Child(fullPath).PutAsync(fileStream, default);
+
+            var downloadUrl = await uploadTask;
+
+            return downloadUrl;
+        }
+
         //Response QR dealer
 
         /*Get transaction info*/
