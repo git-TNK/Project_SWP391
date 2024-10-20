@@ -9,10 +9,9 @@ function AnswerQuestion() {
   const [answer, setAnswer] = useState('');
   const [attachment, setAttachment] = useState(null);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [accountEmail, setAccountEmail] = useState(''); // State để lưu email
   const navigate = useNavigate();
 
-  // Hàm fetch câu hỏi từ API, bao gồm cả email
+  // Hàm fetch câu hỏi từ API
   const fetchQuestion = async () => {
     try {
       const response = await fetch(`http://localhost:5056/api/Question`);
@@ -23,18 +22,7 @@ function AnswerQuestion() {
     }
   };
 
-  // Hàm fetch thông tin tài khoản từ API
-  const fetchAccountEmail = async (accountId) => {
-    try {
-      const response = await fetch(`http://localhost:5056/api/Account/${accountId}`);
-      const data = await response.json();
-      setAccountEmail(data.email); // Giả sử API trả về đối tượng có thuộc tính email
-    } catch (err) {
-      console.error("Failed to fetch account email:", err);
-    }
-  };
-
-  // Hàm gửi câu trả lời và email
+  // Hàm gửi câu trả lời
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedQuestion) return; // Kiểm tra nếu chưa chọn câu hỏi thì không thực hiện gì
@@ -55,15 +43,11 @@ function AnswerQuestion() {
       const data = await response.json();
       console.log("Submitted answer:", data);
 
-      // Sau khi gửi câu trả lời thành công, tiếp tục gửi email chứa thông tin
-      await sendEmail(selectedQuestion, answer, attachment);
-
       // Cập nhật lại danh sách câu hỏi và reset form
       fetchQuestion();
       setAnswer(''); // Reset câu trả lời
       setAttachment(null); // Reset tệp đính kèm
       setSelectedQuestion(null); // Reset câu hỏi được chọn
-      setAccountEmail(''); // Reset email
 
       // Điều hướng người dùng đến trang lịch sử hỗ trợ
       navigate('/historySupport');
@@ -72,50 +56,11 @@ function AnswerQuestion() {
     }
   };
 
-  // Hàm gửi email
-  const sendEmail = async (question, answer, attachment) => {
-    try {
-      // Kiểm tra xem accountEmail có hợp lệ không
-      if (!accountEmail) {
-        console.error("Không có địa chỉ email để gửi.");
-        return; // Ngừng hàm nếu không có email
-      }
-
-      const emailBody = `
-        Câu hỏi: ${question.question}\n
-        Câu trả lời: ${answer}\n
-        Bài Lab: ${question.labName}\n
-        File đính kèm: ${attachment ? attachment.name : 'Không có tệp đính kèm'}
-      `;
-
-      const emailData = {
-        to: accountEmail, // Sử dụng email từ API của tài khoản
-        subject: `Trả lời câu hỏi cho bài lab: ${question.labName}`,
-        body: emailBody,
-      };
-
-      // Gọi API gửi email
-      const emailResponse = await fetch(`http://localhost:5056/api/Email/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(emailData), // Chuyển object email thành JSON
-      });
-
-      const emailResult = await emailResponse.json();
-      console.log("Email sent:", emailResult);
-    } catch (err) {
-      console.error("Failed to send email:", err);
-    }
-  };
-
   // Hàm chọn câu hỏi
   const handleSelectQuestion = (question) => {
     setSelectedQuestion(question);
     setAnswer(''); // Reset câu trả lời
     setAttachment(null); // Reset tệp đính kèm
-    fetchAccountEmail(question.accountId); // Fetch email của tài khoản đã chọn
   };
 
   useEffect(() => {

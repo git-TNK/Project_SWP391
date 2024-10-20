@@ -4,6 +4,20 @@ import { NavLink, useNavigate } from "react-router-dom";
 function Header() {
   const [searchTerm, setSearchTerm] = useState(""); // State to capture search term
   const navigate = useNavigate();
+  const [listOrder, setListOrder] = useState([]);
+
+  async function fetchListOrder(account) {
+    try {
+      const response = await fetch(
+        `http://localhost:5056/Order/${account.accountId}`
+      );
+      const data = await response.json();
+      setListOrder(data);
+      return data.orderId;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const [account, setAccount] = useState(null);
 
@@ -13,6 +27,12 @@ function Header() {
       setAccount(savedAccount);
     }
   }, []);
+
+  useEffect(() => {
+    if (account) {
+      fetchListOrder(account);
+    }
+  }, [account]);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -274,7 +294,7 @@ function Header() {
           <NavLink
             to="/service"
             style={({ isActive }) =>
-              account
+              account && listOrder.length > 0
                 ? isActive
                   ? activeNavLinkStyle
                   : navLinkStyle
@@ -283,10 +303,11 @@ function Header() {
           >
             Yêu Cầu Hỗ Trợ
           </NavLink>
+
           <NavLink
             to="/viewQuestion"
             style={({ isActive }) =>
-              account
+              account && listOrder.length > 0
                 ? isActive
                   ? activeNavLinkStyle
                   : navLinkStyle

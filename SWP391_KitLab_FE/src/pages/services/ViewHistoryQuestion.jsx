@@ -39,12 +39,12 @@ function ViewHistoryQuestion() {
           `http://localhost:5056/api/Question/GetQuestionByAccountId/${accountId}`
         );
         setListQuestions(response.data);
-        fetchListAnswers(response.data); // Sử dụng hàm đã được khởi tạo
+        fetchListAnswers(response.data);
       } catch (err) {
         console.error(err);
       }
     },
-    [fetchListAnswers] // Thêm fetchListAnswers vào dependencies
+    [fetchListAnswers]
   );
 
   useEffect(() => {
@@ -57,6 +57,11 @@ function ViewHistoryQuestion() {
     return listAnswers.find((answer) => answer.questionId === questionId);
   }
 
+  // Calculate the latest turn value from listQuestions
+  const latestTurn = listQuestions.length
+    ? Math.max(...listQuestions.map((q) => q.turn))
+    : 0;
+
   return (
     <>
       <Header />
@@ -64,6 +69,10 @@ function ViewHistoryQuestion() {
         <h2 className="text-2xl font-bold mb-4">
           Danh Sách Câu Hỏi Và Trả Lời:
         </h2>
+
+        {/* Display the latest turn */}
+        <h3>Số lượt hỏi còn lại: {latestTurn}</h3>
+
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
             <thead className="bg-gray-100">
