@@ -65,7 +65,7 @@ namespace KLM.APIService.Controllers
             {
                 using (var stream = request.File.OpenReadStream())
                 {
-                    var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.File.FileName, request.File.ContentType);
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsyncQuestion(stream, request.File.FileName, request.File.ContentType);
                     documentUrl = uploadUrl;
                 }
             }
@@ -113,10 +113,10 @@ namespace KLM.APIService.Controllers
                             result.Status = "Active";
                             result.Turn = min - 1;
                             result.DateOfQuestion = DateTime.Now;
-                            if (documentUrl != null)
-                            {
-                                await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-                            }
+                            //if (documentUrl != null)
+                            //{
+                            //    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                            //}
                             _unitOfWork.QuestionTblRepository.Create(result);
                             return Ok(result);
                         }
@@ -145,15 +145,46 @@ namespace KLM.APIService.Controllers
                 result.Status = "Active";
                 result.Turn = productBuying * 2 - 1;
                 result.DateOfQuestion = DateTime.Now;
-                if (documentUrl != null)
-                {
-                    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-                }
+                //if (documentUrl != null)
+                //{
+                //    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
+                //}
                 _unitOfWork.QuestionTblRepository.Create(result);
                 return Ok(result);
             }
             else return BadRequest("Fail");
         }
+
+
+        //Test dang file len question folder firebase
+        /*
+        [HttpPost("UploadQuestionPDF")]
+        public async Task<IActionResult> UploadQuestionFile(IFormFile formFile)
+        {
+            string? documentUrl;
+            try
+            {
+
+                using (var stream = formFile.OpenReadStream())
+                {
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsyncQuestion(stream, formFile.FileName, formFile.ContentType);
+                    documentUrl = uploadUrl;
+                }
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest("No file uploaded");
+            }
+            if (documentUrl != null) 
+            {
+                return Ok($"Success uploaded: {documentUrl}");
+            } else
+            {
+                return BadRequest("No file uploaded");
+            }
+
+        }
+        */
 
     }
 }
