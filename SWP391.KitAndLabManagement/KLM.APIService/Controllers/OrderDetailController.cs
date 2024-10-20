@@ -1,7 +1,6 @@
 ﻿using KLM.Repository;
 using KLM.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,18 +31,24 @@ namespace KLM.APIService.Controllers
         {
             List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accounId);
             List<ProductKitTbl> productKits = _unitOfWork.ProductKitTblRepository.GetAll();
+            List<QuestionTbl> listQuestion = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(accounId);
+            List<DateTime> latestQuestion = new List<DateTime>();
+
+            if (listOrder == null || !listOrder.Any())
+            {
+                // Xử lý trường hợp không có đơn hàng nào
+                return BadRequest("No orders found for the specified account.");
+            }
+
+            List<DateTime> DateOrder = listOrder.Select(x => x.OrderDate).ToList();
+
+            // Kiểm tra nếu DateOrder không có phần tử nào
+            if (!DateOrder.Any())
+            {
+                return BadRequest("No valid order dates found.");
+            }
             if (listOrder != null)
             {
-                List<DateTime> DateOrder = new List<DateTime>();
-
-                foreach (OrderTbl x in listOrder)
-                {
-                    DateOrder.Add(x.OrderDate);
-                }
-                if (DateOrder.IsNullOrEmpty())
-                {
-                    return BadRequest();
-                }
                 DateTime newestTime = DateOrder.Max();
                 string orderId = "";
                 foreach (var item in listOrder)
@@ -54,6 +59,7 @@ namespace KLM.APIService.Controllers
                     }
                 }
 
+                //===================================================
                 OrderDetailTbl orderDetail = new OrderDetailTbl();
                 orderDetail.OrderId = orderId;
                 orderDetail.KitId = kitId;
@@ -61,6 +67,7 @@ namespace KLM.APIService.Controllers
                 orderDetail.KitQuantity = kitQuantity;
                 orderDetail.Price = price;
                 _unitOfWork.OrderDetailsRepository.Create(orderDetail);
+
                 foreach (var item in productKits)
                 {
                     if (orderDetail.KitId.Equals(item.KitId))
@@ -69,13 +76,29 @@ namespace KLM.APIService.Controllers
                         _unitOfWork.ProductKitTblRepository.Update(item);
                     }
                 }
+
+
+                //Neu mua them thi cong them luot          
+                foreach (var x in listQuestion)
+                {
+                    latestQuestion.Add(x.DateOfQuestion);
+                }
+                var latestQuestionCreate = latestQuestion.Max();
+                foreach (var item in listQuestion)
+                {
+                    if (item.DateOfQuestion.Equals(latestQuestionCreate))
+                    {
+                        item.Turn += kitQuantity * 2;
+                        _unitOfWork.QuestionTblRepository.Update(item);
+                    }
+                }
                 return Ok(orderDetail);
             }
-            else if (listOrder == null)
-            {
-                //for if Account first order
-                return Ok(await AddOrderDetails(accounId, kitId, kitName, price, kitQuantity));
-            }
+            //else if (listOrder == null)
+            //{
+            //    //for if Account first order
+            //    return Ok(await AddOrderDetails(accounId, kitId, kitName, price, kitQuantity));
+            //}
             else { return BadRequest(); }
         }
 
