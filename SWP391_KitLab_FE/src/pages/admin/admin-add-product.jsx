@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import AdminHeader from "./admin-header";
 import Sidebar from "./sidebar";
 import Footer from "../../Footer";
@@ -6,6 +6,7 @@ import { Camera } from "lucide-react";
 import FeedbackModal from "./feedback-modal";
 import { NavLink, useNavigate } from "react-router-dom";
 import LoadingSpinner from "./loading";
+import axios from "axios";
 
 const brandOptions = ["Arduino", "Rasberry pi", "Nanode"];
 const typeOptions = [
@@ -37,7 +38,9 @@ function AddProduct() {
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [listOfLab, setListOfLab] = useState([]);
 
+  //Xử lý upload ảnh
   const handlePictureUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -50,12 +53,14 @@ function AddProduct() {
     }
   };
 
+  //Xử lý chọn type
   const handleToggleType = (type) => {
     setTypes((prev) =>
       prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     );
   };
 
+  //Set up form xác minh
   const validateForm = () => {
     let formErrors = {};
 
@@ -73,9 +78,11 @@ function AddProduct() {
     return Object.keys(formErrors).length === 0;
   };
 
+  //Xử lý submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    //Check coi có lỗi nào trong form validate không
     if (!validateForm()) {
       console.log("Form has errors. Please correct them.");
       return;
@@ -83,6 +90,7 @@ function AddProduct() {
 
     setIsLoading(true);
 
+    //Nạp data vào request
     const formData = new FormData();
     formData.append("kitName", kitName);
     formData.append("brand", brand);
@@ -94,6 +102,7 @@ function AddProduct() {
       formData.append(`types[${index}]`, type);
     });
 
+    //Gửi request
     try {
       const response = await fetch("http://localhost:5056/Product/AddProduct", {
         method: "POST",
@@ -123,10 +132,46 @@ function AddProduct() {
     setIsModalOpen(true);
   };
 
+  //Xử lý đóng modal khi có thông báo kết quả add
   const handleModalClose = () => {
     setIsModalOpen(false);
     if (isSuccess) {
       navigate("/admin"); // Replace '/main-page' with your actual main page route
+    }
+  };
+
+  //Xử lý fetch lab data để khi chọn type thì hiển thị lab tương ứng
+  const fetchLabData = useCallback(async () => {
+    try {
+      const response = await axios.get("http://localhost:5056/Lab/GetLab");
+      if (response.status === 200) {
+        setListOfLab(response.data);
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.log(`Messup line 147: ${err}`);
+    }
+  }, []);
+
+  //Khi vào trang thì sẽ fetch data của lab 1 lần
+  useEffect(() => {
+    fetchLabData();
+  }, [fetchLabData]);
+
+  //Tính toán useMemo dùng để lưu các kết quả tính toán phức tạp
+  //Trả về listOfLab sau khi đã lọc
+  const filterListLab = useMemo(() => {
+    return listOfLab.filter((lab) =>
+      types.some((type) => lab.labTypes.includes(type))
+    );
+  }, [listOfLab, types]);
+
+  const handleStatusTranslate = (status) => {
+    switch (status) {
+      case "Changed":
+        return "Đã sửa";
+      default:
+        return "Mới";
     }
   };
 
@@ -235,51 +280,108 @@ function AddProduct() {
                     )}
                   </div>
                 </div>
-                <div>
-                  <p className="font-semibold mb-2">Hãng</p>
-                  <div className="flex gap-2">
-                    {brandOptions.map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        onClick={() => setBrand(option)}
-                        className={`px-4 py-2 rounded-full text-sm ${
-                          brand === option
-                            ? "bg-black text-white"
-                            : "bg-gray-200 text-black"
-                        }`}
-                      >
-                        {option}
-                      </button>
-                    ))}
+
+                <div className="flex">
+                  <div className="w-1/2">
+                    {/* Hãng */}
+                    <div>
+                      <p className="font-bold mb-2">Hãng</p>
+                      <div className="flex gap-2 mb-4">
+                        {brandOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => setBrand(option)}
+                            className={`px-4 py-2 rounded-full text-sm ${
+                              brand === option
+                                ? "bg-black text-white"
+                                : "bg-gray-200 text-black"
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.brand && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.brand}
+                        </p>
+                      )}
+                    </div>
+                    {/* Loại */}
+                    <div>
+                      <p className="font-bold mb-2">Loại</p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {typeOptions.map((type) => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => handleToggleType(type)}
+                            className={`px-4 py-2 rounded-full text-sm ${
+                              types.includes(type)
+                                ? "bg-black text-white"
+                                : "bg-gray-200 text-black"
+                            }`}
+                          >
+                            {type}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.types && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.types}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  {errors.brand && (
-                    <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
-                  )}
-                </div>
-                <div>
-                  <p className="font-semibold mb-2">Loại</p>
-                  <div className="flex flex-wrap gap-2">
-                    {typeOptions.map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => handleToggleType(type)}
-                        className={`px-4 py-2 rounded-full text-sm ${
-                          types.includes(type)
-                            ? "bg-black text-white"
-                            : "bg-gray-200 text-black"
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    ))}
+
+                  {/* List các bài lab khi chọn loại */}
+                  <div className="w-1/2">
+                    <p className="font-bold mb-2">Các bài lab</p>
+                    {/* table */}
+                    <div className="overflow-y-auto h-56">
+                      <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                        <thead className="bg-gray-200 text-gray-700">
+                          <tr>
+                            <th className="w-2/3 py-2 px-4 text-left">
+                              Tên lab
+                            </th>
+                            <th className="w-1/3 py-2 text-left">Trạng thái</th>
+                          </tr>
+                        </thead>
+                        <tbody className="text-gray-600">
+                          {filterListLab.map((lab) => (
+                            <tr
+                              key={lab.labId}
+                              className="border-b border-gray-200 hover:bg-gray-50"
+                            >
+                              {lab.status !== "Deleted" && (
+                                <>
+                                  <td className="py-2 px-4 text-left">
+                                    {lab.labName}
+                                  </td>
+                                  <td
+                                    className={`w-20 inline-block my-3 py-2 text-center text-white rounded text-sm ${
+                                      lab.status === "Changed"
+                                        ? "bg-yellow-300"
+                                        : "bg-green-500"
+                                    }`}
+                                  >
+                                    {handleStatusTranslate(lab.status)}
+                                  </td>
+                                </>
+                              )}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                  {errors.types && (
-                    <p className="text-red-500 text-sm mt-1">{errors.types}</p>
-                  )}
                 </div>
+
+                {/* Nhập mô tả */}
                 <div>
+                  <p className="font-bold mb-2">Nhập mô tả</p>
                   <textarea
                     placeholder="Mô tả..."
                     className={`w-full h-32 resize-none focus:outline-none p-2 border ${
