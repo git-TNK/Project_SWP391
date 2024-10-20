@@ -7,7 +7,9 @@ function ViewHistoryQuestion() {
   const [listQuestions, setListQuestions] = useState([]);
   const [listAnswers, setListAnswers] = useState([]);
   const [account, setAccount] = useState(null);
+  const [minTurnQuestion, setMinTurnQuestion] = useState([]); // Trạng thái cho câu hỏi có turn nhỏ nhất
 
+  // Lấy tài khoản từ localStorage khi component mount
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
@@ -15,6 +17,7 @@ function ViewHistoryQuestion() {
     }
   }, []);
 
+  // Hàm gọi API lấy danh sách câu trả lời
   const fetchListAnswers = useCallback(async (questions) => {
     try {
       const answers = await Promise.all(
@@ -28,39 +31,51 @@ function ViewHistoryQuestion() {
       );
       setListAnswers(answers.flat());
     } catch (err) {
-      console.error(err);
+      console.error("Lỗi khi lấy câu trả lời:", err);
     }
   }, []);
 
+  // Hàm gọi API lấy danh sách câu hỏi
   const fetchListQuestions = useCallback(
     async (accountId) => {
       try {
         const response = await axios.get(
           `http://localhost:5056/api/Question/GetQuestionByAccountId/${accountId}`
         );
-        setListQuestions(response.data);
-        fetchListAnswers(response.data);
+        const questions = response.data;
+
+        setListQuestions(questions);
+        await fetchListAnswers(questions); // Đảm bảo lấy xong câu hỏi mới lấy câu trả lời
+
+        // Tìm câu hỏi có turn nhỏ nhất và cập nhật state
+        const minTurnQ = findQuestionWithMinTurn(questions);
+
+        setMinTurnQuestion(minTurnQ);
       } catch (err) {
-        console.error(err);
+        console.error("Lỗi khi lấy câu hỏi:", err);
       }
     },
     [fetchListAnswers]
   );
 
+  function findQuestionWithMinTurn(questions) {
+    if (questions.length === 0) return null;
+    return questions.reduce((minQuestion, currentQuestion) =>
+      currentQuestion.turn < minQuestion.turn ? currentQuestion : minQuestion
+    );
+  }
+
+  // Gọi API khi có thông tin tài khoản
   useEffect(() => {
     if (account) {
       fetchListQuestions(account.accountId);
     }
   }, [account, fetchListQuestions]);
 
+  // Tìm câu trả lời dựa trên questionId
   function findAnswerByQuestionId(questionId) {
     return listAnswers.find((answer) => answer.questionId === questionId);
   }
-
-  // Calculate the latest turn value from listQuestions
-  const latestTurn = listQuestions.length
-    ? Math.max(...listQuestions.map((q) => q.turn))
-    : 0;
 
   return (
     <>
@@ -70,8 +85,12 @@ function ViewHistoryQuestion() {
           Danh Sách Câu Hỏi Và Trả Lời:
         </h2>
 
-        {/* Display the latest turn */}
-        <h3>Số lượt hỏi còn lại: {latestTurn}</h3>
+        {/* Hiển thị lượt hỏi còn lại */}
+        {minTurnQuestion ? (
+          <h3>Số lượt hỏi còn lại: {minTurnQuestion.turn}</h3>
+        ) : (
+          <h3>Chưa có câu hỏi</h3>
+        )}
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
