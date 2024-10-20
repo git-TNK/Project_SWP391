@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Footer from "../../Footer";
 import Header from "../Header";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,13 +16,8 @@ function OrderHistoryPage() {
   const getAccount = () => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     setAccount(savedAccount);
-    // console.log(savedAccount);
     return savedAccount;
   };
-
-  useEffect(() => {
-    fetchListOrder(getAccount());
-  }, []);
 
   useEffect(() => {
     if (account && account.role !== "Customer") {
@@ -30,18 +25,26 @@ function OrderHistoryPage() {
     }
   }, [account, navigate]);
 
-  async function fetchListOrder(account) {
+  const fetchListOrder = useCallback(async (account) => {
     try {
       const response = await fetch(
         `http://localhost:5056/Order/${account.accountId}`
       );
       const data = await response.json();
       setListOrder(data);
-      return data.orderId;
+
+      // Fetch order details for each order
+      for (const order of data) {
+        await fetchListOrderDetail(order.orderId); // Call to fetch details for each order
+      }
     } catch (err) {
       console.log(err);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    fetchListOrder(getAccount());
+  }, [fetchListOrder]);
 
   async function fetchListOrderDetail(orderId) {
     try {
@@ -74,20 +77,6 @@ function OrderHistoryPage() {
       console.log(err);
     }
   }
-
-  // fetchListOrder();
-
-  // console.log(listorder);
-  useEffect(() => {
-    fetchListOrder(getAccount());
-    fetchListOrderDetail(fetchListOrder(getAccount()));
-  }, []);
-
-  useEffect(() => {
-    if (account && account.role !== "Customer") {
-      navigate("*");
-    }
-  }, [account, navigate]);
 
   const handleViewOrderDetail = (orderId) => {
     setSelectedOrderId(orderId);

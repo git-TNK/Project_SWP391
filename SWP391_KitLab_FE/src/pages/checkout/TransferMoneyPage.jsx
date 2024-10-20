@@ -111,9 +111,13 @@ function TransferMoneyPage() {
     async (item) => {
       try {
         const response = await fetch(
-          `http://localhost:5056/api/OrderDetail/${account.accountId}/${
-            item.kitId
-          }/${encodeURIComponent(item.name)}/${item.quantity}/${item.price}`,
+          `http://localhost:5056/api/OrderDetail/${encodeURIComponent(
+            account.accountId
+          )}/${encodeURIComponent(item.kitId)}/${encodeURIComponent(
+            item.name
+          )}/${encodeURIComponent(item.quantity)}/${encodeURIComponent(
+            item.price
+          )}`,
           {
             method: "POST",
             headers: {
@@ -134,7 +138,7 @@ function TransferMoneyPage() {
     if (isSuccess) {
       createOrder()
         .then(() => {
-          return Promise.all(cart.map((item) => createOrderDetails(item)));
+          return Promise.then(cart.map((item) => createOrderDetails(item)));
         })
         .then(() => console.log("All order details created"))
         .catch((error) => console.log(error));
@@ -145,6 +149,7 @@ function TransferMoneyPage() {
   const urlQr = `https://img.vietqr.io/image/MB-0961671129-print.jpg?amount=2000&addInfo=Testing&accountName=Le Sy Binh`;
 
   console.log(buyerData.totalCart);
+  console.log(cart);
 
   return (
     <div className="flex flex-col min-h-screen">
