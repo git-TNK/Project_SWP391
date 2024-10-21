@@ -53,14 +53,14 @@ namespace KLM.APIService.Controllers
 
 
         [HttpPost("Register/{userName}/{password}/{email}/{fullName}/{phone}")]
-        public bool Register(string userName, string password, string email, string fullName, string phone)
+        public async Task<IActionResult> Register(string userName, string password, string email, string fullName, string phone)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
             foreach (var account in listAccount)
             {
                 if (account.Email.Equals(email) || account.UserName.Equals(userName))
                 {
-                    return false;
+                    return BadRequest("Email or userName is duplicated");
                 }
             }
             string accountId = "ACC" + (new Random().Next(000, 999));
@@ -81,7 +81,7 @@ namespace KLM.APIService.Controllers
             registerAccount.Status = "Active";
             registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
             _unitOfWork.AccountTblRepository.Create(registerAccount);
-            return true;
+            return Ok("Success");
         }
         [HttpGet]
         public async Task<List<AccountTbl>> GetAccountTbls()
