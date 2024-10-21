@@ -1,4 +1,5 @@
-﻿using KLM.Repository;
+﻿using Google.Apis.Storage.v1.Data;
+using KLM.Repository;
 using KLM.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -100,6 +101,14 @@ namespace KLM.APIService.Controllers
             //    return Ok(await AddOrderDetails(accounId, kitId, kitName, price, kitQuantity));
             //}
             else { return BadRequest(); }
+        }
+
+
+
+        [HttpGet("AllOrderDetail")]
+        public async Task<ActionResult<IEnumerable<OrderDetailTbl>>> GetListForDashboard()
+        {
+            return await _unitOfWork.OrderDetailsRepository.GetAllOrderDetail();
         }
 
     }

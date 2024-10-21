@@ -19,5 +19,11 @@ namespace KLM.Repository.Repositories
                 Price = o.Price,
             }).Where(o => o.OrderId.Equals(orderId)).ToListAsync();
         }
+
+        public async Task<List<OrderDetailTbl>> GetAllOrderDetail()
+        {
+            var orderDetailList = await _context.Set<OrderDetailTbl>().ToListAsync();
+            return orderDetailList;
+        }
     }
 }
