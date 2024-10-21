@@ -103,16 +103,18 @@ namespace KLM.APIService.Controllers
             return null;
         }
 
-        [HttpPut("{userName},{phoneNumber}, {address}")]
-        public async Task<bool> UpdateProfile(string userName, string phoneNumber, string address)
+        [HttpPut("{accountId},{phoneNumber},{address},{email},{fullName}")]
+        public async Task<bool> UpdateProfile(string accountId, string phoneNumber, string address, string email, string fullName)
         {
             var listAcc = await GetAccountTbls();
             foreach (var account in listAcc)
             {
-                if (account.UserName.Equals(userName))
+                if (account.AccountId.Equals(accountId))
                 {
                     account.PhoneNumber = phoneNumber;
                     account.Address = address;
+                    account.Email = email;
+                    account.FullName = fullName;
                     _unitOfWork.AccountTblRepository.Update(account);
                     return true;
                 }
