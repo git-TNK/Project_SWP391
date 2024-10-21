@@ -35,126 +35,87 @@ namespace KLM.APIService.Controllers
         [HttpPost("AddQuestion")]
         public async Task<IActionResult> CreateQuestion(AddQuestionRequest request)
         {
-            string accountId = request.accounId;
+            string acccountId = request.accounId;
             string question = request.question;
             string labName = request.labName;
-            //DateTime DateOfCreation = DateTime.Now;
-            string? documentUrl = null;
+            string documentUrl;
+            int minTurn = 0;
+            //Lay so luong sp da mua
             int productBuying = 0;
-            bool? isBuying = false;
-
-
-            List<OrderTbl> checkOrderOfAccount = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accountId);
-            if (checkOrderOfAccount != null)
+            List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(acccountId);
+            List<OrderDetailTbl> listOrderDetail = new List<OrderDetailTbl>();
+            List<OrderDetailTbl> listAllOrderDetails = await _unitOfWork.OrderDetailsRepository.GetAllAsync();
+            foreach (var x in listOrder)
             {
-                isBuying = true;
-                foreach (var x in checkOrderOfAccount)
+                foreach (var item in listAllOrderDetails)
                 {
-                    List<OrderDetailTbl> checkOrderDetailsOfAccount = await _unitOfWork.OrderDetailsRepository.GetAllOrdersDetailsById(x.OrderId);
-                    foreach (var y in checkOrderDetailsOfAccount)
+                    if (x.OrderId.Equals(item.OrderId))
                     {
-                        productBuying += y.KitQuantity;
+                        listOrderDetail.Add(item);
                     }
                 }
             }
-            else { isBuying = false; }
-
-
-
-            if (request.File != null && request.File.Length > 0)
+            if (listOrderDetail.Any())
             {
-                using (var stream = request.File.OpenReadStream())
+                foreach (var item in listOrderDetail)
                 {
-                    var uploadUrl = await _firebaseStorageService.UploadPDFAsyncQuestion(stream, request.File.FileName, request.File.ContentType);
-                    documentUrl = uploadUrl;
+                    productBuying += item.KitQuantity;
                 }
             }
-
-            if ((bool)isBuying)
+            //======
+            using (var stream = request.File.OpenReadStream())
             {
-                Task<List<QuestionTbl>> listQuestions = _unitOfWork.QuestionTblRepository.GetAllQuestions();
-                //Check turn con lai neu Account da hoi roi
-                var result = new QuestionTbl();
-                List<QuestionTbl> listCheckTurn = new();
-                foreach (var x in await listQuestions)
-                {
-                    if (x.AccountId.Equals(accountId))
-                    {
-                        listCheckTurn.Add(x);
-                    }
-                }
-                //==================================================================            
-                foreach (var item in await listQuestions)
-                {
-                    if (item.AccountId.Equals(accountId))
-                    {
-                        int min = 100;
-                        int checkTurn = 0;
-                        foreach (var x in listCheckTurn)
-                        {
-                            if (x.Turn <= min)
-                            {
-                                min = x.Turn;
-                                checkTurn = min;
-                            }
-                        }
-                        if (checkTurn > 0)
-                        {
-                            result.QuestionId = "Q" + (new Random().Next(0, 999));
+                var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.File.FileName, request.File.ContentType);
+                documentUrl = uploadUrl;
+            }
 
-                            if (result.QuestionId.Equals(item.QuestionId))
-                            {
-                                result.QuestionId = "Q" + (new Random().Next(0, 999));
-                            }
-                            result.AccountId = accountId;
-                            result.Question = question;
-                            result.LabName = labName;
-                            result.AttachedFile = documentUrl;
-                            result.Status = "Active";
-                            result.Turn = min - 1;
-                            result.DateOfQuestion = DateTime.Now;
-                            //if (documentUrl != null)
-                            //{
-                            //    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-                            //}
-                            _unitOfWork.QuestionTblRepository.Create(result);
-                            return Ok(result);
-                        }
-                        else if (checkTurn == 0)
+            string questionId = "Q" + (new Random().Next(000, 999));
+            List<QuestionTbl> listQuestionByAcc = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(acccountId);
+            if (listQuestionByAcc.Any())
+            {
+                List<DateTime> listQuestionDateByAcc = listQuestionByAcc.Select(x => x.DateOfQuestion).ToList();
+                if (listQuestionDateByAcc.Any())
+                {
+                    DateTime dateOfQuestionNewest = listQuestionDateByAcc.Max();
+                    foreach (var x in listQuestionByAcc)
+                    {
+                        if (x.DateOfQuestion.Equals(dateOfQuestionNewest))
                         {
-                            return BadRequest("You end of turn to ask");
+                            minTurn = x.Turn - 1;
+                        }
+                        if (x.QuestionId.Equals(questionId))
+                        {
+                            questionId = "Q" + (new Random().Next(000, 999));
                         }
                     }
                 }
-                //Neu Account lan dau hoi thi khong can check turn nua
-
-                result = new QuestionTbl();
-                result.QuestionId = "Q" + (new Random().Next(0, 999));
-
-                foreach (var item in await listQuestions)
-                {
-                    if (result.QuestionId.Equals(item.QuestionId))
-                    {
-                        result.QuestionId = "Q" + (new Random().Next(0, 999));
-                    }
-                }
-                result.AccountId = accountId;
+                QuestionTbl result = new QuestionTbl();
+                result.QuestionId = questionId;
+                result.AccountId = acccountId;
+                result.Turn = minTurn;
                 result.Question = question;
                 result.LabName = labName;
                 result.AttachedFile = documentUrl;
                 result.Status = "Active";
-                result.Turn = productBuying * 2 - 1;
                 result.DateOfQuestion = DateTime.Now;
-                //if (documentUrl != null)
-                //{
-                //    await _firebaseStorageService.DeleteDocumentAsync(documentUrl);
-                //}
+                _unitOfWork.QuestionTblRepository.Create(result);
+                return Ok(result);
+            }//Lan dau tien hoi
+            else
+            {
+                QuestionTbl result = new QuestionTbl();
+                result.QuestionId = questionId;
+                result.AccountId = acccountId;
+                result.Turn = productBuying * 2 - 1;
+                result.Question = question;
+                result.LabName = labName;
+                result.AttachedFile = documentUrl;
+                result.Status = "Active";
+                result.DateOfQuestion = DateTime.Now;
                 _unitOfWork.QuestionTblRepository.Create(result);
                 return Ok(result);
             }
-            else return BadRequest("Fail");
         }
-
 
         //Test dang file len question folder firebase
         /*
