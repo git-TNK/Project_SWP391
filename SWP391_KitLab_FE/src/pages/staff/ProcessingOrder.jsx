@@ -78,12 +78,12 @@ function ProcessingOrder() {
                     <td className="border px-4 py-2 text-center">
                       <button
                         className={`${
-                          order.status === "Shipped"
+                          order.status === "Shipping"
                             ? "bg-gray-400 cursor-not-allowed"
                             : "bg-green-500 hover:bg-green-600"
                         } text-white font-bold py-1 px-2 rounded`}
                         onClick={() => handleUpdateOrderStatus(order.orderId)}
-                        disabled={order.status === "Shipped"}
+                        disabled={order.status === "Shipping"}
                       >
                         {order.status === "Shipping"
                           ? "Đã Xác Nhận"
