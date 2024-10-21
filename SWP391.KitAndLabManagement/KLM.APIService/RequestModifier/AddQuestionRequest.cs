@@ -10,6 +10,7 @@ namespace KLM.APIService.RequestModifier
         public string question { get; set; }
         [Required]
         public string labName { get; set; }
+        [Required]
         public IFormFile? File { get; set; }
     }
 }
