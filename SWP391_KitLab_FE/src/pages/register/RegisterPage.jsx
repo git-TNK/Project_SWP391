@@ -81,7 +81,7 @@ function RegisterPage() {
         navigate("/login");
       } catch (error) {
         console.error("Lỗi đăng ký:", error);
-        alert("Đăng ký thất bại. Vui lòng thử lại.");
+        alert("Đăng ký thất bại. Email hoặc tên đăng nhập đã tồn tại.");
       }
     }
   };
