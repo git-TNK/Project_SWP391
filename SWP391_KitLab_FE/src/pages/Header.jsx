@@ -158,7 +158,7 @@ function Header() {
             {account ? (
               <>
                 <NavLink
-                  to="/edit-profile"
+                  to="/view-profile"
                   style={{
                     padding: "10px 20px",
                     backgroundColor: "#333",

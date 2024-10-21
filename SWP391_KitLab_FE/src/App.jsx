@@ -32,6 +32,7 @@ import ProcessingOrder from "./pages/staff/ProcessingOrder";
 import AnswerQuesion from "./pages/staff/AnswerQuesion";
 import ViewHistorySupport from "./pages/staff/ViewHistorySupport";
 import ViewHistoryQuestion from "./pages/services/ViewHistoryQuestion";
+import ViewProfile from "./pages/profile/ViewProfile";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/resetpassword" element={<ResetPasswordPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/edit-profile" element={<EditProfile />}></Route>
+        <Route path="/view-profile" element={<ViewProfile/>}></Route>
 
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
