@@ -56,11 +56,18 @@ function ViewHistorySupport() {
                     <td className="border px-4 py-3">{row.accountId}</td>
                     <td className="border px-4 py-3">{row.answer}</td>
                     <td className="border px-4 py-3">
-                      <button className="text-blue-600 hover:underline">
+                      <button className="text-black-600">
                         {row.labName}
                       </button>
                     </td>
-                    <td className="border px-4 py-3">{row.attachedFile}</td>
+                    <td className="border px-4 py-3"> <a href={row.attachedFile}
+                          className="text-blue-500 hover:text-blue-800"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={(row.labName)}
+                          >
+                          Link của lab  
+                          </a></td>
                     <td className="border px-4 py-3">{row.dateOfAnswer}</td>
                     <td className="border px-4 py-3 text-center">
                       <button
