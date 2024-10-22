@@ -134,16 +134,83 @@ function TransferMoneyPage() {
     [account.accountId]
   );
 
+  const sendEmail = useCallback(
+    async (emailBody) => {
+      try {
+        await fetch("http://localhost:5056/api/Email/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            To: `${account.email}`, // Ensure this has the correct recipient email
+            Subject: "Hóa đơn của bạn",
+            Body: emailBody,
+          }),
+        });
+        console.log("Email sent successfully");
+      } catch (error) {
+        console.log("Error sending email:", error);
+      }
+    },
+    [account.email]
+  ); // Add account.email as a dependency
+
+  const createEmailBody = useCallback((cart) => {
+    let totalAmount = 0;
+    const rows = cart
+      .map((item, index) => {
+        const amount = item.quantity * item.price; // Assuming item contains quantity and price
+        totalAmount += amount;
+        return `<tr>
+                <td>${index + 1}</td>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>${amount.toFixed(2)}</td>
+              </tr>`;
+      })
+      .join("");
+
+    return `
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <th style="border: 1px solid black;">STT</th>
+          <th style="border: 1px solid black;">Tên Kit</th>
+          <th style="border: 1px solid black;">Số Lượng</th>
+          <th style="border: 1px solid black;">Giá Tiền</th>
+        </tr>
+        ${rows}
+        <tr>
+          <td colspan="3" style="border: 1px solid black;">Tổng</td>
+          <td style="border: 1px solid black;">${totalAmount.toFixed(2)}</td>
+        </tr>
+      </table>
+    `;
+  }, []); // No dependencies needed
+
   useEffect(() => {
     if (isSuccess) {
       createOrder()
         .then(() => {
-          return Promise.then(cart.map((item) => createOrderDetails(item)));
+          return Promise.all(cart.map((item) => createOrderDetails(item)));
+        })
+        .then(() => {
+          console.log("All order details created");
+          const emailBody = createEmailBody(cart); // Create email body
+          return sendEmail(emailBody); // Send email
         })
         .then(() => console.log("All order details created"))
         .catch((error) => console.log(error));
     }
-  }, [isSuccess, cart, listOrder, createOrder, createOrderDetails]);
+  }, [
+    isSuccess,
+    cart,
+    listOrder,
+    createOrder,
+    createOrderDetails,
+    sendEmail,
+    createEmailBody,
+  ]);
   // const urlQr = `https://img.vietqr.io/image/MB-0373713955-compact2.jpg?amount=${buyerData.totalCart}&addInfo=Testing&accountName=Tran Nam Khanh`;
   //o tren la dung so tien hien thi o duoi la so tien nho de test
   const urlQr = `https://img.vietqr.io/image/MB-0961671129-print.jpg?amount=2000&addInfo=Testing&accountName=Le Sy Binh`;

@@ -7,7 +7,7 @@ function ViewHistoryQuestion() {
   const [listQuestions, setListQuestions] = useState([]);
   const [listAnswers, setListAnswers] = useState([]);
   const [account, setAccount] = useState(null);
-  const [minTurnQuestion, setMinTurnQuestion] = useState([]); // Trạng thái cho câu hỏi có turn nhỏ nhất
+  const [newestQuestion, setNewestQuestion] = useState([]); // Trạng thái cho câu hỏi có turn nhỏ nhất
 
   // Lấy tài khoản từ localStorage khi component mount
   useEffect(() => {
@@ -47,10 +47,8 @@ function ViewHistoryQuestion() {
         setListQuestions(questions);
         await fetchListAnswers(questions); // Đảm bảo lấy xong câu hỏi mới lấy câu trả lời
 
-        // Tìm câu hỏi có turn nhỏ nhất và cập nhật state
-        const minTurnQ = findQuestionWithMinTurn(questions);
-
-        setMinTurnQuestion(minTurnQ);
+        const newestQ = findNewestQuestion(questions);
+        setNewestQuestion(newestQ);
       } catch (err) {
         console.error("Lỗi khi lấy câu hỏi:", err);
       }
@@ -58,10 +56,12 @@ function ViewHistoryQuestion() {
     [fetchListAnswers]
   );
 
-  function findQuestionWithMinTurn(questions) {
+  function findNewestQuestion(questions) {
     if (questions.length === 0) return null;
-    return questions.reduce((minQuestion, currentQuestion) =>
-      currentQuestion.turn < minQuestion.turn ? currentQuestion : minQuestion
+    return questions.reduce((newest, current) =>
+      new Date(current.dateOfQuestion) > new Date(newest.dateOfQuestion)
+        ? current
+        : newest
     );
   }
 
@@ -86,8 +86,8 @@ function ViewHistoryQuestion() {
         </h2>
 
         {/* Hiển thị lượt hỏi còn lại */}
-        {minTurnQuestion ? (
-          <h3>Số lượt hỏi còn lại: {minTurnQuestion.turn}</h3>
+        {newestQuestion ? (
+          <h3>Số lượt hỏi còn lại: {newestQuestion.turn}</h3>
         ) : (
           <h3>Chưa có câu hỏi</h3>
         )}

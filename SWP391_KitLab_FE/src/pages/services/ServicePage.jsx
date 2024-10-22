@@ -66,6 +66,7 @@ function ServicePage() {
 
         if (response.ok) {
           alert("Gửi yêu cầu thành công!");
+          navigate("/");
         } else {
           const errorMessage = await response.text();
           alert(`Gửi yêu cầu thất bại: ${errorMessage}`);
