@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { Check, X } from "lucide-react"; // Import Lucide icons
 
 const FeedbackModal = ({ isOpen, onClose, message, isSuccess }) => {
   const [isAnimating, setIsAnimating] = useState(false);
@@ -22,7 +23,7 @@ const FeedbackModal = ({ isOpen, onClose, message, isSuccess }) => {
     <div
       className={`fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full transition-opacity duration-900 ease-in-out ${
         isOpen ? "opacity-100" : "opacity-0"
-      }`}
+      } z-[100]`}
       onClick={onClose}
     >
       <div
@@ -39,35 +40,9 @@ const FeedbackModal = ({ isOpen, onClose, message, isSuccess }) => {
             }`}
           >
             {isSuccess ? (
-              <svg
-                className="h-6 w-6 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
+              <Check className="h-6 w-6 text-green-600" strokeWidth={2} />
             ) : (
-              <svg
-                className="h-6 w-6 text-red-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
+              <X className="h-6 w-6 text-red-600" strokeWidth={2} />
             )}
           </div>
           <h3

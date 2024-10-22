@@ -5,7 +5,7 @@ import Footer from "../../Footer";
 import axios from "axios";
 import Notification from "./notification";
 import SearchBar from "./search-bar";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 
 function AdminAccount() {
   const [accountList, setAccountList] = useState([]);
@@ -18,11 +18,13 @@ function AdminAccount() {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const accountsPerPage = 10;
+  const accountsPerPage = 12;
 
   //Filter
   const [filterRole, setFilterRole] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isFilterOpenStatus, setIsFilterOpenStatus] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -44,9 +46,11 @@ function AdminAccount() {
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
         const roleMatch = filterRole === "All" || account.role === filterRole;
-        return nameMatch && roleMatch;
+        const statusMatch =
+          filterStatus === "All" || account.status === filterStatus;
+        return nameMatch && roleMatch && statusMatch;
       });
-  }, [accountList, searchTerm, filterRole]);
+  }, [accountList, searchTerm, filterRole, filterStatus]);
 
   const indexOfLastAccount = currentPage * accountsPerPage;
   const indexOfFirstAccount = indexOfLastAccount - accountsPerPage;
@@ -66,7 +70,36 @@ function AdminAccount() {
     fetchData();
   }, []);
 
-  const handlePromote = async (account) => {
+  const handleBanningAcc = async (account) => {
+    console.log(account);
+
+    try {
+      const response = await axios.put(
+        `http://localhost:5056/api/Account/AccountBanning?id=${account.accountId}`
+      );
+
+      if (response.status === 200) {
+        fetchData();
+        console.log("success");
+
+        if (account.status === "DeActive") {
+          setNotification({
+            message: `Gỡ chặn tài khoản: ${account.username}`,
+            type: "success",
+          });
+        } else if (account.status === "Active") {
+          setNotification({
+            message: `Đã chặn tài khoản: ${account.username}`,
+            type: "error",
+          });
+        }
+      }
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }
+  };
+
+  const handleAccRole = async (account) => {
     console.log(account);
 
     try {
@@ -80,12 +113,12 @@ function AdminAccount() {
 
         if (account.role === "Customer") {
           setNotification({
-            message: `Thăng cấp tài khoản: ${account.username}`,
+            message: `Chức vụ ${account.username} giờ là NHÂN VIÊN`,
             type: "success",
           });
         } else if (account.role === "Staff") {
           setNotification({
-            message: `Giáng cấp tài khoản: ${account.username}`,
+            message: `Chức vụ ${account.username} giờ là KHÁCH HÀNG`,
             type: "error",
           });
         }
@@ -108,24 +141,44 @@ function AdminAccount() {
     setIsModalOpen(false);
   };
 
-  const handleFilterClick = () => {
+  const handleFilterClickRole = () => {
     setIsFilterOpen(!isFilterOpen);
   };
 
-  const handleFilterSelect = (role) => {
-    setFilterRole(role);
-    setIsFilterOpen(false);
+  const handleFilterClickStatus = () => {
+    setIsFilterOpenStatus(!isFilterOpenStatus);
+  };
+
+  const handleFilterSelect = (filterValue, type) => {
+    if (type === "SelectRole") {
+      setFilterRole(filterValue);
+      setIsFilterOpen(false);
+    } else {
+      setFilterStatus(filterValue);
+      setIsFilterOpenStatus(false);
+    }
     setCurrentPage(1);
   };
 
-  const handleTranslate = (role) => {
-    switch (role) {
-      case "All":
-        return "Tất cả";
-      case "Customer":
-        return "Khách hàng";
-      default:
-        return "Nhân viên";
+  const handleTranslate = (filterValue, type) => {
+    if (type === "TranslateRole") {
+      switch (filterValue) {
+        case "All":
+          return "Tất cả";
+        case "Customer":
+          return "Khách hàng";
+        default:
+          return "Nhân viên";
+      }
+    } else {
+      switch (filterValue) {
+        case "All":
+          return "Tất cả";
+        case "Active":
+          return "Hoạt động";
+        default:
+          return "Bị chặn";
+      }
     }
   };
 
@@ -141,7 +194,7 @@ function AdminAccount() {
     );
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
           <h2 className="text-xl font-bold mb-4">{title}</h2>
           {content}
@@ -171,20 +224,30 @@ function AdminAccount() {
               <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={handleSearch}
-                placeholder="Tìm kiếm theo tên"
+                placeholderString="Tìm kiếm bằng tên tài khoản..."
               />
-              {/* filter */}
+              {/* filter role*/}
               <div className="relative z-50">
                 <button
-                  onClick={handleFilterClick}
-                  className="bg-black text-white px-4 py-2 rounded-md flex items-center"
+                  onClick={handleFilterClickRole}
+                  className="w-[180px] bg-gray-300 text-black px-4 py-2 hover:bg-black hover:text-white rounded-md flex items-center"
                 >
                   <Filter size={20} className="mr-2" />
-                  Lọc
-                  <ChevronDown size={20} className="ml-2" />
+                  <span className="mx-auto">
+                    {filterRole === "All"
+                      ? "Chức vụ"
+                      : filterRole === "Customer"
+                      ? "Khách hàng"
+                      : "Nhân viên"}
+                  </span>
+                  {isFilterOpen ? (
+                    <ChevronUp size={20} className="ml-2" />
+                  ) : (
+                    <ChevronDown size={20} className="ml-2" />
+                  )}
                 </button>
                 {isFilterOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+                  <div className="absolute right-0 mt-2 w-[170px] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                     <div
                       className="py-1"
                       role="menu"
@@ -194,7 +257,7 @@ function AdminAccount() {
                       {["All", "Customer", "Staff"].map((role) => (
                         <button
                           key={role}
-                          onClick={() => handleFilterSelect(role)}
+                          onClick={() => handleFilterSelect(role, "SelectRole")}
                           className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium text-left
                             ${
                               role === filterRole
@@ -204,7 +267,58 @@ function AdminAccount() {
                             `}
                           role="menuitem"
                         >
-                          {handleTranslate(role)}
+                          {handleTranslate(role, "TranslateRole")}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* filter status*/}
+              <div className="relative z-50">
+                <button
+                  onClick={handleFilterClickStatus}
+                  className="w-[180px] bg-gray-300 text-black px-4 py-2 hover:bg-black hover:text-white rounded-md flex items-center"
+                >
+                  <Filter size={20} className="mr-2" />
+                  <span className="mx-auto">
+                    {filterStatus === "All"
+                      ? "Trạng thái"
+                      : filterStatus === "Active"
+                      ? "Hoạt động"
+                      : "Bị chặn"}
+                  </span>
+                  {isFilterOpenStatus ? (
+                    <ChevronUp size={20} className="ml-2" />
+                  ) : (
+                    <ChevronDown size={20} className="ml-2" />
+                  )}
+                </button>
+                {isFilterOpenStatus && (
+                  <div className="absolute right-0 mt-2 w-[170px] rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      {["All", "Active", "DeActive"].map((status) => (
+                        <button
+                          key={status}
+                          onClick={() =>
+                            handleFilterSelect(status, "SelectStatus")
+                          }
+                          className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium text-left
+                            ${
+                              status === filterStatus
+                                ? "text-white bg-black"
+                                : "text-black bg-white"
+                            }
+                            `}
+                          role="menuitem"
+                        >
+                          {handleTranslate(status, "TranslateStatus")}
                         </button>
                       ))}
                     </div>
@@ -225,8 +339,8 @@ function AdminAccount() {
                     <th className="py-3 px-4 text-center">Số điện thoại</th>
                     <th className="py-3 px-4 text-left">Email</th>
                     <th className="py-3 px-4 text-left">Địa chỉ</th>
-                    <th className="py-3 px-4 text-left ">Chức vụ</th>
-                    <th className="py-3 px-4 text-center">Thăng/Giáng cấp</th>
+                    <th className="py-3 px-4 text-center">Chức vụ</th>
+                    <th className="py-3 px-4 text-center">Trạng thái</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-600">
@@ -239,9 +353,14 @@ function AdminAccount() {
                       <td className="py-2 px-4">{account.username}</td>
                       <td className="py-2 px-4 ">{account.password}</td>
                       <td className="py-2 px-4 ">{account.fullName}</td>
-                      <td className="py-2 px-4 text-right">
-                        {account.phoneNumber}
-                      </td>
+                      {account.phoneNumber ? (
+                        <td className="py-2 px-4 text-right">
+                          {account.phoneNumber}
+                        </td>
+                      ) : (
+                        <td className="py-2 px-4 text-right">-</td>
+                      )}
+
                       <td className="py-2 px-4 ">{account.email}</td>
                       <td className="py-2 px-4 ">
                         {account.address ? (
@@ -255,28 +374,46 @@ function AdminAccount() {
                           <span className="text-gray-400">-</span>
                         )}
                       </td>
-                      <td className="py-2 pl-4 pr-1">
+
+                      <td className="py-2 px-4 text-center">
+                        {account.role === "Staff" ? (
+                          <button
+                            className="bg-gray-300 w-26 hover:bg-black hover:text-white font-medium py-1 px-2 text-black rounded-lg"
+                            onClick={() => handleAccRole(account)}
+                          >
+                            Nhân viên
+                          </button>
+                        ) : (
+                          <button
+                            className="bg-gray-300 w-26 hover:bg-black hover:text-white font-medium py-1 px-2 text-black rounded-lg"
+                            onClick={() => handleAccRole(account)}
+                          >
+                            Khách hàng
+                          </button>
+                        )}
+                      </td>
+                      {/*<td className="py-2 pl-4 pr-1">
                         <span className="inline-block w-24">
                           {account.role === "Staff"
                             ? "Nhân viên"
                             : "Khách hàng"}
                         </span>
-                      </td>
+                      </td> */}
 
                       <td className="py-2 px-4 text-center">
-                        {account.role === "Staff" ? (
+                        {account.status === "Active" ? (
                           <button
-                            className="w-24 py-1 px-2 bg-black text-white rounded"
-                            onClick={() => handlePromote(account)}
+                            className="bg-green-500 w-24 py-1 px-2  text-white rounded-lg"
+                            onClick={() => handleBanningAcc(account)}
                           >
-                            Giáng cấp
+                            Hoạt động
                           </button>
                         ) : (
                           <button
-                            className="w-24 py-1 px-2 bg-black text-white rounded"
-                            onClick={() => handlePromote(account)}
+                            className="bg-red-500 w-24 py-1 px-2  text-white rounded-lg"
+                            onClick={() => handleBanningAcc(account)}
                           >
-                            Thăng cấp
+                            Bị chặn
                           </button>
                         )}
                       </td>

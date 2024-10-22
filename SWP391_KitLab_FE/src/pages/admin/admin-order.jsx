@@ -5,12 +5,12 @@ import Sidebar from "./sidebar";
 import axios from "axios";
 import LoadingSpinner from "./loading";
 import SearchBar from "./search-bar";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, ChevronUp, Filter } from "lucide-react";
 
 function AdminOrder() {
   const [orderList, setOrderList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const orderPerpage = 5;
+  const orderPerpage = 12;
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [modalContent, setModalContent] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,10 +82,12 @@ function AdminOrder() {
 
   const handleTranslateOrderStatus = (status) => {
     switch (status) {
-      case "Processing":
-        return "Đang xử lí";
       case "Done":
         return "Đã xong";
+      case "Shipping":
+        return "Đang giao";
+      case "Processing":
+        return "Đang xử lí";
       default:
         return "Tất cả";
     }
@@ -135,6 +137,8 @@ function AdminOrder() {
     switch (status) {
       case "Done":
         return "Đã xong";
+      case "Shipping":
+        return "Đang giao";
       default:
         return "Đang xử lí";
     }
@@ -144,8 +148,10 @@ function AdminOrder() {
     switch (status) {
       case "Done":
         return "bg-green-500";
-      default:
+      case "Shipping":
         return "bg-yellow-500";
+      default:
+        return "bg-red-500";
     }
   };
 
@@ -201,7 +207,7 @@ function AdminOrder() {
     }
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
           <h2 className="text-xl font-bold mb-4">{title}</h2>
           {content}
@@ -231,16 +237,23 @@ function AdminOrder() {
               <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={handleSearch}
+                placeholderString="Tìm kiếm đơn hàng bằng tên tài khoản..."
               />
               {/* filter */}
               <div className="relative z-50">
                 <button
                   onClick={handleFilterClick}
-                  className="bg-black text-white px-4 py-2 rounded-md flex items-center"
+                  className="w-[180px] bg-gray-300 text-black hover:text-white hover:bg-black px-4 py-2 rounded-md flex items-center"
                 >
                   <Filter size={20} className="mr-2" />
-                  Lọc
-                  <ChevronDown size={20} className="ml-2" />
+                  <span className="mx-auto">
+                    {handleTranslateOrderStatus(filterStatus)}
+                  </span>
+                  {isFilterOpen ? (
+                    <ChevronUp size={20} className="ml-2" />
+                  ) : (
+                    <ChevronDown size={20} className="ml-2" />
+                  )}
                 </button>
                 {isFilterOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
@@ -250,22 +263,24 @@ function AdminOrder() {
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
                     >
-                      {["All", "Processing", "Done"].map((status) => (
-                        <button
-                          key={status}
-                          onClick={() => handleFilterSelect(status)}
-                          className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium text-left
+                      {["All", "Done", "Shipping", "Processing"].map(
+                        (status) => (
+                          <button
+                            key={status}
+                            onClick={() => handleFilterSelect(status)}
+                            className={`block items-center my-2 mx-4 w-5/6 px-4 py-3 text-sm hover:bg-black hover:text-white rounded-lg transition-colors duration-500 font-medium text-left
                             ${
                               status === filterStatus
                                 ? "text-white bg-black"
                                 : "text-black bg-white"
                             }
                             `}
-                          role="menuitem"
-                        >
-                          {handleTranslateOrderStatus(status)}
-                        </button>
-                      ))}
+                            role="menuitem"
+                          >
+                            {handleTranslateOrderStatus(status)}
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
                 )}

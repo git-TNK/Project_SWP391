@@ -44,7 +44,7 @@ function AdminLab() {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const labPerpage = 5;
+  const labPerpage = 12;
 
   //notification
   const [notification, setNotification] = useState(null);
@@ -111,7 +111,7 @@ function AdminLab() {
     }
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
           <h2 className="text-xl font-bold mb-4">{title}</h2>
           {content}
@@ -248,13 +248,14 @@ function AdminLab() {
               <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={handleSearch}
+                placeholderString="Tìm kiếm bằng tên lab..."
               />
               <FilterType
                 options={typeOptions}
                 onFilterChange={handleFilterChange}
               />
               <NavLink to="/admin/addLab">
-                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
+                <button className="bg-gray-300 text-black hover:bg-black hover:text-white px-4 py-2 rounded-md flex items-center">
                   <PlusCircle size={20} className="mr-2" />
                   Thêm lab
                 </button>
@@ -300,7 +301,7 @@ function AdminLab() {
                           {lab.labTypes.map((type, index) => (
                             <span
                               key={index}
-                              className="bg-gray-100 px-2 py-1 rounded truncate"
+                              className="bg-gray-100 w-[90px] px-2 py-1 rounded truncate"
                             >
                               {type}
                             </span>

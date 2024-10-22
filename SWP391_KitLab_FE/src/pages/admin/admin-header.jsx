@@ -98,24 +98,27 @@ function AdminHeader() {
           </div> */}
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <button onClick={handleLogOut}>
+            <button
+              onClick={handleLogOut}
+              className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28"
+            >
               <NavLink
                 to="/"
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "black",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "10px",
-                  cursor: "pointer",
-                  textDecoration: "none",
-                }}
+                // style={{
+                //   padding: "8px 16px",
+                //   backgroundColor: "black",
+                //   color: "white",
+                //   border: "none",
+                //   borderRadius: "10px",
+                //   cursor: "pointer",
+                //   textDecoration: "none",
+                // }}
               >
                 Đăng xuất
               </NavLink>
             </button>
 
-            <NavLink>
+            <NavLink to="/view-profile">
               <img
                 src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
                 style={{

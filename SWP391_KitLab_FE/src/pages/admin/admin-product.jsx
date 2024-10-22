@@ -34,7 +34,7 @@ const AdminProduct = () => {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8;
+  const productsPerPage = 12;
 
   //search bar
   const [searchTerm, setSearchTerm] = useState("");
@@ -241,6 +241,7 @@ const AdminProduct = () => {
               <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={handleSearch}
+                placeholderString="Tìm kiếm bằng tên sản phẩm..."
               />
 
               <FilterType
@@ -249,7 +250,7 @@ const AdminProduct = () => {
               />
 
               <NavLink to="/admin/addProduct">
-                <button className="bg-black text-white px-4 py-2 rounded-md flex items-center">
+                <button className="bg-gray-300 text-black hover:text-white hover:bg-black px-4 py-2 rounded-md flex items-center">
                   <PlusCircle size={20} className="mr-2" />
                   Thêm Sản Phẩm
                 </button>
