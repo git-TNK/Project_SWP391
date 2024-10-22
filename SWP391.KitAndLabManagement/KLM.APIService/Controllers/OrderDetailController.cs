@@ -1,5 +1,4 @@
-﻿using Google.Apis.Storage.v1.Data;
-using KLM.Repository;
+﻿using KLM.Repository;
 using KLM.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -89,7 +88,7 @@ namespace KLM.APIService.Controllers
                 {
                     if (item.DateOfQuestion.Equals(latestQuestionCreate))
                     {
-                        item.Turn += kitQuantity * 2;
+                        item.Turn = item.Turn + kitQuantity * 2;
                         _unitOfWork.QuestionTblRepository.Update(item);
                     }
                 }

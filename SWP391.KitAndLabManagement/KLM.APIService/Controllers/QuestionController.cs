@@ -65,7 +65,7 @@ namespace KLM.APIService.Controllers
             //======
             using (var stream = request.File.OpenReadStream())
             {
-                var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.File.FileName, request.File.ContentType);
+                var uploadUrl = await _firebaseStorageService.UploadPDFAsyncQuestion(stream, request.File.FileName, request.File.ContentType);
                 documentUrl = uploadUrl;
             }
 
@@ -81,6 +81,10 @@ namespace KLM.APIService.Controllers
                     {
                         if (x.DateOfQuestion.Equals(dateOfQuestionNewest))
                         {
+                            if (x.Turn <= 0)
+                            {
+                                return BadRequest("Bạn đã hết lượt hỏi");
+                            }
                             minTurn = x.Turn - 1;
                         }
                         if (x.QuestionId.Equals(questionId))
