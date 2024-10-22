@@ -23,7 +23,7 @@ function StaffHeader() {
   };
 
   return (
-    <header className="shadow-md" style={{ backgroundColor: "rgb(31, 41, 55)", color: "white" }}>
+    <header className="shadow-md" style={{ backgroundColor: "black", color: "white" }}>
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           {/* Logo hình vuông bo cạnh tròn với màu nền gray */}
