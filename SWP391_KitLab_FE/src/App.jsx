@@ -14,7 +14,6 @@ import AdminOrder from "./pages/admin/admin-order";
 import AddProduct from "./pages/admin/admin-add-product";
 import AdminViewProduct from "./pages/admin/admin-product-view";
 import ForgotPasswordPage from "./pages/forgotpassword/ForgotPassWordPage";
-import ResetPasswordPage from "./pages/resetpassword/ResetPasswordPage";
 import OrderHistoryPage from "./pages/orderHistory/OrderHistoryPage";
 
 import ProductViewPage from "./pages/products/ProductViewPage";
@@ -41,7 +40,6 @@ function App() {
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/forgotpassword" element={<ForgotPasswordPage />}></Route>
-        <Route path="/resetpassword" element={<ResetPasswordPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/edit-profile" element={<EditProfile />}></Route>
         <Route path="/view-profile" element={<ViewProfile/>}></Route>

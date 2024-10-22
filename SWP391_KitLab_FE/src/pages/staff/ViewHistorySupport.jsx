@@ -7,111 +7,85 @@ import Footer from "../../Footer";
 function ViewHistorySupport() {
   const [listAnswers, setListAnswers] = useState([]);
 
-  // Fetch the list of orders from the API
+  // Fetch the list of answers from the API
   async function fetchListAnswers() {
     try {
       const response = await axios.get(`http://localhost:5056/api/Answer`);
       setListAnswers(response.data);
     } catch (err) {
-      console.error("Failed to fetch orders:", err);
+      console.error("Failed to fetch answers:", err);
     }
   }
-
-  const headers = [
-    'ID Tài Khoản',
-    'Câu Trả Lời',
-    'Tên Bài Lab',
-    'File Đính Kèm',
-    'Ngày',
-    'Trạng thái'
-  ];
-
-  const data = [
-    {
-      id: '12345',
-      answer: 'Answer text 1',
-      labName: 'Lab 1',
-      attachment: 'File 1',
-      date: '2024-10-01',
-      status: 'Pending'
-    },
-    {
-      id: '12346',
-      answer: 'Answer text 2',
-      labName: 'Lab 2',
-      attachment: 'File 2',
-      date: '2024-10-02',
-      status: 'Confirmed'
-    },
-    {
-      id: '12347',
-      answer: 'Answer text 3',
-      labName: 'Lab 3',
-      attachment: 'File 3',
-      date: '2024-10-03',
-      status: 'Pending'
-    },
-    // Add more data rows as needed
-  ];
 
   useEffect(() => {
     fetchListAnswers();
   }, []);
 
-  console.log(listAnswers);
-  
-
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       {/* StaffHeader at the top */}
-      <header>
-        <StaffHeader />
-      </header>
+      <StaffHeader />
 
-      <div className="flex flex-grow">
+      <div className="flex flex-1">
         {/* Sidebar on the left */}
-        <aside>
-          <StaffSlideBar />
-        </aside>
+        <StaffSlideBar />
 
         {/* Main content area with the table */}
-        <main className="flex-grow p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Lịch Sử Hỗ Trợ</h1>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr>
-                {headers.map((header, index) => (
-                  <th
-                    key={index}
-                    className="border border-gray-300 p-2 bg-gray-100 text-left"
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {listAnswers.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                  <td className="border border-gray-300 p-2">{row.accountId}</td>
-                  <td className="border border-gray-300 p-2">{row.answer}</td>
-                  <td className="border border-gray-300 p-2">
-                    <button className="text-blue-600 underline">
-                      {row.labName}
-                    </button>
-                  </td>
-                  <td className="border border-gray-300 p-2">{row.attachedFile}</td>
-                  <td className="border border-gray-300 p-2">{row.dateOfAnswer}</td>
-                  <td className="border border-gray-300 p-2">
-                    <button className="bg-blue-500 text-white px-2 py-1 rounded">
-                      {row.status === 'Pending' ? 'Chưa Trả Lời' : 'Đã Trả Lời'}
-                    </button>
-                  </td>
+        <div className="flex-1 p-10 overflow-x-auto">
+          <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
+            Lịch Sử Hỗ Trợ
+          </h1>
+          <div className="overflow-x-auto rounded-lg shadow-lg">
+            <table className="min-w-full bg-white border border-gray-300">
+              <thead>
+                <tr className="bg-indigo-500 text-white">
+                  <th className="border px-4 py-3 text-left">ID Tài Khoản</th>
+                  <th className="border px-4 py-3 text-left">Câu Trả Lời</th>
+                  <th className="border px-4 py-3 text-left">Tên Bài Lab</th>
+                  <th className="border px-4 py-3 text-left">File Đính Kèm</th>
+                  <th className="border px-4 py-3 text-left">Ngày</th>
+                  <th className="border px-4 py-3 text-center">Trạng Thái</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </main>
+              </thead>
+              <tbody>
+                {listAnswers.map((row, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    className="hover:bg-gray-100 transition-colors duration-300"
+                  >
+                    <td className="border px-4 py-3">{row.accountId}</td>
+                    <td className="border px-4 py-3">{row.answer}</td>
+                    <td className="border px-4 py-3">
+                      <button className="text-black-600">
+                        {row.labName}
+                      </button>
+                    </td>
+                    <td className="border px-4 py-3"> <a href={row.attachedFile}
+                          className="text-blue-500 hover:text-blue-800"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={(row.labName)}
+                          >
+                          Link của lab  
+                          </a></td>
+                    <td className="border px-4 py-3">{row.dateOfAnswer}</td>
+                    <td className="border px-4 py-3 text-center">
+                      <button
+                        className={`${
+                          row.status === "Pending"
+                            ? "bg-red-500"
+                            : "bg-green-500"
+                        } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
+                      >
+                        {row.status === "Pending" ? "Chưa Trả Lời" : "Đã Trả Lời"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <Footer />
     </div>

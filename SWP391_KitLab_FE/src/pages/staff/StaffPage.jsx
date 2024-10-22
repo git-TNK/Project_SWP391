@@ -18,17 +18,17 @@ function StaffPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-50">
       <StaffHeader />
       <div className="flex flex-1">
         <StaffSlideBar />
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto mt-4">
+        <div className="bg-white p-10 rounded-lg shadow-lg max-w-3xl mx-auto mt-6">
           <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
             NỘI QUY NHÂN VIÊN
           </h1>
-          <ol className="list-decimal pl-6 space-y-4 text-gray-700">
+          <ol className="list-decimal pl-8 space-y-6 text-gray-700 leading-relaxed">
             {rules.map((rule, index) => (
-              <li key={index} className="text-md">
+              <li key={index} className="text-lg">
                 {rule.split(", ").map((segment, segIndex) => (
                   <React.Fragment key={segIndex}>
                     {segment}

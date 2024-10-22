@@ -27,16 +27,23 @@ function LoginPage() {
 
   async function fetchAccount(userName, password) {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `http://localhost:5056/api/Account/${userName},${password}`
       );
-      localStorage.removeItem("account");
-      setAccount(response.data);
-      setRole(response.data.role);
-      localStorage.setItem("account", JSON.stringify(response.data));
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.removeItem("account");
+        setAccount(data);
+        setRole(data.role);
+        alert("Đăng nhập thành công!");
+        localStorage.setItem("account", JSON.stringify(data));
+      } else {
+        const errorMessage = await response.text();
+        alert(`${errorMessage}`);
+      }
     } catch (err) {
-      console.log(err);
-      alert("Sai tài khoản hoặc mật khẩu");
+      console.error(err);
     }
   }
 

@@ -36,8 +36,7 @@ function Header() {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    localStorage.removeItem("account");
-    localStorage.removeItem("labNames");
+    localStorage.clear();
     setAccount(null); // Update state to remove account
     setTimeout(() => {
       navigate("/"); // Navigate after state change
