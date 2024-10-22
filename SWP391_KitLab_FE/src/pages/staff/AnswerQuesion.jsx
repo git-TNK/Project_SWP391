@@ -93,7 +93,15 @@ function AnswerQuestion() {
                     <td className="border px-4 py-3">{row.accountId}</td>
                     <td className="border px-4 py-3">{row.question}</td>
                     <td className="border px-4 py-3">{row.labName}</td>
-                    <td className="border px-4 py-3">{row.attachedFile}</td>
+                    <td className="border px-4 py-3">  <a
+                          href={row.attachedFile}
+                          className="text-blue-500 hover:text-blue-800"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={(row.labName)}
+                        >
+                          Link của lab
+                        </a> </td>
                     <td className="border px-4 py-3">{row.dateOfQuestion}</td>
                     <td className="border px-4 py-3 text-center">
                       <button
@@ -138,7 +146,7 @@ function AnswerQuestion() {
                   <h3 className="text-lg font-semibold mb-2">Chọn Tệp:</h3>
                   <input
                     type="file"
-                    accept=".xlsx, .pdf, .docx, .doc, .xls, .jpg, .png, .zip"
+                    accept=".pdf"
                     onChange={(e) => setAttachment(e.target.files[0])}
                     className="w-full"
                   />
