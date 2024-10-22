@@ -79,6 +79,7 @@ namespace KLM.APIService.Controllers
                 if (x.OrderId.Equals(orderId))
                 {
                     x.Status = "Done";
+                    x.ReceiveDate = DateTime.Now;
                     _unitOfWork.OrderTblRepository.Update(x);
                     return Ok();
                 }
