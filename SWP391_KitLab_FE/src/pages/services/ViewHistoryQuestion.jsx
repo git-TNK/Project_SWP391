@@ -118,7 +118,7 @@ function ViewHistoryQuestion() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        View File
+                        Xem File
                       </a>
                     </td>
                     <td className="px-4 py-2">
