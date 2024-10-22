@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const menuItems = [
   { name: "Quản Lý Sản Phẩm", route: "/admin/product" },
@@ -10,7 +10,7 @@ const menuItems = [
 ];
 
 function Sidebar() {
-  const location = useLocation();
+  // const location = useLocation();
 
   return (
     <div className="w-64 bg-white shadow-md">
