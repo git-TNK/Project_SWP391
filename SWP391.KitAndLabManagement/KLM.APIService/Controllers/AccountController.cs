@@ -21,10 +21,14 @@ namespace KLM.APIService.Controllers
             {
                 if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
                 {
+                    if (account[i].Status == "DeActive")
+                    {
+                        return BadRequest("Tài khoản của bạn đã bị chặn vui lòng liên hệ: FPT University - kitcentral@gmail.com");
+                    }
                     return Ok(account[i]);
                 }
             }
-            return BadRequest();
+            return BadRequest("Sai tài khoản hoặc mật khẩu");
         }
 
         //get account for admin page
