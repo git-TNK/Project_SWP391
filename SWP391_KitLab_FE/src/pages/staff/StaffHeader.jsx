@@ -5,6 +5,10 @@ function StaffHeader() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
 
+  if (account.role != "Staff" || account == null) {
+    navigate("*");
+  }
+
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
@@ -23,7 +27,10 @@ function StaffHeader() {
   };
 
   return (
-    <header className="shadow-md" style={{ backgroundColor: "black", color: "white" }}>
+    <header
+      className="shadow-md"
+      style={{ backgroundColor: "black", color: "white" }}
+    >
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           {/* Logo hình vuông bo cạnh tròn với màu nền gray */}
