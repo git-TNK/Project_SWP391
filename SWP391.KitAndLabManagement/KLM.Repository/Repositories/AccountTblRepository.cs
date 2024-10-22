@@ -68,5 +68,28 @@ namespace KLM.Repository.Repositories
 
             return true;
         }
+
+        //banning account
+        public async Task<bool> BanningAccount(string id)
+        {
+            var accountSearch = await _context.Set<AccountTbl>().FirstOrDefaultAsync(e => e.AccountId == $"{id}" && e.Role != "Admin");
+
+            if (accountSearch == null)
+            {
+                return false;
+            }
+
+            if (accountSearch.Status == "Active")
+            {
+                accountSearch.Status = "DeActive";
+            }
+            else
+            {
+                accountSearch.Status = "Active";
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

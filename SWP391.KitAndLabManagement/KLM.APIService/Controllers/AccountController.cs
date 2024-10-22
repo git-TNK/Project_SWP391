@@ -34,6 +34,7 @@ namespace KLM.APIService.Controllers
             return await _unitOfWork.AccountTblRepository.GetAccountForAdmin();
         }
 
+        //Account promotion
         [HttpPut("AccountPromote")]
         public async Task<IActionResult> Promotion(string id)
         {
@@ -48,6 +49,24 @@ namespace KLM.APIService.Controllers
             {
                 Console.WriteLine("Failed to change role");
                 return BadRequest("Fail to promote");
+            }
+        }
+
+        //Account banning
+        [HttpPut("AccountBanning")]
+        public async Task<IActionResult> Banning(string id)
+        {
+            bool result = await _unitOfWork.AccountTblRepository.BanningAccount(id);
+
+            if (result)
+            {
+                Console.WriteLine($"Banned or unbanned account {id}");
+                return Ok("Success");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to ban or unban account {id}");
+                return BadRequest("Fail to ban");
             }
         }
 
