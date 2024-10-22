@@ -30,76 +30,53 @@ namespace KLM.APIService.Controllers
         public async Task<IActionResult> AddOrderDetails(string accounId, string kitId, string kitName, decimal price, int kitQuantity)
         {
             List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(accounId);
-            List<ProductKitTbl> productKits = _unitOfWork.ProductKitTblRepository.GetAll();
-            List<QuestionTbl> listQuestion = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(accounId);
-            List<DateTime> latestQuestion = new List<DateTime>();
 
             if (listOrder == null || !listOrder.Any())
             {
-                // Xử lý trường hợp không có đơn hàng nào
                 return BadRequest("No orders found for the specified account.");
             }
 
             List<DateTime> DateOrder = listOrder.Select(x => x.OrderDate).ToList();
 
-            // Kiểm tra nếu DateOrder không có phần tử nào
-            if (!DateOrder.Any())
+            if (DateOrder == null || !DateOrder.Any())
             {
                 return BadRequest("No valid order dates found.");
             }
-            if (listOrder != null)
+
+            DateTime newestTime = DateOrder.Max();
+            string orderId = listOrder.First(item => item.OrderDate.Equals(newestTime)).OrderId;
+
+            // Thêm chi tiết đơn hàng
+            OrderDetailTbl orderDetail = new OrderDetailTbl
             {
-                DateTime newestTime = DateOrder.Max();
-                string orderId = "";
-                foreach (var item in listOrder)
-                {
-                    if (item.OrderDate.Equals(newestTime))
-                    {
-                        orderId = item.OrderId;
-                    }
-                }
+                OrderId = orderId,
+                KitId = kitId,
+                KitName = kitName,
+                KitQuantity = kitQuantity,
+                Price = price
+            };
+            _unitOfWork.OrderDetailsRepository.Create(orderDetail);
 
-                //===================================================
-                OrderDetailTbl orderDetail = new OrderDetailTbl();
-                orderDetail.OrderId = orderId;
-                orderDetail.KitId = kitId;
-                orderDetail.KitName = kitName;
-                orderDetail.KitQuantity = kitQuantity;
-                orderDetail.Price = price;
-                _unitOfWork.OrderDetailsRepository.Create(orderDetail);
-
-                foreach (var item in productKits)
-                {
-                    if (orderDetail.KitId.Equals(item.KitId))
-                    {
-                        item.Quantity = item.Quantity - kitQuantity;
-                        _unitOfWork.ProductKitTblRepository.Update(item);
-                    }
-                }
-
-
-                //Neu mua them thi cong them luot          
-                foreach (var x in listQuestion)
-                {
-                    latestQuestion.Add(x.DateOfQuestion);
-                }
-                var latestQuestionCreate = latestQuestion.Max();
-                foreach (var item in listQuestion)
-                {
-                    if (item.DateOfQuestion.Equals(latestQuestionCreate))
-                    {
-                        item.Turn = item.Turn + kitQuantity * 2;
-                        _unitOfWork.QuestionTblRepository.Update(item);
-                    }
-                }
-                return Ok(orderDetail);
+            // Cập nhật số lượng sản phẩm
+            List<ProductKitTbl> productKits = _unitOfWork.ProductKitTblRepository.GetAll();
+            var productKit = productKits.FirstOrDefault(item => item.KitId.Equals(kitId));
+            if (productKit != null)
+            {
+                productKit.Quantity -= kitQuantity;
+                _unitOfWork.ProductKitTblRepository.Update(productKit);
             }
-            //else if (listOrder == null)
-            //{
-            //    //for if Account first order
-            //    return Ok(await AddOrderDetails(accounId, kitId, kitName, price, kitQuantity));
-            //}
-            else { return BadRequest(); }
+
+            // Cập nhật lượt câu hỏi
+            List<QuestionTbl> listQuestion = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(accounId);
+            if (listQuestion != null && listQuestion.Any())
+            {
+                var latestQuestionCreate = listQuestion.Max(q => q.DateOfQuestion);
+                var latestQuestionItem = listQuestion.First(q => q.DateOfQuestion.Equals(latestQuestionCreate));
+                latestQuestionItem.Turn += kitQuantity * 2;
+                _unitOfWork.QuestionTblRepository.Update(latestQuestionItem);
+            }
+
+            return Ok(orderDetail);
         }
 
 
