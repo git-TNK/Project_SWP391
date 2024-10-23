@@ -70,6 +70,22 @@ function ProcessingOrder() {
     setIsModalOpen(true);
     setSelectedOrderId(orderId);
   };
+ 
+  async function handleConfirmReceived(orderId) {
+    try {
+      const response = await fetch(
+        `http://localhost:5056/Order/CustomerUpdateOrder/${orderId}`,
+        { method: "PUT" }
+      );
+      if (response.ok) {
+        // Update order list after confirmation
+        fetchListOrders();
+        alert("Đã xác nhận nhận hàng thành công!");
+      }
+    } catch (error) {
+      console.error("Error confirming order:", error);
+    }
+  }
 
 
 
@@ -93,6 +109,7 @@ function ProcessingOrder() {
                   <th className="border px-4 py-3 text-left">Ngày đặt</th>
                   <th className="border px-4 py-3 text-left">Địa chỉ</th>
                   <th className="border px-4 py-3 text-center">Trạng thái</th>
+                  <th className="border px-4 py-3 text-center">Đã Nhận</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,14 +134,29 @@ function ProcessingOrder() {
                         className={`${
                           order.status === "Shipping"
                             ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-green-500 hover:bg-green-600"
+                            : (order.status === "Done" ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600")
                         } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
                         onClick={() => handleUpdateOrderStatus(order.orderId)}
-                        disabled={order.status === "Shipping"}
+                        disabled={order.status === "Shipping" || order.status === "Done"}
                       >
                         {order.status === "Shipping"
-                          ? "Đã Xác Nhận"
-                          : "Xác Nhận"}
+                          ? "Đang giao hàng"
+                          : (order.status === "Done" ? "Giao hàng thành công" : "Xác nhận")}
+                      </button>
+                    </td>
+                    <td className="border px-4 py-3 text-center">
+                      <button
+                        className={`${
+                          order.status === "Shipping"
+                            ? "bg-green-500 hover:bg-green-600"
+                            : "bg-gray-400 cursor-not-allowed"
+                        } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
+                        onClick={() => handleConfirmReceived(order.orderId)}
+                        disabled={order.status === "Processing" || order.status === "Done"}
+                      >
+                        {order.status === "Shipping"
+                          ? "Xác nhận đã nhận hàng"
+                          : (order.status === "Done"  ? "Đã nhận được hàng" : "Chưa nhận được hàng")}
                       </button>
                     </td>
                   </tr>

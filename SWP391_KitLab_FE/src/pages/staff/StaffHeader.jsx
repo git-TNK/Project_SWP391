@@ -5,7 +5,7 @@ function StaffHeader() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
 
-  if (account.role != "Staff" || account == null) {
+  if (account == null || account.role !== "Staff") {
     navigate("*");
   }
 
@@ -13,6 +13,7 @@ function StaffHeader() {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
       setAccount(savedAccount);
+
     }
     if (savedAccount && savedAccount.role !== "Staff") {
       navigate("*");
