@@ -32,6 +32,8 @@ import AnswerQuesion from "./pages/staff/AnswerQuesion";
 import ViewHistorySupport from "./pages/staff/ViewHistorySupport";
 import ViewHistoryQuestion from "./pages/services/ViewHistoryQuestion";
 import ViewProfile from "./pages/profile/ViewProfile";
+import ChangePassword from "./pages/profile/ChangePassword";
+
 
 function App() {
   return (
@@ -43,6 +45,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />}></Route>
         <Route path="/edit-profile" element={<EditProfile />}></Route>
         <Route path="/view-profile" element={<ViewProfile/>}></Route>
+        <Route path="/changepassword" element={<ChangePassword/>}></Route>
 
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
