@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../../Footer";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import AdminHeader from "../admin/admin-header";
+import Sidebar from "../admin/sidebar";
+import { ArrowLeft } from "lucide-react";
 
 function ViewProfile() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
+  const [roleCheck, setRoleCheck] = useState(true); //bình thêm
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
       setAccount(savedAccount);
+      setRoleCheck(false);
     }
   }, []);
 
+  //Bình đã đổi để có thể cho staff và admin vô xem profile và edit
   useEffect(() => {
-    if (account && account.role !== "Customer") {
+    console.log("empty");
+    if (account && roleCheck) {
       navigate("*");
     }
-  }, [account, navigate]);
+  }, [roleCheck, account, navigate]);
 
   // Chỉ render giao diện khi account đã được lấy
   if (!account) {
@@ -27,9 +34,26 @@ function ViewProfile() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header />
+      {/* Thêm logic, nếu customer thì header của customer, còn admin + staff thì header admin */}
+      {account.role === "Customer" ? (
+        <Header />
+      ) : (
+        <div>
+          <AdminHeader />
+          <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
+          <NavLink
+            to={account.role === "Admin" ? "/admin/product" : "/staff"}
+            className={
+              "mt-3 flex rounded-lg cursor-pointer bg-gray-300 text-black font-bold hover:bg-black hover:text-white h-8 w-48 text-base"
+            }
+          >
+            <ArrowLeft width={"25px"} height={"25px"} className="pt-2" />
+            <span className="pt-1">Quay về trang chính</span>
+          </NavLink>
+        </div>
+      )}
 
-      <div className="flex-grow flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center pb-10">
         <div className="bg-white text-black rounded-xl p-8 shadow-md w-full max-w-lg">
           <div className="flex flex-col items-center mb-6">
             <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center mb-4">

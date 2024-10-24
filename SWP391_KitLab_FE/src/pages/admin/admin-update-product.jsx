@@ -294,6 +294,7 @@ function UpdateProduct() {
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
                       min="1"
+                      onWheel={(e) => e.target.blur()}
                     />
                     {errors.quantity && (
                       <p className="text-red-500 text-sm mt-1">
@@ -313,6 +314,7 @@ function UpdateProduct() {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       min="1000"
+                      onWheel={(e) => e.target.blur()}
                     />
                     {errors.price && (
                       <p className="text-red-500 text-sm mt-1">

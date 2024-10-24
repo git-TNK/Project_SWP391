@@ -287,7 +287,9 @@ function AdminLab() {
                       className="border-b border-gray-200 hover:bg-gray-50"
                     >
                       <td className="py-2 px-4">{lab.labId}</td>
-                      <td className="py-2 px-4">{lab.labName}</td>
+                      <td className="py-2 px-4" title={lab.labName}>
+                        <p className="truncate w-24">{lab.labName}</p>
+                      </td>
                       <td className="py-2 px-4 text-center">
                         <button
                           onClick={() => handleModalOpen(lab, "description")}
