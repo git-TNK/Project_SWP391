@@ -121,5 +121,21 @@ namespace KLM.APIService.Controllers
             }
             return false;
         }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(string accountId, string oldPassword, string newPassword)
+        {
+            var account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
+            foreach (var item in account)
+            {
+                if (item.AccountId.Equals(accountId) && item.Password.Equals(oldPassword))
+                {
+                    item.Password = newPassword;
+                    _unitOfWork.AccountTblRepository.Update(item);
+                    return Ok(item);
+                }
+            }
+            return BadRequest("Mật khẩu nhập không chính xác");
+        }
     }
 }
