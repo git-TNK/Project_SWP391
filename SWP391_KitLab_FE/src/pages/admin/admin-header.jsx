@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 function AdminHeader() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
+  const [displayAccount, setDisplayAccount] = useState(null);
+
+  useEffect(() => {
+    const savedAccount = JSON.parse(localStorage.getItem("account"));
+
+    if (savedAccount) {
+      setDisplayAccount(savedAccount);
+      console.log(savedAccount);
+    }
+  }, []);
 
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -118,15 +128,18 @@ function AdminHeader() {
               </NavLink>
             </button>
 
-            <NavLink to="/view-profile">
-              <img
+            <button className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28">
+              <NavLink to="/view-profile">
+                {/* <img
                 src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
                 style={{
                   width: "100%",
                   height: "50px",
                 }}
-              />
-            </NavLink>
+              /> */}
+                {displayAccount === null ? "" : `${displayAccount.userName}`}
+              </NavLink>
+            </button>
           </div>
         </div>
       </header>
