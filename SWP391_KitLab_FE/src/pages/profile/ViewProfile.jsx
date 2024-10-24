@@ -39,17 +39,17 @@ function ViewProfile() {
         <Header />
       ) : (
         <div>
-          <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
           <AdminHeader />
-          <button className="flex rounded-lg cursor-pointer bg-gray-300 text-black font-bold hover:bg-black hover:text-white h-8 w-48 text-base">
-            <ArrowLeft width={"25px"} height={"25px"} className="pt-1" />
-            <NavLink
-              to={account.role === "Admin" ? "/admin/product" : "/staff"}
-              className={"pt-[1.5px]"}
-            >
-              Quay về trang chính
-            </NavLink>
-          </button>
+          <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
+          <NavLink
+            to={account.role === "Admin" ? "/admin/product" : "/staff"}
+            className={
+              "mt-3 flex rounded-lg cursor-pointer bg-gray-300 text-black font-bold hover:bg-black hover:text-white h-8 w-48 text-base"
+            }
+          >
+            <ArrowLeft width={"25px"} height={"25px"} className="pt-2" />
+            <span className="pt-1">Quay về trang chính</span>
+          </NavLink>
         </div>
       )}
 

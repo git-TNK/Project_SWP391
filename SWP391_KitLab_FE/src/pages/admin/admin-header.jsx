@@ -13,7 +13,10 @@ function AdminHeader() {
       setDisplayAccount(savedAccount);
       console.log(savedAccount);
     }
-  }, []);
+    if (savedAccount === null || savedAccount.role !== "Admin") {
+      navigate("/*");
+    }
+  }, [navigate]);
 
   const handleLogOut = (e) => {
     e.preventDefault();
@@ -23,10 +26,6 @@ function AdminHeader() {
       navigate("/");
     }, 0);
   };
-
-  // if (account == null || account.role === "Admin" ) {
-  //   navigate("*");
-  // }
 
   return (
     <div>
@@ -81,69 +80,19 @@ function AdminHeader() {
             </div>
           </div>
 
-          {/* <div style={{ display: "flex", alignItems: "center" }}>
-            <input
-              type="text"
-              placeholder="Tìm kiếm sản phẩm"
-              style={{
-                padding: "8px",
-                borderRadius: "10px",
-                marginRight: "10px",
-                width: "600px",
-                height: "35px",
-                borderColor: "black",
-                borderStyle: "solid",
-                borderWidth: "2px",
-                color: "black",
-              }}
-            />
-            <button
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "black",
-                color: "white",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
-            >
-              Tìm Kiếm
-            </button>
-          </div> */}
-
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <button
               onClick={handleLogOut}
               className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28"
             >
-              <NavLink
-                to="/"
-                // style={{
-                //   padding: "8px 16px",
-                //   backgroundColor: "black",
-                //   color: "white",
-                //   border: "none",
-                //   borderRadius: "10px",
-                //   cursor: "pointer",
-                //   textDecoration: "none",
-                // }}
-              >
-                Đăng xuất
-              </NavLink>
+              <NavLink to="/">Đăng xuất</NavLink>
             </button>
 
-            <button className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28">
-              <NavLink to="/view-profile">
-                {/* <img
-                src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
-                style={{
-                  width: "100%",
-                  height: "50px",
-                }}
-              /> */}
+            <NavLink to="/view-profile">
+              <button className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28">
                 {displayAccount === null ? "" : `${displayAccount.userName}`}
-              </NavLink>
-            </button>
+              </button>
+            </NavLink>
           </div>
         </div>
       </header>
