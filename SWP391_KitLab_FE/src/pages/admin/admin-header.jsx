@@ -24,6 +24,10 @@ function AdminHeader() {
     }, 0);
   };
 
+  // if (account == null || account.role === "Admin" ) {
+  //   navigate("*");
+  // }
+
   return (
     <div>
       <header
