@@ -6,12 +6,16 @@ import axios from "axios";
 import Notification from "./notification";
 import SearchBar from "./search-bar";
 import { ChevronDown, ChevronUp, Filter } from "lucide-react";
+import LoadingSpinner from "./loading";
 
 function AdminAccount() {
   const [accountList, setAccountList] = useState([]);
   const [notification, setNotification] = useState(null);
   const [selectedAccount, setselectedAccount] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //loading
+  const [loading, setLoading] = useState(false);
 
   //search
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,14 +31,17 @@ function AdminAccount() {
   const [isFilterOpenStatus, setIsFilterOpenStatus] = useState(false);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "http://localhost:5056/api/Account/AccountManage"
       );
       console.log(response.data);
       setAccountList(response.data);
+      setLoading(false);
     } catch (err) {
       console.log("Fail to fetch data");
+      setLoading(false);
     }
   };
 
@@ -72,7 +79,7 @@ function AdminAccount() {
 
   const handleBanningAcc = async (account) => {
     console.log(account);
-
+    setLoading(true);
     try {
       const response = await axios.put(
         `http://localhost:5056/api/Account/AccountBanning?id=${account.accountId}`
@@ -94,14 +101,16 @@ function AdminAccount() {
           });
         }
       }
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.log(`Error: ${err}`);
     }
   };
 
   const handleAccRole = async (account) => {
     console.log(account);
-
+    setLoading(true);
     try {
       const response = await axios.put(
         `http://localhost:5056/api/Account/AccountPromote?id=${account.accountId}`
@@ -122,8 +131,10 @@ function AdminAccount() {
             type: "error",
           });
         }
+        setLoading(false);
       }
     } catch (err) {
+      setLoading(false);
       console.log(`Error: ${err}`);
     }
   };
@@ -350,9 +361,15 @@ function AdminAccount() {
                       className="border-b border-gray-200 hover:bg-gray-50"
                     >
                       <td className="py-2 px-4">{account.accountId}</td>
-                      <td className="py-2 px-4">{account.username}</td>
-                      <td className="py-2 px-4 ">{account.password}</td>
-                      <td className="py-2 px-4 ">{account.fullName}</td>
+                      <td className="py-2 px-4" title={account.username}>
+                        <p className="truncate w-28">{account.username}</p>
+                      </td>
+                      <td className="py-2 px-4 " title={account.password}>
+                        <p className="truncate w-20">{account.password}</p>
+                      </td>
+                      <td className="py-2 px-4 " title={account.fullName}>
+                        <p className="truncate w-28">{account.fullName}</p>
+                      </td>
                       {account.phoneNumber ? (
                         <td className="py-2 px-4 text-right">
                           {account.phoneNumber}
@@ -361,7 +378,9 @@ function AdminAccount() {
                         <td className="py-2 px-4 text-right">-</td>
                       )}
 
-                      <td className="py-2 px-4 ">{account.email}</td>
+                      <td title={account.email} className="py-2 px-4 ">
+                        <p className="truncate w-32">{account.email}</p>
+                      </td>
                       <td className="py-2 px-4 ">
                         {account.address ? (
                           <button
@@ -453,6 +472,7 @@ function AdminAccount() {
         </div>
       </div>
       <Footer />
+      {loading && <LoadingSpinner />}
     </div>
   );
 }

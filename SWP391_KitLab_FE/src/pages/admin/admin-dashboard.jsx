@@ -5,6 +5,7 @@ import Footer from "../../Footer";
 import axios from "axios";
 import SearchBar from "./search-bar";
 import SalesStatisticsCharts from "./chart-render";
+import LoadingSpinner from "./loading";
 
 function AdminDashboard() {
   // const [listOfKit, setListOfKit] = useState([]);
@@ -13,6 +14,7 @@ function AdminDashboard() {
   // const [sortOrder, setSortOrder] = useState("none");
   // const labPerpage = 12;
 
+  const [loading, setLoading] = useState(false);
   const [chartDataAmount, setChartDataAmount] = useState([]);
   const [chartDataToltalPrice, setChartDataTotalPrice] = useState([]);
   const [orderList, setOrderLsit] = useState([]);
@@ -201,10 +203,12 @@ function AdminDashboard() {
   // };
 
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       await fetchOrderDetail();
       // await fetchKitData();
       await fetchOrderList();
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -377,6 +381,7 @@ function AdminDashboard() {
         </div>
       </div>
       <Footer />
+      {loading && <LoadingSpinner />}
     </div>
   );
 }

@@ -5,15 +5,17 @@ import Sidebar from "./sidebar";
 import Footer from "../../Footer";
 import axios from "axios";
 import AdminNotFound from "./admin-not-found-page";
+import LoadingSpinner from "./loading";
 
 function AdminViewProduct() {
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [labList, setLabList] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
     async function fetchProduct() {
+      setLoading(true);
       try {
         const response = await axios.get(`http://localhost:5056/Product/${id}`);
         setProduct(response.data);
@@ -64,9 +66,7 @@ function AdminViewProduct() {
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-2xl font-bold">Chi tiết sản phẩm</h1>
             </div>
-            {loading ? (
-              <p>Loading...</p>
-            ) : product ? (
+            {product ? (
               <div className="bg-white shadow-lg rounded-lg overflow-hidden flex">
                 <div className="w-1/2">
                   <img
@@ -148,6 +148,7 @@ function AdminViewProduct() {
         </div>
       </div>
       <Footer />
+      {loading && <LoadingSpinner />}
     </div>
   );
 }
