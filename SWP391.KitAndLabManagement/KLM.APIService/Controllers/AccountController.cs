@@ -21,10 +21,14 @@ namespace KLM.APIService.Controllers
             {
                 if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
                 {
+                    if (account[i].Status == "DeActive")
+                    {
+                        return BadRequest("Tài khoản của bạn đã bị chặn vui lòng liên hệ: FPT University - kitcentral@gmail.com");
+                    }
                     return Ok(account[i]);
                 }
             }
-            return BadRequest();
+            return BadRequest("Sai tài khoản hoặc mật khẩu");
         }
 
         //get account for admin page
@@ -34,6 +38,7 @@ namespace KLM.APIService.Controllers
             return await _unitOfWork.AccountTblRepository.GetAccountForAdmin();
         }
 
+        //Account promotion
         [HttpPut("AccountPromote")]
         public async Task<IActionResult> Promotion(string id)
         {
@@ -51,38 +56,80 @@ namespace KLM.APIService.Controllers
             }
         }
 
+        //Account banning
+        [HttpPut("AccountBanning")]
+        public async Task<IActionResult> Banning(string id)
+        {
+            bool result = await _unitOfWork.AccountTblRepository.BanningAccount(id);
 
-        [HttpPost("Register/{userName}/{password}/{email}/{fullName}/{phone}")]
-        public async Task<IActionResult> Register(string userName, string password, string email, string fullName, string phone)
+            if (result)
+            {
+                Console.WriteLine($"Banned or unbanned account {id}");
+                return Ok("Success");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to ban or unban account {id}");
+                return BadRequest("Fail to ban");
+            }
+        }
+
+
+        [HttpPost("Register")]
+
+        public async Task<IActionResult> Register(AccountTbl request)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
+            AccountTbl? idCheck;
+            string? accountId;
             foreach (var account in listAccount)
             {
-                if (account.Email.Equals(email) || account.UserName.Equals(userName))
+                if (account.Email.Equals(request.Email) && account.UserName.Equals(request.UserName))
                 {
-                    return BadRequest("Email or userName is duplicated");
+                    Console.WriteLine("Both existed");
+                    return BadRequest("Both existed");
+                }
+                else if (account.Email.Equals(request.Email))
+                {
+                    Console.WriteLine("Email existed");
+                    return BadRequest("Email existed");
+                }
+                else if (account.UserName.Equals(request.UserName))
+                {
+                    Console.WriteLine("Username already existed");
+                    return BadRequest("Username existed");
                 }
             }
-            string accountId = "ACC" + (new Random().Next(000, 999));
-            foreach (var x in listAccount)
+
+            //foreach (var x in listAccount)
+            //{
+            //    if (x.AccountId.Equals(accountId))
+            //    {
+            //        accountId = "ACC" + (new Random().Next(000, 999));
+            //    }
+            //}
+
+            do
             {
-                if (x.AccountId.Equals(accountId))
-                {
-                    accountId = "ACC" + (new Random().Next(000, 999));
-                }
-            }
+                accountId = "ACC" + (new Random().Next(000, 999));
+                idCheck = _unitOfWork.AccountTblRepository.GetById(accountId);
+            } while (idCheck != null);
+
             AccountTbl registerAccount = new AccountTbl();
             registerAccount.AccountId = accountId;
-            registerAccount.FullName = fullName;
-            registerAccount.UserName = userName;
-            registerAccount.Password = password;
-            registerAccount.Email = email;
+            registerAccount.FullName = request.FullName.Trim();
+            registerAccount.UserName = request.UserName.Trim();
+            registerAccount.Password = request.Password.Trim();
+            registerAccount.PhoneNumber = request.PhoneNumber.Trim();
+            registerAccount.Email = request.Email.Trim();
             registerAccount.Role = "Customer";
             registerAccount.Status = "Active";
             registerAccount.DateOfCreation = DateOnly.FromDateTime(DateTime.Now);
             _unitOfWork.AccountTblRepository.Create(registerAccount);
             return Ok("Success");
         }
+
+
         [HttpGet]
         public async Task<List<AccountTbl>> GetAccountTbls()
         {

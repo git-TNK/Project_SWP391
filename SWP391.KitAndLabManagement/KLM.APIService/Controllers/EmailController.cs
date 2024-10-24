@@ -67,4 +67,48 @@ public class EmailController : ControllerBase
         return Ok("Email sent successfully.");
     }
 
+    //[HttpPost("SendBill")]
+    //public async Task<IActionResult> SendBill([FromBody] SendBillRequest request)
+    //{
+    //    if (request.ListOrderDetail != null && request.ListOrderDetail.Any())
+    //    {
+    //        // Tạo nội dung email với HTML Table
+    //        string content = @"
+    //        <h2 style='text-align: center;'>Hóa đơn của bạn</h2>
+    //        <table style='width: 100%; border-collapse: collapse;' border='1' cellpadding='5'>
+    //            <thead>
+    //                <tr style='background-color: #f2f2f2;'>
+    //                    <th style='text-align: left;'>STT</th>
+    //                    <th style='text-align: left;'>Tên Kit</th>
+    //                    <th style='text-align: center;'>Số Lượng</th>
+    //                    <th style='text-align: right;'>Giá</th>
+    //                </tr>
+    //            </thead>
+    //            <tbody>
+    //    ";
+
+    //        // Thêm từng dòng của danh sách chi tiết đơn hàng
+    //        string bodyContent = string.Join("",
+    //            request.ListOrderDetail.Select((detail, index) => $@"
+    //            <tr>
+    //                <td style='text-align: left;'>{index + 1}</td>
+    //                <td style='text-align: left;'>{detail.KitName}</td>
+    //                <td style='text-align: center;'>{detail.KitQuantity}</td>
+    //                <td style='text-align: right;'>{detail.Price:C}</td>
+    //            </tr>
+    //        "));
+
+    //        // Kết thúc bảng
+    //        content += bodyContent + "</tbody></table>";
+
+    //        // Gửi email với nội dung HTML
+    //        await _emailService.SendEmailAsync(
+    //            request.EmailRequest.To,
+    //            request.EmailRequest.Subject,
+    //            content // Nội dung HTML được truyền trực tiếp
+    //        );
+    //    }
+    //    return Ok();
+    //}
+
 }
