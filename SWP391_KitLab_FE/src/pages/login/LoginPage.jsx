@@ -79,13 +79,13 @@ function LoginPage() {
         <form onSubmit={onFinish}>
           <div className="custom-user-box mb-6">
             <label htmlFor="userName" className="text-sm text-gray-600">
-              Tên đăng nhập
+              Tên đăng nhập hoặc email
             </label>
             <input
               type="text"
               id="userName"
               className="w-full p-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
-              placeholder="Tên đăng nhập"
+              placeholder="Tên đăng nhập hoặc email"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
