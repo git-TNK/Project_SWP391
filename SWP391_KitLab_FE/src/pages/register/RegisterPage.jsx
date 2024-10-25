@@ -6,6 +6,8 @@ import FeedbackModal from "../admin/feedback-modal";
 
 function RegisterPage() {
   const navigate = useNavigate();
+  const apiKeyVerifyMail = "a5be82b41cedacd749a299e392f313329496442b";
+  const [isEmailVerified, setIsEmailVerified] = useState(false); // Trạng thái kiểm tra email
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -85,12 +87,33 @@ function RegisterPage() {
     }
   };
 
+  const handleVerifiedEmail = async () => {
+    try {
+      const response = await fetch(
+        `https://api.hunter.io/v2/email-verifier?email=${formData.email}&api_key=${apiKeyVerifyMail}`
+      );
+      const data = await response.json();
+      return data.data.result === "deliverable";
+    } catch (error) {
+      console.error("Lỗi xác thực email:", error);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setIsLoading(true);
-
       try {
+        // Kiểm tra xem email có hợp lệ không
+        const emailVerified = await handleVerifiedEmail();
+        if (!emailVerified) {
+          setModalMessage("Email không tồn tại hoặc không hợp lệ.");
+          setIsModalOpen(true);
+          return;
+        }
+
+        setIsLoading(true);
+
         const requestData = {
           userName: formData.userName.trim(),
           fullName: formData.fullName.trim(),
@@ -115,26 +138,20 @@ function RegisterPage() {
         const responseText = await response.text();
 
         if (response.ok && responseText === "Success") {
-          setModalMessage("Thành công!");
+          setModalMessage("Đăng ký thành công!");
           setIsSuccess(true);
-          // navigate("/login");
         } else if (responseText === "Both existed") {
-          setModalMessage("Thất bại. Tên người dùng VÀ email đã tồn tại");
-          setIsSuccess(false);
+          setModalMessage("Thất bại. Tên người dùng và email đã tồn tại.");
         } else if (responseText === "Email existed") {
-          // alert("Đăng ký thất bại. Email hoặc tên đăng nhập đã tồn tại.");
           setModalMessage("Thất bại. Email đã tồn tại!");
-          setIsSuccess(false);
         } else if (responseText === "Username existed") {
-          setModalMessage("Thất bại .Tên người dùng đã tồn tại!");
-          setIsSuccess(false);
+          setModalMessage("Thất bại. Tên người dùng đã tồn tại!");
         } else {
-          setModalMessage("Thất bại. Thử lại sau");
-          setIsSuccess(false);
+          setModalMessage("Thất bại. Thử lại sau.");
         }
       } catch (error) {
         console.error("Lỗi đăng ký:", error);
-        alert("Đăng ký thất bại. Vui lòng thử lại sau.");
+        setModalMessage("Đăng ký thất bại. Vui lòng thử lại sau.");
       } finally {
         setIsLoading(false);
         setIsModalOpen(true);
