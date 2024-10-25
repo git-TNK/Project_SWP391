@@ -13,13 +13,13 @@ namespace KLM.APIService.Controllers
 
         public AccountController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-        [HttpGet("{userName},{password}")]
-        public async Task<IActionResult> CheckExistAccount(string userName, string password)
+        [HttpGet("{userNameOrMail},{password}")]
+        public async Task<IActionResult> CheckExistAccount(string userNameOrMail, string password)
         {
             List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
             {
-                if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
+                if ((account[i].UserName.Equals(userNameOrMail) || account[i].Email.Equals(userNameOrMail)) && account[i].Password.Equals(password))
                 {
                     if (account[i].Status == "DeActive")
                     {
