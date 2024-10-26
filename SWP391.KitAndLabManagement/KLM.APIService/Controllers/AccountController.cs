@@ -84,32 +84,44 @@ namespace KLM.APIService.Controllers
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
             AccountTbl? idCheck;
             string? accountId;
-            foreach (var account in listAccount)
+            bool sameUsername = false;
+            bool sameEmail = false;
+
+
+            foreach (var account in listAccount) 
             {
-                if (account.Email.Equals(request.Email) && account.UserName.Equals(request.UserName))
+                if (account.Email.Equals(request.Email))
+                {
+                    sameEmail = true;
+                } 
+                if (account.UserName.Equals(request.UserName))
+                {
+                    sameUsername = true;
+                }
+                if(sameUsername && sameEmail)
+                {
+                    break;
+                }
+            }
+
+            
+                if (sameEmail && sameUsername)
                 {
                     Console.WriteLine("Both existed");
                     return BadRequest("Both existed");
                 }
-                else if (account.Email.Equals(request.Email))
+                else if (sameEmail)
                 {
                     Console.WriteLine("Email existed");
                     return BadRequest("Email existed");
                 }
-                else if (account.UserName.Equals(request.UserName))
+                else if (sameUsername)
                 {
                     Console.WriteLine("Username already existed");
                     return BadRequest("Username existed");
                 }
-            }
 
-            //foreach (var x in listAccount)
-            //{
-            //    if (x.AccountId.Equals(accountId))
-            //    {
-            //        accountId = "ACC" + (new Random().Next(000, 999));
-            //    }
-            //}
+          
 
             do
             {
