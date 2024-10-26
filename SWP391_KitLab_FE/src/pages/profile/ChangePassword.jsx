@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
-import Header from '../Header';
-import Footer from '../../Footer';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
+import Header from "../Header";
+import Footer from "../../Footer";
 
 function ChangePassword() {
   const [account, setAccount] = useState(null);
@@ -21,14 +21,14 @@ function ChangePassword() {
   }, [account, navigate]);
 
   const [passwords, setPasswords] = useState({
-    accountId: '',
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    accountId: "",
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(''); // State to store success message
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // State to store success message
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,47 +41,52 @@ function ChangePassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the new password matches the old password
+    // Kiểm tra mật khẩu mới và cũ giống nhau
     if (passwords.newPassword === passwords.oldPassword) {
-      setError('Mật khẩu mới và cũ giống nhau.');
+      setError("Mật khẩu mới và cũ giống nhau.");
       return;
     }
 
-    // Check if the new password and confirm password match
+    // Kiểm tra mật khẩu xác nhận và mật khẩu mới có khớp không
     if (passwords.newPassword !== passwords.confirmPassword) {
-      setError('Mật khẩu mới và mật khẩu xác nhận không khớp.');
+      setError("Mật khẩu mới và mật khẩu xác nhận không khớp.");
       return;
     }
 
-    // Clear any error messages
-    setError('');
+    setError(""); // Xóa thông báo lỗi cũ
 
     try {
       const response = await fetch(
-        `http://localhost:5056/api/Account/ChangePassword?accountId=${account.accountId}&oldPassword=${passwords.oldPassword}&newPassword=${passwords.newPassword}`, 
+        "http://localhost:5056/api/Account/ChangePassword",
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
-          }
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accountId: account.accountId,
+            oldPassword: passwords.oldPassword,
+            newPassword: passwords.newPassword,
+          }),
         }
       );
 
       if (response.ok) {
-        // Show a success message on the screen
-        setSuccess('Đổi mật khẩu thành công.');
+        setSuccess("Đổi mật khẩu thành công.");
 
-        // Navigate to view-profile page with a success message
+        // Điều hướng sau 2 giây
         setTimeout(() => {
-          navigate('/view-profile', { state: { message: 'Đổi mật khẩu thành công.' } });
-        }, 2000); // Optional delay for better user experience
+          navigate("/view-profile", {
+            state: { message: "Đổi mật khẩu thành công." },
+          });
+        }, 2000);
       } else {
         const errorData = await response.text();
-        setError('Sai mật khẩu cũ hoặc có lỗi xảy ra.');
+        setError(errorData || "Sai mật khẩu cũ hoặc có lỗi xảy ra.");
       }
     } catch (err) {
-      console.error('Error:', err);
-      setError('Lỗi kết nối. Vui lòng thử lại sau.');
+      console.error("Error:", err);
+      setError("Lỗi kết nối. Vui lòng thử lại sau.");
     }
   };
 
@@ -90,12 +95,17 @@ function ChangePassword() {
       <Header />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-3xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mt-8 text-gray-800">Đổi mật khẩu</h1>
+          <h1 className="text-3xl font-bold text-center mt-8 text-gray-800">
+            Đổi mật khẩu
+          </h1>
 
           <div className="mt-16 max-w-md mx-auto">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="oldPassword" className="block text-gray-700 text-lg mb-2">
+                <label
+                  htmlFor="oldPassword"
+                  className="block text-gray-700 text-lg mb-2"
+                >
                   Mật khẩu cũ
                 </label>
                 <input
@@ -109,7 +119,10 @@ function ChangePassword() {
               </div>
 
               <div>
-                <label htmlFor="newPassword" className="block text-gray-700 text-lg mb-2">
+                <label
+                  htmlFor="newPassword"
+                  className="block text-gray-700 text-lg mb-2"
+                >
                   Mật khẩu mới
                 </label>
                 <input
@@ -123,7 +136,10 @@ function ChangePassword() {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-gray-700 text-lg mb-2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-gray-700 text-lg mb-2"
+                >
                   Nhập lại mật khẩu mới
                 </label>
                 <input

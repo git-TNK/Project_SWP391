@@ -35,7 +35,7 @@ function EditProfile() {
   async function fetchEditProfile(e) {
     e.preventDefault(); // Ngăn không cho trang tải lại khi gửi form
 
-    // Kiểm tra các ô nhập liệu, nếu bị bỏ trống thì sử dụng giá trị từ savedAccount
+    // Kiểm tra và cập nhật dữ liệu từ form hoặc sử dụng giá trị cũ
     const updatedName = name.trim() || account.fullName;
     const updatedEmail = email.trim() || account.email;
     const updatedPhoneNumber = phoneNumber.trim() || account.phoneNumber;
@@ -43,7 +43,19 @@ function EditProfile() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5056/api/Account/${account.accountId},${updatedPhoneNumber},${updatedAddress},${updatedEmail},${updatedName}`
+        `http://localhost:5056/api/Account/EditProfile`,
+        {
+          accountId: account.accountId,
+          fullName: updatedName,
+          email: updatedEmail,
+          phoneNumber: updatedPhoneNumber,
+          address: updatedAddress,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (response.status === 200) {

@@ -33,7 +33,7 @@ import ViewHistorySupport from "./pages/staff/ViewHistorySupport";
 import ViewHistoryQuestion from "./pages/services/ViewHistoryQuestion";
 import ViewProfile from "./pages/profile/ViewProfile";
 import ChangePassword from "./pages/profile/ChangePassword";
-
+import ConfirmMailRegister from "./pages/register/ConfirmMailRegister";
 
 function App() {
   return (
@@ -43,9 +43,10 @@ function App() {
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/forgotpassword" element={<ForgotPasswordPage />}></Route>
         <Route path="/register" element={<RegisterPage />}></Route>
+        <Route path="/confirmMail" element={<ConfirmMailRegister />}></Route>
         <Route path="/edit-profile" element={<EditProfile />}></Route>
-        <Route path="/view-profile" element={<ViewProfile/>}></Route>
-        <Route path="/changepassword" element={<ChangePassword/>}></Route>
+        <Route path="/view-profile" element={<ViewProfile />}></Route>
+        <Route path="/changepassword" element={<ChangePassword />}></Route>
 
         <Route path="/orderHistory" element={<OrderHistoryPage />}></Route>
         <Route path="/service" element={<ServicePage />}></Route>
