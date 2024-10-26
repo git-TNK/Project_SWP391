@@ -11,9 +11,9 @@ public partial class AvailableLabTbl
 
     public string OrderId { get; set; }
 
-    public int TurnsRemaining { get; set; }
-
     public string LabName { get; set; }
+    public string Description { get; set; }
+    public string Document { get; set; }
 
     public virtual OrderTbl Order { get; set; }
 }
