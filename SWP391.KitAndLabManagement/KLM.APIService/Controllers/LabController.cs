@@ -47,13 +47,17 @@ namespace KLM.APIService.Controllers
         [HttpPost("AddLab")]
         public async Task<IActionResult> UploadLab(AddLabRequest request)
         {
-            string documentUrl;
+            string? documentUrl;
 
-            using (var stream = request.document.OpenReadStream())
+            if (request.document is not null)
             {
-                var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.document.FileName, request.document.ContentType);
-                documentUrl = uploadUrl;
+                using (var stream = request.document.OpenReadStream())
+                {
+                    var uploadUrl = await _firebaseStorageService.UploadPDFAsync(stream, request.document.FileName, request.document.ContentType);
+                    documentUrl = uploadUrl;
+                }
             }
+            else { documentUrl = null; }
 
             if (documentUrl == null || documentUrl.Length == 0)
             {
@@ -122,7 +126,7 @@ namespace KLM.APIService.Controllers
                 isNewFileUpload = true;
             }
 
-            
+
 
             //if (documentUrl == null || documentUrl.Length == 0)
             //    return BadRequest("No file uploaded");
@@ -138,7 +142,7 @@ namespace KLM.APIService.Controllers
 
             if (string.IsNullOrWhiteSpace(errors))
             {
-                if(isNewFileUpload && !string.IsNullOrWhiteSpace(oldDocumentUrl))
+                if (isNewFileUpload && !string.IsNullOrWhiteSpace(oldDocumentUrl))
                 {
                     //Xoa file cu khi co file moi upload
                     await _firebaseStorageService.DeleteDocumentAsync(oldDocumentUrl);

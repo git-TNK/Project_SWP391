@@ -27,6 +27,24 @@ public class EmailController : ControllerBase
         return Ok("Email sent successfully.");
     }
 
+    [HttpPost("send-otp")]
+    public async Task<IActionResult> SendOtp([FromBody] EmailRequest request)
+    {
+        if (string.IsNullOrEmpty(request.To))
+            return BadRequest("Recipient email is required.");
+
+        // Tạo mã OTP 6 chữ số ngẫu nhiên
+        var otp = new Random().Next(100000, 999999).ToString();
+
+        // Lưu mã OTP vào cache hoặc database (tùy theo yêu cầu)
+        // Giả sử bạn lưu vào bộ nhớ tạm thời bằng cache
+
+        // Gửi mã OTP qua email
+        await _emailService.SendEmailAsync(request.To, request.Subject, request.Body + otp);
+
+        return Ok(new { otp = otp, message = "OTP sent successfully." });
+    }
+
     [HttpPut("sendMailForgotPassword/{email}")]
     public async Task<IActionResult> SendEmailForgotPassword([FromBody] EmailRequest request, string email)
     {
