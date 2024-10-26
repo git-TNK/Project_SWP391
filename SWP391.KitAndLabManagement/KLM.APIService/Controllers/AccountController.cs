@@ -1,7 +1,9 @@
-﻿using KLM.Repository;
+﻿using KLM.APIService.RequestModifier;
+using KLM.Repository;
 using KLM.Repository.Models;
 using KLM.Repository.ModelView;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 namespace KLM.APIService.Controllers
 {
@@ -13,13 +15,13 @@ namespace KLM.APIService.Controllers
 
         public AccountController(UnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-        [HttpGet("{userName},{password}")]
-        public async Task<IActionResult> CheckExistAccount(string userName, string password)
+        [HttpPost("Login")]
+        public async Task<IActionResult> CheckExistAccount([FromBody] LoginRequest request)
         {
             List<AccountTbl> account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
             for (int i = 0; i < account.Count; i++)
             {
-                if (account[i].UserName.Equals(userName) && account[i].Password.Equals(password))
+                if ((account[i].UserName.Equals(request.userNameOrEmail) || account[i].Email.Equals(request.userNameOrEmail)) && account[i].Password.Equals(request.password))
                 {
                     if (account[i].Status == "DeActive")
                     {
@@ -76,7 +78,7 @@ namespace KLM.APIService.Controllers
 
 
         [HttpPost("Register")]
-       
+
         public async Task<IActionResult> Register(AccountTbl request)
         {
             var listAccount = _unitOfWork.AccountTblRepository.GetAll();
@@ -84,7 +86,8 @@ namespace KLM.APIService.Controllers
             string? accountId;
             foreach (var account in listAccount)
             {
-                if (account.Email.Equals(request.Email) && account.UserName.Equals(request.UserName)){
+                if (account.Email.Equals(request.Email) && account.UserName.Equals(request.UserName))
+                {
                     Console.WriteLine("Both existed");
                     return BadRequest("Both existed");
                 }
@@ -149,23 +152,51 @@ namespace KLM.APIService.Controllers
             return null;
         }
 
-        [HttpPut("{accountId},{phoneNumber},{address},{email},{fullName}")]
-        public async Task<bool> UpdateProfile(string accountId, string phoneNumber, string address, string email, string fullName)
+        [HttpPut("EditProfile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] EditProfileRequest request)
         {
             var listAcc = await GetAccountTbls();
+            string cleanedPhone = request.phoneNumber.Trim().Replace(" ", "");
+
+            // Biểu thức chính quy kiểm tra số điện thoại Việt Nam hợp lệ
+            string pattern = @"^(0[3|5|7|8|9])\d{8}$";
+
+            // Kiểm tra tính hợp lệ bằng Regex
+            bool checkPhone = Regex.IsMatch(cleanedPhone, pattern);
+
             foreach (var account in listAcc)
             {
-                if (account.AccountId.Equals(accountId))
+                if (request.email.Equals(account.Email))
                 {
-                    account.PhoneNumber = phoneNumber;
-                    account.Address = address;
-                    account.Email = email;
-                    account.FullName = fullName;
+                    return BadRequest("Email đã tồn tại");
+                }
+                if (account.AccountId.Equals(request.accountId))
+                {
+                    account.PhoneNumber = request.phoneNumber;
+                    account.Address = request.address;
+                    account.Email = request.email;
+                    account.FullName = request.fullName;
                     _unitOfWork.AccountTblRepository.Update(account);
-                    return true;
+                    return Ok(true);
                 }
             }
-            return false;
+            return BadRequest();
+        }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var account = await _unitOfWork.AccountTblRepository.GetAllAccounts();
+            foreach (var item in account)
+            {
+                if (item.AccountId.Equals(request.accountId) && item.Password.Equals(request.oldPassword))
+                {
+                    item.Password = request.newPassword;
+                    _unitOfWork.AccountTblRepository.Update(item);
+                    return Ok(item);
+                }
+            }
+            return BadRequest("Mật khẩu nhập không chính xác");
         }
     }
 }
