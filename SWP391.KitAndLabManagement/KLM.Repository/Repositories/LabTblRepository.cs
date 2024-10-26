@@ -165,7 +165,7 @@ namespace KLM.Repository.Repositories
             lab.Status = "Deleted";
             lab.DateOfDeletion = DateOnly.FromDateTime(DateTime.Today.Date);
 
-            lab.Kits.Clear();
+            //lab.Kits.Clear();
 
             await _context.SaveChangesAsync();
 
