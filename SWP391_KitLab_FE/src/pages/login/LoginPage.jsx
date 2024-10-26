@@ -32,7 +32,7 @@ function LoginPage() {
         headers: {
           "Content-Type": "application/json", // Specify JSON content type
         },
-        body: JSON.stringify({ userName, password }), // Send data in the request body
+        body: JSON.stringify({ userNameOrEmail: userName, password }),
       });
 
       if (response.ok) {

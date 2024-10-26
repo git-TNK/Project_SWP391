@@ -161,17 +161,19 @@ function ProductDetails() {
               <span className="font-semibold">Danh sách Labs: </span>
               {labList.length > 0 ? (
                 <ul className="list-none pl-0">
-                  {labList.map((lab, index) => (
-                    <li key={index} className="flex items-start mb-2">
-                      <span className="text-2xl mr-2 leading-none">•</span>
-                      <button
-                        onClick={() => openLabModal(lab)}
-                        className="text-left hover:bg-gray-100 px-2 py-1 rounded text-gray-800"
-                      >
-                        {lab.name}
-                      </button>
-                    </li>
-                  ))}
+                  {labList
+                    .filter((lab) => lab.status !== "Deleted") // Lọc các lab có trạng thái khác "Deleted"
+                    .map((lab, index) => (
+                      <li key={index} className="flex items-start mb-2">
+                        <span className="text-2xl mr-2 leading-none">•</span>
+                        <button
+                          onClick={() => openLabModal(lab)}
+                          className="text-left hover:bg-gray-100 px-2 py-1 rounded text-gray-800"
+                        >
+                          {lab.name}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               ) : (
                 <p className="text-gray-800">Không có lab nào được liên kết</p>
