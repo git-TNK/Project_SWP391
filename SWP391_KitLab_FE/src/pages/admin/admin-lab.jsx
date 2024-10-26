@@ -62,7 +62,7 @@ function AdminLab() {
       const response = await axios.get("http://localhost:5056/Lab");
       setLabData(response.data);
       setLoading(false);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       setLoading(false);
       setError("Failed to fetch lab data");
@@ -105,6 +105,19 @@ function AdminLab() {
         title = "Mô tả của Lab";
         content = <p className="mb-4">{selectedLab.labDescription}</p>;
         break;
+      case "delete":
+        title = "";
+        content = (
+          <div className="mb-2">
+            <p className="text-center font-bold text-red-700 text-4xl">
+              Xác nhận xóa
+            </p>
+            <p className="text-center font-bold text-red-700 text-4xl">
+              {selectedLab.labName}
+            </p>
+          </div>
+        );
+        break;
       default:
         title = "";
         content = null;
@@ -115,12 +128,31 @@ function AdminLab() {
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
           <h2 className="text-xl font-bold mb-4">{title}</h2>
           {content}
-          <button
-            onClick={handleModalClose}
-            className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-black hover:text-white "
-          >
-            Đóng
-          </button>
+          {modalContent === "delete" ? (
+            <div className="flex justify-center gap-10">
+              <button
+                onClick={() =>
+                  handleDeleteLab(selectedLab.labId, selectedLab.labName)
+                }
+                className="bg-green-400 text-black px-4 py-2 rounded hover:bg-green-500 font-semibold "
+              >
+                Xác nhận
+              </button>
+              <button
+                onClick={handleModalClose}
+                className="bg-red-400 text-black px-4 py-2 rounded hover:bg-red-500 font-semibold"
+              >
+                Hủy bỏ
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleModalClose}
+              className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-black hover:text-white "
+            >
+              Đóng
+            </button>
+          )}
         </div>
       </div>
     );
@@ -131,9 +163,9 @@ function AdminLab() {
     setLoading(true);
 
     if (labToDelete) {
-      console.log(labToDelete);
+      // console.log(labToDelete);
     } else {
-      console.log("nope");
+      // console.log("nope");
       return;
     }
 
@@ -143,7 +175,7 @@ function AdminLab() {
       );
       if (response.status === 200) {
         fetchLabData();
-        console.log("Success message: ", response.data);
+        // console.log("Success message: ", response.data);
         setNotification({ message: `Đã xóa: ${labName}`, type: "error" });
         setLoading(false);
       } else {
@@ -154,6 +186,8 @@ function AdminLab() {
       console.error("error while deleting lab: ", err);
       setNotification({ message: "Xóa thất bại", type: "error" });
       setLoading(false);
+    } finally {
+      setIsModalOpen(false);
     }
   };
 
@@ -364,7 +398,8 @@ function AdminLab() {
                             className="text-red-500 hover:text-red-700"
                             title="Xóa"
                             onClick={() =>
-                              handleDeleteLab(lab.labId, lab.labName)
+                              // handleDeleteLab(lab.labId, lab.labName)
+                              handleModalOpen(lab, "delete")
                             }
                           >
                             <Trash2 size={16} />

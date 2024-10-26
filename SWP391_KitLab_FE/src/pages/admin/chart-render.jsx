@@ -281,7 +281,7 @@ const SalesStatisticsCharts = ({
                 />
                 <Bar
                   dataKey={selectedChart === "amount" ? "amount" : "price"}
-                  fill="#000"
+                  fill="#1aa3ff"
                 />
               </BarChart>
             </ResponsiveContainer>

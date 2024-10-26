@@ -11,6 +11,7 @@ function AdminViewProduct() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
   const [labList, setLabList] = useState([]);
+  const [filteredLab, setFilteredLab] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -41,6 +42,14 @@ function AdminViewProduct() {
         return "bg-green-500";
     }
   };
+
+  useEffect(() => {
+    if (labList.length === 0) {
+      return;
+    }
+    const tempList = labList.filter((lab) => lab.status !== "Deleted");
+    setFilteredLab(tempList);
+  }, [labList]);
 
   const getStatusTranslate = (status) => {
     switch (status.toLowerCase()) {
@@ -123,12 +132,12 @@ function AdminViewProduct() {
                       </div>
                     </div>
                   )}
-                  {labList && (
+                  {filteredLab && (
                     <div>
                       <h3 className="font-semibold mb-2">Lab kèm theo:</h3>
-                      {labList && labList.length > 0 ? (
+                      {filteredLab && filteredLab.length > 0 ? (
                         <ul className="list-disc list-inside text-sm text-gray-700">
-                          {labList.map((lab, index) => (
+                          {filteredLab.map((lab, index) => (
                             <li key={index}>{lab.name}</li>
                           ))}
                         </ul>
