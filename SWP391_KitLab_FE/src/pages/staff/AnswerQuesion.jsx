@@ -81,7 +81,6 @@ function AnswerQuestion() {
                   <th className="border px-4 py-3 text-left">Tên Bài Lab</th>
                   <th className="border px-4 py-3 text-left">File Đính Kèm</th>
                   <th className="border px-4 py-3 text-left">Ngày</th>
-                  <th className="border px-4 py-3 text-center">Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
@@ -102,19 +101,19 @@ function AnswerQuestion() {
                         >
                           Link của lab
                         </a> </td>
-                    <td className="border px-4 py-3">{row.dateOfQuestion}</td>
-                    <td className="border px-4 py-3 text-center">
-                      <button
-                        className={`${
-                          row.status === "Active"
-                            ? "bg-red-500 hover:bg-red-600"
-                            : "bg-green-500 hover:bg-green-600"
-                        } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
-                        onClick={() => handleSelectQuestion(row)}
-                      >
-                        {row.status === "Active" ? "Chưa Trả Lời" : "Đã Trả Lời"}
-                      </button>
-                    </td>
+                        <td className="border px-4 py-3 text-center">
+  <button
+    className={`${
+      row.status === "Active"
+        ? "bg-red-500 hover:bg-red-600"
+        : "bg-green-500"
+    } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
+    onClick={() => handleSelectQuestion(row)}
+    disabled={row.status !== "Active"} // Vô hiệu hóa nút nếu trạng thái không phải là "Active"
+  >
+    {row.status === "Active" ? "Chưa Trả Lời" : "Đã Trả Lời"}
+  </button>
+</td>
                   </tr>
                 ))}
               </tbody>
@@ -153,7 +152,7 @@ function AnswerQuestion() {
                 </div>
                 <button 
                   type="submit" 
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                  className="px-4 py-2 bg-black text-white rounded-lg hover:bg-blue-700 transition duration-200"
                 >
                   Gửi
                 </button>

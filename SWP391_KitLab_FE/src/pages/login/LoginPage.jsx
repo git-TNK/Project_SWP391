@@ -27,9 +27,13 @@ function LoginPage() {
 
   async function fetchAccount(userName, password) {
     try {
-      const response = await fetch(
-        `http://localhost:5056/api/Account/${userName},${password}`
-      );
+      const response = await fetch(`http://localhost:5056/api/Account/Login`, {
+        method: "POST", // Use POST method
+        headers: {
+          "Content-Type": "application/json", // Specify JSON content type
+        },
+        body: JSON.stringify({ userNameOrEmail: userName, password }),
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -40,10 +44,10 @@ function LoginPage() {
         localStorage.setItem("account", JSON.stringify(data));
       } else {
         const errorMessage = await response.text();
-        alert(`${errorMessage}`);
+        alert(`Error: ${errorMessage}`);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Login failed:", err);
     }
   }
 
@@ -79,13 +83,13 @@ function LoginPage() {
         <form onSubmit={onFinish}>
           <div className="custom-user-box mb-6">
             <label htmlFor="userName" className="text-sm text-gray-600">
-              Tên đăng nhập
+              Tên đăng nhập hoặc email
             </label>
             <input
               type="text"
               id="userName"
               className="w-full p-3 border border-gray-300 rounded-md text-base focus:outline-none focus:border-blue-500"
-              placeholder="Tên đăng nhập"
+              placeholder="Tên đăng nhập hoặc email"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />

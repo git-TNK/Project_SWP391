@@ -220,18 +220,29 @@ function CheckoutPage() {
                       </div>
                     </div>
                   ))}
-                  <div className="mt-4">
+                  <div className="mt-8 space-y-6 text-center">
+                    <h2 className="text-xl text-gray-850">
+                      Số lượt hỏi của bạn sẽ bằng{" "}
+                      <span className="text-blue-600">
+                        số lượng sản phẩm × 2
+                      </span>
+                    </h2>
+
                     <Link to="/banking">
                       <button
-                        className="bg-black text-white px-4 py-2 rounded"
+                        className={`w-full sm:w-auto bg-black hover:bg-gray-800 text-white font-medium px-6 py-3 rounded-lg 
+      transition-colors duration-300 ${
+        !formSubmitted ? "opacity-50 cursor-not-allowed" : ""
+      }`}
                         disabled={!formSubmitted}
                       >
                         Thanh toán
                       </button>
                     </Link>
+
                     <NavLink
                       to="/"
-                      className="block mt-2 text-center text-blue-500"
+                      className="block mt-4 text-blue-500 hover:text-blue-700 transition-colors duration-300"
                     >
                       Quay về trang chủ
                     </NavLink>

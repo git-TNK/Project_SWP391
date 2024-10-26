@@ -193,7 +193,7 @@ function ProcessingOrder() {
                   {listOrderDetail.map((detail, index) => (
                     <tr key={index} className="border-b">
                       <td className="py-2 px-4">{detail.kitName}</td>
-                      <td className="py-2 px-4">{detail.price} đ</td>
+                      <td className="py-2 px-4">{detail.price} VND</td>
                       <td className="py-2 px-4">{detail.kitQuantity}</td>
                     </tr>
                   ))}

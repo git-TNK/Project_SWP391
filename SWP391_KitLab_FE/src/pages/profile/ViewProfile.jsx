@@ -170,6 +170,10 @@ function ViewProfile() {
           </div>
 
           <button className="mt-6 bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full">
+            <Link to="/changepassword">Đổi mật khẩu</Link>
+          </button>
+
+          <button className="mt-6 bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full">
             <Link to="/edit-profile">Cập nhật Thông tin</Link>
           </button>
         </div>

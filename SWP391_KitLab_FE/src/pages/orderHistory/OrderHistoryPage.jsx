@@ -199,7 +199,14 @@ function OrderHistoryPage() {
                   <ul>
                     {productDetails.labs.map((lab) => (
                       <li key={lab.labId} className="mb-2">
-                        <p className="font-bold">{lab.name}</p>
+                        <p className="font-bold">
+                          {lab.name}{" "}
+                          {lab.status === "Changed"
+                            ? "(Lab đã được chỉnh sửa)"
+                            : lab.status === "Deleted"
+                            ? "(Lab đã bị xóa)"
+                            : ""}
+                        </p>
                         <p>{lab.description}</p>
                         <Link
                           to={lab.document}

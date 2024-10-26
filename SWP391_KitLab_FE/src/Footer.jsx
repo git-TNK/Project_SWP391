@@ -22,7 +22,7 @@ function Footer() {
           <p className="mb-2 font-semibold">
             Thành viên: Trần Nam Khánh, Trịnh Hải Đức, Lê Sỹ Bình
           </p>
-          <p className="mb-2">Thông tin: GV: SWP3931, SE1866</p>
+          <p className="mb-2">Thông tin: GV: SWP391, SE1866</p>
           <p>Liên hệ: FPT University - kitcentral@gmail.com</p>
         </div>
       </div>
