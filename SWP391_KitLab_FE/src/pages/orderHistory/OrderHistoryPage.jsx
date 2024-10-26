@@ -30,7 +30,8 @@ function OrderHistoryPage() {
       const response = await fetch(
         `http://localhost:5056/Order/${account.accountId}`
       );
-      const data = await response.json();
+      let data = await response.json();
+      data.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
       setListOrder(data);
 
       // Fetch order details for each order
@@ -112,6 +113,7 @@ function OrderHistoryPage() {
                 <th className="py-2 px-4 text-left">Mã đơn hàng</th>
                 <th className="py-2 px-4 text-left">Trạng thái</th>
                 <th className="py-2 px-4 text-left">Tổng tiền hàng</th>
+                <th className="py-2 px-4 text-left">Ngày đặt hàng</th>
                 <th className="py-2 px-4 text-left">Xác nhận đã nhận hàng</th>
                 <th className="py-2 px-4 text-left">Xem chi tiết đơn hàng</th>
               </tr>
@@ -130,6 +132,7 @@ function OrderHistoryPage() {
                     </span>
                   </td>
                   <td className="py-2 px-4">{order.price} đ</td>
+                  <td className="py-2 px-4">{order.orderDate.split("T", 1)}</td>
                   <td>
                     <button
                       className={`${
@@ -208,14 +211,20 @@ function OrderHistoryPage() {
                             : ""}
                         </p>
                         <p>{lab.description}</p>
-                        <Link
-                          to={lab.document}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-500 underline"
-                        >
-                          Xem tài liệu
-                        </Link>
+                        {lab.status === "Deleted" ? (
+                          <span className="text-gray-400 underline cursor-not-allowed">
+                            Xem tài liệu
+                          </span>
+                        ) : (
+                          <Link
+                            to={lab.document}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline"
+                          >
+                            Xem tài liệu
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </ul>

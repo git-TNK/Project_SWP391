@@ -37,6 +37,7 @@ function Header() {
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.clear();
+    sessionStorage.clear();
     setAccount(null); // Update state to remove account
     setTimeout(() => {
       navigate("/"); // Navigate after state change
