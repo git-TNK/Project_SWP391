@@ -123,13 +123,15 @@ namespace KLM.Repository.Repositories
 
 
         //Create Product (TO CREATE PRODUCT DO NOT MODIFY FOR NOW)
-        public async Task<string> CreateProduct(string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateOnly dateOfCreation)
+        public async Task<string> CreateProduct(string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateTime dateOfCreation)
         {
             string? nameCheck = _context.Set<ProductKitTbl>().Where(e => e.Name == $"{kitName}").Select(e => e.Name).FirstOrDefault()?.ToString();
             string kitId;
             string? idCheck;
 
             string? error="";
+
+
 
             //cheking existed ID
             do
@@ -216,7 +218,7 @@ namespace KLM.Repository.Repositories
             }
 
             product.Status = "Deleted";
-            product.DateOfDeletion = DateOnly.FromDateTime(DateTime.Today.Date);
+            product.DateOfDeletion = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return true;
@@ -225,7 +227,7 @@ namespace KLM.Repository.Repositories
 
 
         //Update Product (NOT CREATE PRODUCT PAY ATTENTION)
-        public async Task<ValueTuple<string, string>> UpdateProduct(string idToChange, string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateOnly dateOfChange, bool isNewImageUploaded)
+        public async Task<ValueTuple<string, string>> UpdateProduct(string idToChange, string kitName, string brand, string description, string pictureUrl, int price, int quantity, List<string> types, DateTime dateOfChange, bool isNewImageUploaded)
         {
             string? nameCheck = _context.Set<ProductKitTbl>().Where(e => e.Name == kitName && e.KitId != idToChange).Select(e => e.Name).FirstOrDefault();
 

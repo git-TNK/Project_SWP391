@@ -71,7 +71,7 @@ namespace KLM.APIService.Controllers
             int price = request.price;
             int quantity = request.quantity;
             List<string> types = request.types;
-            DateOnly dateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
+            DateTime dateOfCreation = DateTime.Now;
 
             string result = await _unitOfWork.ProductKitTblRepository.CreateProduct(kitName, brand, description, imageUrl, price, quantity, types, dateOfCreation);
 
@@ -135,7 +135,7 @@ namespace KLM.APIService.Controllers
             int price = request.price;
             int quantity = request.quantity;
             List<string> types = request.types;
-            DateOnly dateOfChange = DateOnly.FromDateTime(DateTime.Today.Date);
+            DateTime dateOfChange = DateTime.Now;
 
             var (errors, oldImageUrl) = await _unitOfWork.ProductKitTblRepository.UpdateProduct(
                 id, kitName, brand, description, imageUrl, price, quantity, types, dateOfChange, isNewImageUploaded);
@@ -162,35 +162,6 @@ namespace KLM.APIService.Controllers
             }
         }
 
-
-        //Test dang anh len firebase
-        /*
-        [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded");
-
-            using (var stream = file.OpenReadStream())
-            {
-                var uploadUrl = await _firebaseStorageService.UploadImageAsync(stream, file.FileName, file.ContentType);
-                return Ok(new { DownloadUrl = uploadUrl });
-            }
-        }*/
-
-        /*Test delete anh
-        //[HttpDelete("DeleteImage")]
-        //public async Task<IActionResult> DeleteImageTest()
-        //{
-        //    string imageUrl = "https://firebasestorage.googleapis.com/v0/b/swp391-2004.appspot.com/o/Images%2Fcat4.jpg?alt=media&token=bce5e056-515c-4f25-acfa-effef768678f";
-        //    if (imageUrl == null || imageUrl.Length == 0)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    await _firebaseStorageService.DeleteImageAsync(imageUrl);
-
-        //    return Ok("Deleted");
-        }*/
 
         //update so luong kit con lai trong kho
         [HttpPut("{kitId}, {quantity}")]
