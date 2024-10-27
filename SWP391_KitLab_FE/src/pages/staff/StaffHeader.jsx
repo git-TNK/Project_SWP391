@@ -5,15 +5,14 @@ function StaffHeader() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
 
-  if (account == null || account.role !== "Staff") {
-    navigate("*");
-  }
+  // if (account == null || account.role !== "Staff") {
+  //   navigate("*");
+  // }
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
       setAccount(savedAccount);
-
     }
     if (savedAccount && savedAccount.role !== "Staff") {
       navigate("*");

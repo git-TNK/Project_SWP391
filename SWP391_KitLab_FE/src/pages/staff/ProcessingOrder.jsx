@@ -55,22 +55,18 @@ function ProcessingOrder() {
         );
         const productData = await productResponse.json();
         setProductDetails(productData);
-    }
-  }
-    catch(err)
-    {
+      }
+    } catch (err) {
       console.log(err);
-      
     }
   }
-
 
   const handleViewOrderDetail = (orderId) => {
     fetchListOrderDetail(orderId);
     setIsModalOpen(true);
     setSelectedOrderId(orderId);
   };
- 
+
   async function handleConfirmReceived(orderId) {
     try {
       const response = await fetch(
@@ -86,8 +82,6 @@ function ProcessingOrder() {
       console.error("Error confirming order:", error);
     }
   }
-
-
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -121,27 +115,37 @@ function ProcessingOrder() {
                     <td className="border px-4 py-3">{order.orderId}</td>
                     <td className="border px-4 py-3">{order.accountId}</td>
                     <td className="border px-4 py-3">
-                      <button className="text-blue-600 hover:underline"  onClick={() => handleViewOrderDetail(order.orderId)}>
-
+                      <button
+                        className="text-blue-600 hover:underline"
+                        onClick={() => handleViewOrderDetail(order.orderId)}
+                      >
                         Bấm vào để xem chi tiết
                       </button>
                     </td>
                     <td className="border px-4 py-3">{order.price}</td>
-                    <td className="border px-4 py-3">{order.orderDate}</td>
+                    <td className="border px-4 py-3">
+                      {order.orderDate.split("T").join(" ")}
+                    </td>
                     <td className="border px-4 py-3">{order.address}</td>
                     <td className="border px-4 py-3 text-center">
                       <button
                         className={`${
                           order.status === "Shipping"
                             ? "bg-gray-400 cursor-not-allowed"
-                            : (order.status === "Done" ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600")
+                            : order.status === "Done"
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-green-500 hover:bg-green-600"
                         } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
                         onClick={() => handleUpdateOrderStatus(order.orderId)}
-                        disabled={order.status === "Shipping" || order.status === "Done"}
+                        disabled={
+                          order.status === "Shipping" || order.status === "Done"
+                        }
                       >
                         {order.status === "Shipping"
                           ? "Đang giao hàng"
-                          : (order.status === "Done" ? "Giao hàng thành công" : "Xác nhận")}
+                          : order.status === "Done"
+                          ? "Giao hàng thành công"
+                          : "Xác nhận"}
                       </button>
                     </td>
                     <td className="border px-4 py-3 text-center">
@@ -152,11 +156,16 @@ function ProcessingOrder() {
                             : "bg-gray-400 cursor-not-allowed"
                         } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
                         onClick={() => handleConfirmReceived(order.orderId)}
-                        disabled={order.status === "Processing" || order.status === "Done"}
+                        disabled={
+                          order.status === "Processing" ||
+                          order.status === "Done"
+                        }
                       >
                         {order.status === "Shipping"
                           ? "Xác nhận đã nhận hàng"
-                          : (order.status === "Done"  ? "Đã nhận được hàng" : "Chưa nhận được hàng")}
+                          : order.status === "Done"
+                          ? "Đã nhận được hàng"
+                          : "Chưa nhận được hàng"}
                       </button>
                     </td>
                   </tr>
@@ -206,7 +215,14 @@ function ProcessingOrder() {
                   <ul>
                     {productDetails.labs.map((lab) => (
                       <li key={lab.labId} className="mb-2">
-                        <p className="font-bold">{lab.name}</p>
+                        <p className="font-bold">
+                          {lab.name}{" "}
+                          {lab.status === "Deleted"
+                            ? "(Lab đã bị xóa)"
+                            : lab.status === "Changed"
+                            ? "(Lab đã chỉnh sửa)"
+                            : ""}
+                        </p>
                         <p>{lab.description}</p>
                         <Link
                           to={lab.document}
