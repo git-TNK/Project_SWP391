@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
 import Header from "../Header";
 import Footer from "../../Footer";
+import LoadingSpinner from "../admin/loading";
+import FeedbackModal from "../admin/feedback-modal";
 
 function ChangePassword() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate(); // Initialize navigate hook
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));

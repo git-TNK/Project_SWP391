@@ -90,7 +90,7 @@ const AdminProduct = () => {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return listProduct.filter((product) => {
+    const filtered = listProduct.filter((product) => {
       const nameMatch = product.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -100,6 +100,12 @@ const AdminProduct = () => {
           (type) => product.typeNames && product.typeNames.includes(type)
         );
       return nameMatch && typeMatch;
+    });
+
+    return [...filtered].sort((a, b) => {
+      const dateA = new Date(a.dateOfCreation);
+      const dateB = new Date(b.dateOfCreation);
+      return dateB - dateA;
     });
   }, [listProduct, searchTerm, selectedTypes]);
 

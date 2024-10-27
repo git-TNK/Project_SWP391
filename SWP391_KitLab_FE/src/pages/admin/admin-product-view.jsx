@@ -108,14 +108,23 @@ function AdminViewProduct() {
                       Số lượng: {product.quantity}
                     </p>
                     <p className="mt-5 text-sm text-gray-600">
-                      Ngày tạo: {product.dateOfCreation}
+                      Ngày tạo: {product.dateOfCreation.split("T")[0]}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Ngày sửa: {product.dateOfChange}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      Ngày xóa: {product.dateOfDeletion}
-                    </p>
+                    {product.dateOfChange !== null ? (
+                      <p className="text-sm text-gray-600">
+                        Ngày sửa: {product.dateOfChange.split("T")[0]}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-gray-600">Ngày sửa:</p>
+                    )}
+
+                    {product.dateOfDeletion !== null ? (
+                      <p className="text-sm text-gray-600">
+                        Ngày xóa: {product.dateOfDeletion.split("T")[0]}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-gray-600">Ngày xóa:</p>
+                    )}
                   </div>
                   {product.typeNames && (
                     <div className="mb-4">
