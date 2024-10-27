@@ -103,7 +103,7 @@ public partial class Swp391Context : DbContext
                 .HasColumnName("AccountID");
             entity.Property(e => e.Answer)
                 .IsRequired()
-                .HasColumnType("text");
+                .HasColumnType("nvarchar(max)");
             entity.Property(e => e.LabName)
                 .IsRequired()
                 .HasMaxLength(300);
@@ -373,7 +373,7 @@ public partial class Swp391Context : DbContext
                 .HasMaxLength(100);
             entity.Property(e => e.Question)
                 .IsRequired()
-                .HasColumnType("text");
+                .HasColumnType("nvarchar(max)");
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(20);
