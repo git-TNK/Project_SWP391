@@ -123,7 +123,15 @@ function OrderHistoryPage() {
                 <tr key={index} className="border-b">
                   <td className="py-2 px-4">{order.orderId}</td>
                   <td className="py-2 px-4">
-                    <span className="bg-green-100 text-green-800 py-1 px-2 rounded-full text-sm">
+                    <span
+                      className={`py-1 px-2 rounded-full text-sm ${
+                        order.status === "Done"
+                          ? "bg-green-100 text-green-800"
+                          : order.status === "Processing"
+                          ? "bg-red-100 text-white-800"
+                          : "bg-yellow-100 text-black-800"
+                      }`}
+                    >
                       {order.status === "Done"
                         ? "Đã nhận hàng"
                         : order.status === "Processing"

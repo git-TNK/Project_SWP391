@@ -42,7 +42,12 @@ function ViewHistoryQuestion() {
         const response = await axios.get(
           `http://localhost:5056/api/Question/GetQuestionByAccountId/${accountId}`
         );
-        const questions = response.data;
+        let questions = response.data;
+
+        // Sort questions by date in descending order (newest first)
+        questions = questions.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
 
         setListQuestions(questions);
         await fetchListAnswers(questions); // Đảm bảo lấy xong câu hỏi mới lấy câu trả lời
