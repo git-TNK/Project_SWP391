@@ -32,7 +32,11 @@ function AnswerQuestion() {
       formData.append("acctachFile", attachment);
 
       const response = await fetch(
-        `http://localhost:5056/api/Answer/answerQuestion/${selectedQuestion.questionId}/${selectedQuestion.accountId}/${answer}/${selectedQuestion.labName}`,
+        `http://localhost:5056/api/Answer/answerQuestion/${
+          selectedQuestion.questionId
+        }/${selectedQuestion.accountId}/${encodeURIComponent(answer)}/${
+          selectedQuestion.labName
+        }`,
         {
           method: "POST",
           body: formData,
