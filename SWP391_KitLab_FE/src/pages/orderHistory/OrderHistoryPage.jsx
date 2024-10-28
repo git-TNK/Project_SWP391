@@ -208,22 +208,28 @@ function OrderHistoryPage() {
                 <div className="mt-6">
                   <h4 className="text-lg font-bold mb-2">Labs:</h4>
                   <ul>
-                    {productDetails.labs.map((lab) => (
-                      <li key={lab.labId} className="mb-2">
-                        <p className="font-bold">
-                          {lab.name}{" "}
-                          {lab.status === "Changed"
-                            ? "(Lab đã được chỉnh sửa)"
-                            : lab.status === "Deleted"
-                            ? "(Lab đã bị xóa)"
-                            : ""}
-                        </p>
-                        <p>{lab.description}</p>
-                        {lab.status === "Deleted" ? (
-                          <span className="text-gray-400 underline cursor-not-allowed">
-                            Xem tài liệu
-                          </span>
-                        ) : (
+                    {productDetails.labs
+                      .filter(
+                        (lab) =>
+                          !lab.dateOfDeletion ||
+                          new Date(lab.dateOfDeletion) >
+                            new Date(
+                              listOrder.find(
+                                (o) => o.orderId === selectedOrderId
+                              ).orderDate
+                            )
+                      )
+                      .map((lab) => (
+                        <li key={lab.labId} className="mb-2">
+                          <p className="font-bold">
+                            {lab.name}{" "}
+                            {lab.status === "Changed"
+                              ? "(Lab đã được chỉnh sửa)"
+                              : lab.status === "Deleted"
+                              ? "(Lab đã bị xóa)"
+                              : ""}
+                          </p>
+                          <p>{lab.description}</p>
                           <Link
                             to={lab.document}
                             target="_blank"
@@ -232,9 +238,8 @@ function OrderHistoryPage() {
                           >
                             Xem tài liệu
                           </Link>
-                        )}
-                      </li>
-                    ))}
+                        </li>
+                      ))}
                   </ul>
                 </div>
               )}
