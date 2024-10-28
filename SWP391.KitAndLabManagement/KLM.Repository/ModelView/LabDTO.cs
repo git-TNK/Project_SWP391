@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KLM.Repository.ModelView
+﻿namespace KLM.Repository.ModelView
 {
     public class LabDTO
     {
@@ -17,8 +11,8 @@ namespace KLM.Repository.ModelView
         public string Document { get; set; }
 
         public DateOnly DateOfCreationLab { get; set; }
-
-        public DateOnly? DateOfDeletionLab { get; set; }
+        //Cho nay Khanh sua
+        public DateTime? DateOfDeletionLab { get; set; }
 
         public DateOnly? DateOfChangeLab { get; set; }
 

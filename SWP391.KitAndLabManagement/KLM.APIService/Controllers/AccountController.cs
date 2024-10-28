@@ -88,40 +88,40 @@ namespace KLM.APIService.Controllers
             bool sameEmail = false;
 
 
-            foreach (var account in listAccount) 
+            foreach (var account in listAccount)
             {
                 if (account.Email.Equals(request.Email))
                 {
                     sameEmail = true;
-                } 
+                }
                 if (account.UserName.Equals(request.UserName))
                 {
                     sameUsername = true;
                 }
-                if(sameUsername && sameEmail)
+                if (sameUsername && sameEmail)
                 {
                     break;
                 }
             }
 
-            
-                if (sameEmail && sameUsername)
-                {
-                    Console.WriteLine("Both existed");
-                    return BadRequest("Both existed");
-                }
-                else if (sameEmail)
-                {
-                    Console.WriteLine("Email existed");
-                    return BadRequest("Email existed");
-                }
-                else if (sameUsername)
-                {
-                    Console.WriteLine("Username already existed");
-                    return BadRequest("Username existed");
-                }
 
-          
+            if (sameEmail && sameUsername)
+            {
+                Console.WriteLine("Both existed");
+                return BadRequest("Both existed");
+            }
+            else if (sameEmail)
+            {
+                Console.WriteLine("Email existed");
+                return BadRequest("Email existed");
+            }
+            else if (sameUsername)
+            {
+                Console.WriteLine("Username already existed");
+                return BadRequest("Username existed");
+            }
+
+
 
             do
             {
