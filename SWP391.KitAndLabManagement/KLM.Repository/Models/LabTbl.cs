@@ -17,7 +17,7 @@ public partial class LabTbl
 
     public DateOnly DateOfCreation { get; set; }
 
-    public DateOnly? DateOfDeletion { get; set; }
+    public DateTime? DateOfDeletion { get; set; }
 
     public string Status { get; set; }
 

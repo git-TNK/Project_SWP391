@@ -163,7 +163,8 @@ namespace KLM.Repository.Repositories
             }
 
             lab.Status = "Deleted";
-            lab.DateOfDeletion = DateOnly.FromDateTime(DateTime.Today.Date);
+            //cho nay Khanh sua
+            lab.DateOfDeletion = DateTime.Now;
 
             //lab.Kits.Clear();
 
