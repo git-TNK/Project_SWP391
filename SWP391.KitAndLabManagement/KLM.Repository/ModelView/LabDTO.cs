@@ -10,11 +10,11 @@
 
         public string Document { get; set; }
 
-        public DateOnly DateOfCreationLab { get; set; }
+        public DateTime DateOfCreationLab { get; set; }
         //Cho nay Khanh sua
         public DateTime? DateOfDeletionLab { get; set; }
 
-        public DateOnly? DateOfChangeLab { get; set; }
+        public DateTime? DateOfChangeLab { get; set; }
 
         public string Status { get; set; }
 

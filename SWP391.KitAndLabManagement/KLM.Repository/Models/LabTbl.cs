@@ -15,13 +15,13 @@ public partial class LabTbl
 
     public string Document { get; set; }
 
-    public DateOnly DateOfCreation { get; set; }
+    public DateTime DateOfCreation { get; set; }
 
     public DateTime? DateOfDeletion { get; set; }
 
     public string Status { get; set; }
 
-    public DateOnly? DateOfChangeLab { get; set; }
+    public DateTime? DateOfChangeLab { get; set; }
 
     public virtual ICollection<ProductKitTbl> Kits { get; set; } = new List<ProductKitTbl>();
 

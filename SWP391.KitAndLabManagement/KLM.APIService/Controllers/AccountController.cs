@@ -205,7 +205,7 @@ namespace KLM.APIService.Controllers
                 {
                     item.Password = request.newPassword;
                     _unitOfWork.AccountTblRepository.Update(item);
-                    return Ok(item);
+                    return Ok();
                 }
             }
             return BadRequest("Mật khẩu nhập không chính xác");

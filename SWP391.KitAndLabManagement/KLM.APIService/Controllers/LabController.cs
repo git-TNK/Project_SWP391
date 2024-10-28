@@ -67,7 +67,7 @@ namespace KLM.APIService.Controllers
             string labName = request.labName;
             string description = request.description;
             List<string> types = request.labTypes;
-            DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
+            DateTime DateOfCreation = DateTime.Now;
 
             string result = await _unitOfWork.LabTblRepository.CreateLab(labName, description, documentUrl, types, DateOfCreation);
 
@@ -135,7 +135,7 @@ namespace KLM.APIService.Controllers
             string labName = request.labName.Trim();
             string description = request.description.Trim();
             List<string> labTypes = request.labTypes;
-            DateOnly dateOfChange = DateOnly.FromDateTime(DateTime.Today.Date);
+            DateTime dateOfChange = DateTime.Now;
 
             //return (errors, oldImageUrl);
             var (errors, oldDocumentUrl) = await _unitOfWork.LabTblRepository.UpdateLab(id, labName, description, documentUrl, labTypes, dateOfChange, isNewFileUpload);
