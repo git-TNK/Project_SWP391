@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
 import Footer from "../../Footer";
@@ -11,12 +11,23 @@ function ProcessingOrder() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
+  const [accountList, setAccountList] = useState([]);
 
   // Fetch the list of orders from the API
   async function fetchListOrders() {
     try {
       const response = await axios.get(`http://localhost:5056/Order`);
       setListOrders(response.data);
+    } catch (err) {
+      console.error("Failed to fetch orders:", err);
+    }
+  }
+
+  //fetch list account for mapping with accountId
+  async function fetchListAccount() {
+    try {
+      const response = await axios.get(`http://localhost:5056/api/Account`);
+      setAccountList(response.data);
     } catch (err) {
       console.error("Failed to fetch orders:", err);
     }
@@ -38,8 +49,25 @@ function ProcessingOrder() {
     }
   }
 
+  const handleDisplayAccountUsername = (accId) => {
+    const account = accountList.find((acc) => acc.accountId === accId);
+    return account ? account.userName : "Unknown user";
+  };
+
+  const filteredOrder = useMemo(() => {
+    return listOrders.sort((a, b) => {
+      const dateA = new Date(a.orderDate);
+      const dateB = new Date(b.orderDate);
+      return dateB - dateA;
+    });
+  }, [listOrders]);
+
   useEffect(() => {
-    fetchListOrders();
+    const fetchData = async () => {
+      await fetchListOrders();
+      await fetchListAccount();
+    };
+    fetchData();
   }, []);
 
   async function fetchListOrderDetail(orderId) {
@@ -107,25 +135,30 @@ function ProcessingOrder() {
                 </tr>
               </thead>
               <tbody>
-                {listOrders.map((order) => (
+                {filteredOrder.map((order) => (
                   <tr
                     key={order.orderId}
                     className="hover:bg-gray-100 transition-colors duration-300"
                   >
                     <td className="border px-4 py-3">{order.orderId}</td>
-                    <td className="border px-4 py-3">{order.accountId}</td>
+                    <td className="border px-4 py-3">
+                      {handleDisplayAccountUsername(order.accountId)}
+                    </td>
                     <td className="border px-4 py-3">
                       <button
                         className="text-blue-600 hover:underline"
                         onClick={() => handleViewOrderDetail(order.orderId)}
                       >
-                        Bấm vào để xem chi tiết
+                        Chi tiết đơn
                       </button>
                     </td>
                     <td className="border px-4 py-3">{order.price}</td>
-                    <td className="border px-4 py-3">
-                      {order.orderDate.split("T").join(" ")}
-                    </td>
+                    {order.orderDate && (
+                      <td className="border px-4 py-3">
+                        {order.orderDate.split("T")[0]}
+                      </td>
+                    )}
+
                     <td className="border px-4 py-3">{order.address}</td>
                     <td className="border px-4 py-3 text-center">
                       <button
