@@ -25,6 +25,7 @@ const typeOptions = [
 ];
 
 function AddProduct() {
+  //attributes of form
   const [kitName, setKitName] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
@@ -32,13 +33,19 @@ function AddProduct() {
   const [picturePreview, setPicturePreview] = useState(null);
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  //type selector
   const [types, setTypes] = useState([]);
+  //error handler
   const [errors, setErrors] = useState({});
+  //navigate back to page
   const navigate = useNavigate();
+  //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  //loading
   const [isLoading, setIsLoading] = useState(false);
+  //list lab for reference
   const [listOfLab, setListOfLab] = useState([]);
 
   //Xử lý upload ảnh

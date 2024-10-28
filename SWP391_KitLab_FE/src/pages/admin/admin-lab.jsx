@@ -187,6 +187,7 @@ function AdminLab() {
       setNotification({ message: "Xóa thất bại", type: "error" });
       setLoading(false);
     } finally {
+      setSelectedLab(null);
       setIsModalOpen(false);
     }
   };

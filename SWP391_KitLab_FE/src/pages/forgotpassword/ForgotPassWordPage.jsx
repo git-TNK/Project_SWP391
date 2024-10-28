@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import LoadingSpinner from "../admin/loading";
+import FeedbackModal from "../admin/feedback-modal";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // State để lưu thông báo thành công
   const navigate = useNavigate(); // Hook để điều hướng
+  const [isLoading, setIsLoading] = useState(false);
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   async function fetchForgotPassword() {
+    setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:5056/api/Email/sendMailForgotPassword/${email}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          To: email,
-          Subject: "Reset Your Password",
-          Body: "Here is your new password: "
-        })
-      });
+      const response = await fetch(
+        `http://localhost:5056/api/Email/sendMailForgotPassword/${email}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            To: email,
+            Subject: "Reset Your Password",
+            Body: "Here is your new password: ",
+          }),
+        }
+      );
 
       console.log("Response status:", response.status);
       const responseBody = await response.text(); // Lấy phản hồi dưới dạng văn bản
@@ -26,20 +37,34 @@ function ForgotPasswordPage() {
 
       if (response.ok) {
         setSuccessMessage("Email đã được gửi thành công!"); // Cập nhật thông báo thành công
-
+        setModalMessage("Email đã được gửi thành công");
+        setIsSuccess(true);
         // Điều hướng về trang đăng nhập sau 3 giây
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+        // setTimeout(() => {
+        //   navigate("/login");
+        // }, 1500);
       } else {
         console.error("Error:", response.statusText);
         setSuccessMessage("Đã xảy ra lỗi. Vui lòng thử lại."); // Thêm thông báo lỗi
+        setModalMessage("Đã xảy ra lỗi, xin thử lại sau");
+        setIsSuccess(false);
       }
     } catch (error) {
       console.error("Fetch error:", error);
       setSuccessMessage("Đã xảy ra lỗi. Vui lòng thử lại."); // Thêm thông báo lỗi
+      setModalMessage("Đã xảy ra lỗi, xin thử lại sau");
+      setIsSuccess(false);
     }
+    setIsModalOpen(true);
+    setIsLoading(false);
   }
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    if (isSuccess) {
+      navigate("/login"); // Replace '/main-page' with your actual main page route
+    }
+  };
 
   useEffect(() => {
     document.body.classList.add(
@@ -64,10 +89,12 @@ function ForgotPasswordPage() {
     <div>
       <div className="bg-white p-10 rounded-lg shadow-md w-96 text-center">
         <h2 className="text-2xl font-bold mb-4">Quên Mật Khẩu</h2>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          fetchForgotPassword();
-        }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            fetchForgotPassword();
+          }}
+        >
           <div className="relative mb-6">
             <label
               htmlFor="contact"
@@ -87,15 +114,27 @@ function ForgotPasswordPage() {
           </div>
           <button
             type="submit"
-            className="block bg-black text-white py-3 rounded hover:bg-gray-800 transition duration-300"
+            className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors mt-4"
           >
             Xác nhận
           </button>
         </form>
+        <NavLink to="/" className="text-white">
+          <button className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors mt-4">
+            Quay về trang chủ
+          </button>
+        </NavLink>
         {successMessage && ( // Hiện thông báo thành công nếu có
           <div className="mt-4 text-green-500">{successMessage}</div>
         )}
       </div>
+      {isLoading && <LoadingSpinner />}
+      <FeedbackModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        message={modalMessage}
+        isSuccess={isSuccess}
+      />
     </div>
   );
 }
