@@ -89,8 +89,8 @@ function ProcessingOrder() {
     }
   }
 
-  const handleViewOrderDetail = (orderId) => {
-    fetchListOrderDetail(orderId);
+  const handleViewOrderDetail = async (orderId) => {
+    await fetchListOrderDetail(orderId);
     setIsModalOpen(true);
     setSelectedOrderId(orderId);
   };
@@ -124,14 +124,20 @@ function ProcessingOrder() {
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr className="bg-indigo-500 text-white">
-                  <th className="border px-4 py-3 text-left">ID đơn hàng</th>
-                  <th className="border px-4 py-3 text-left">Tài khoản đặt</th>
-                  <th className="border px-4 py-3 text-left">Sản phẩm</th>
-                  <th className="border px-4 py-3 text-left">Tổng tiền</th>
-                  <th className="border px-4 py-3 text-left">Ngày đặt</th>
-                  <th className="border px-4 py-3 text-left">Địa chỉ</th>
-                  <th className="border px-4 py-3 text-center">Trạng thái</th>
-                  <th className="border px-4 py-3 text-center">Đã Nhận</th>
+                  <th className="border px-4 py-3 text-left w-40">
+                    ID đơn hàng
+                  </th>
+                  <th className="border px-4 py-3 text-left w-40">
+                    Tài khoản đặt
+                  </th>
+                  <th className="border px-4 py-3 text-left w-32">Sản phẩm</th>
+                  <th className="border px-4 py-3 text-left w-36">Tổng tiền</th>
+                  <th className="border px-4 py-3 text-left w-32">Ngày đặt</th>
+                  <th className="border px-4 py-3 text-left w-32">Địa chỉ</th>
+                  <th className="border px-4 py-3 text-center w-40">
+                    Trạng thái
+                  </th>
+                  <th className="border px-4 py-3 text-center w-48">Đã Nhận</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,14 +158,18 @@ function ProcessingOrder() {
                         Chi tiết đơn
                       </button>
                     </td>
-                    <td className="border px-4 py-3">{order.price}</td>
+                    <td className="border px-4 py-3 text-right">
+                      {order.price.toLocaleString()}đ
+                    </td>
                     {order.orderDate && (
                       <td className="border px-4 py-3">
                         {order.orderDate.split("T")[0]}
                       </td>
                     )}
 
-                    <td className="border px-4 py-3">{order.address}</td>
+                    <td className="border px-4 py-3" title={order.address}>
+                      <p className="w-32 truncate">{order.address}</p>
+                    </td>
                     <td className="border px-4 py-3 text-center">
                       <button
                         className={`${
@@ -227,16 +237,20 @@ function ProcessingOrder() {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="py-2 px-4 text-left">Tên Kit</th>
-                    <th className="py-2 px-4 text-left">Giá Tiền</th>
-                    <th className="py-2 px-4 text-left">Số Lượng</th>
+                    <th className="py-2 px-4 text-right">Giá Tiền</th>
+                    <th className="py-2 px-4 text-right">Số Lượng</th>
                   </tr>
                 </thead>
                 <tbody>
                   {listOrderDetail.map((detail, index) => (
                     <tr key={index} className="border-b">
                       <td className="py-2 px-4">{detail.kitName}</td>
-                      <td className="py-2 px-4">{detail.price} VND</td>
-                      <td className="py-2 px-4">{detail.kitQuantity}</td>
+                      <td className="py-2 px-4 text-right">
+                        {detail.price.toLocaleString()}đ
+                      </td>
+                      <td className="py-2 px-4 text-right">
+                        {detail.kitQuantity}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
