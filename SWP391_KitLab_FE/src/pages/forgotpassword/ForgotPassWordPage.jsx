@@ -5,10 +5,9 @@ import FeedbackModal from "../admin/feedback-modal";
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // State để lưu thông báo thành công
-  const navigate = useNavigate(); // Hook để điều hướng
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -32,26 +31,22 @@ function ForgotPasswordPage() {
       );
 
       console.log("Response status:", response.status);
-      const responseBody = await response.text(); // Lấy phản hồi dưới dạng văn bản
-      console.log("Response body:", responseBody); // Log phản hồi
+      const responseBody = await response.text();
+      console.log("Response body:", responseBody);
 
       if (response.ok) {
-        setSuccessMessage("Email đã được gửi thành công!"); // Cập nhật thông báo thành công
+        setSuccessMessage("Email đã được gửi thành công!");
         setModalMessage("Email đã được gửi thành công");
         setIsSuccess(true);
-        // Điều hướng về trang đăng nhập sau 3 giây
-        // setTimeout(() => {
-        //   navigate("/login");
-        // }, 1500);
       } else {
         console.error("Error:", response.statusText);
-        setSuccessMessage("Đã xảy ra lỗi. Vui lòng thử lại."); // Thêm thông báo lỗi
+        setSuccessMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
         setModalMessage("Đã xảy ra lỗi, xin thử lại sau");
         setIsSuccess(false);
       }
     } catch (error) {
       console.error("Fetch error:", error);
-      setSuccessMessage("Đã xảy ra lỗi. Vui lòng thử lại."); // Thêm thông báo lỗi
+      setSuccessMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
       setModalMessage("Đã xảy ra lỗi, xin thử lại sau");
       setIsSuccess(false);
     }
@@ -62,31 +57,13 @@ function ForgotPasswordPage() {
   const handleModalClose = () => {
     setIsModalOpen(false);
     if (isSuccess) {
-      navigate("/login"); // Replace '/main-page' with your actual main page route
+      navigate("/login");
     }
   };
 
-  useEffect(() => {
-    document.body.classList.add(
-      "bg-gray-100",
-      "flex",
-      "justify-center",
-      "items-center",
-      "min-h-screen"
-    );
-    return () => {
-      document.body.classList.remove(
-        "bg-gray-100",
-        "flex",
-        "justify-center",
-        "items-center",
-        "min-h-screen"
-      );
-    };
-  }, []);
-
   return (
-    <div>
+    // Applied the styling directly here instead of using useEffect
+    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
       <div className="bg-white p-10 rounded-lg shadow-md w-96 text-center">
         <h2 className="text-2xl font-bold mb-4">Quên Mật Khẩu</h2>
         <form
@@ -119,12 +96,12 @@ function ForgotPasswordPage() {
             Xác nhận
           </button>
         </form>
-        <NavLink to="/" className="text-white">
+        <NavLink to="/login" className="text-white">
           <button className="custom-login-button w-full bg-black text-white py-3 rounded-md text-base cursor-pointer hover:bg-gray-800 transition-colors mt-4">
-            Quay về trang chủ
+            Quay về trang đăng nhập
           </button>
         </NavLink>
-        {successMessage && ( // Hiện thông báo thành công nếu có
+        {successMessage && (
           <div className="mt-4 text-green-500">{successMessage}</div>
         )}
       </div>

@@ -61,7 +61,7 @@ function AdminOrder() {
   };
 
   const filterOrder = useMemo(() => {
-    return orderList
+    const filtered = orderList
       .filter((order) => {
         return listAccount.some(
           (account) =>
@@ -74,6 +74,12 @@ function AdminOrder() {
           filterStatus === "All" || order.status === filterStatus;
         return statusMatch;
       });
+
+    return [...filtered].sort((a, b) => {
+      const dateA = new Date(a.orderDate);
+      const dateB = new Date(b.orderDate);
+      return dateB - dateA;
+    });
   }, [orderList, searchTerm, listAccount, filterStatus]);
 
   const handleFilterClick = () => {

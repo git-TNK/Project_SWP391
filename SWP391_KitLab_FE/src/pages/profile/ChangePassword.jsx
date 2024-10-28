@@ -6,6 +6,7 @@ import LoadingSpinner from "../admin/loading";
 import FeedbackModal from "../admin/feedback-modal";
 import AdminHeader from "../admin/admin-header";
 import { ArrowLeft } from "lucide-react";
+import StaffHeader from "../staff/StaffHeader";
 
 function ChangePassword() {
   const [account, setAccount] = useState(null);
@@ -113,8 +114,8 @@ function ChangePassword() {
       } else {
         const errorData = await response.text();
         setError(errorData || "Sai mật khẩu cũ hoặc có lỗi xảy ra.");
-        // setModalMessage("Mật khẩu cũ không đúng.");
-        // setIsSuccess(false);
+        setModalMessage("Mật khẩu cũ không đúng.");
+        setIsSuccess(false);
       }
     } catch (err) {
       console.error("Error:", err);
@@ -143,7 +144,8 @@ function ChangePassword() {
         <Header />
       ) : (
         <div>
-          <AdminHeader />
+          {account.role === "Admin" ? <AdminHeader /> : <StaffHeader />}
+
           <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
           <NavLink
             to={account.role === "Admin" ? "/admin/product" : "/staff"}

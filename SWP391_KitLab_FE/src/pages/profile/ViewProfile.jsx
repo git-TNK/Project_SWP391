@@ -4,6 +4,8 @@ import Footer from "../../Footer";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import AdminHeader from "../admin/admin-header";
 import Sidebar from "../admin/sidebar";
+import StaffHeader from "../staff/StaffHeader";
+
 import {
   ArrowLeft,
   User,
@@ -58,7 +60,8 @@ function ViewProfile() {
         <Header />
       ) : (
         <div>
-          <AdminHeader />
+          {account.role === "Admin" ? <AdminHeader /> : <StaffHeader />}
+
           <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
           <NavLink
             to={account.role === "Admin" ? "/admin/product" : "/staff"}

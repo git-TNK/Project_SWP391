@@ -193,7 +193,7 @@ function AdminLab() {
   };
 
   const filteredLab = useMemo(() => {
-    return labData.filter((lab) => {
+    const filtered = labData.filter((lab) => {
       const nameMatch = lab.labName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -203,6 +203,12 @@ function AdminLab() {
           (type) => lab.labTypes && lab.labTypes.includes(type)
         );
       return nameMatch && typeMatch;
+    });
+
+    return [...filtered].sort((a, b) => {
+      const dateA = new Date(a.dateOfCreationLab);
+      const dateB = new Date(b.dateOfCreationLab);
+      return dateB - dateA;
     });
   }, [labData, searchTerm, selectedTypes]);
 
@@ -368,9 +374,15 @@ function AdminLab() {
                           Link của lab
                         </a>
                       </td>
-                      <td className="py-2 px-4">{lab.dateOfCreationLab}</td>
+                      <td className="py-2 px-4">
+                        {lab.dateOfCreationLab.split("T")[0]}
+                      </td>
                       <td className="py-2 px-4 ">
-                        {lab.dateOfDeletionLab || lab.dateOfChangeLab || (
+                        {lab.dateOfChangeLab ? (
+                          lab.dateOfChangeLab.split("T")[0]
+                        ) : lab.dateOfDeletionLab ? (
+                          lab.dateOfDeletionLab.split("T")[0]
+                        ) : (
                           <span className="text-gray-400">Không</span>
                         )}
                       </td>
