@@ -8,25 +8,27 @@ function ForgotPasswordPage() {
 
   async function fetchForgotPassword() {
     try {
-      const response = await fetch(`http://localhost:5056/api/Email/sendMailForgotPassword/${email}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          To: email,
-          Subject: "Reset Your Password",
-          Body: "Here is your new password: "
-        })
-      });
+      const response = await fetch(
+        `http://localhost:5056/api/Email/sendMailForgotPassword/${email}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            To: email,
+            Subject: "Reset Your Password",
+            Body: "Here is your new password: ",
+          }),
+        }
+      );
 
       console.log("Response status:", response.status);
       const responseBody = await response.text(); // Lấy phản hồi dưới dạng văn bản
       console.log("Response body:", responseBody); // Log phản hồi
 
       if (response.ok) {
-        setSuccessMessage("Email đã được gửi thành công!"); // Cập nhật thông báo thành công
-
+        setSuccessMessage("Email đã được gửi thành công!");
         // Điều hướng về trang đăng nhập sau 3 giây
         setTimeout(() => {
           navigate("/login");
@@ -64,10 +66,12 @@ function ForgotPasswordPage() {
     <div>
       <div className="bg-white p-10 rounded-lg shadow-md w-96 text-center">
         <h2 className="text-2xl font-bold mb-4">Quên Mật Khẩu</h2>
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          fetchForgotPassword();
-        }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            fetchForgotPassword();
+          }}
+        >
           <div className="relative mb-6">
             <label
               htmlFor="contact"

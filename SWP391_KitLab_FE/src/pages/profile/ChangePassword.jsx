@@ -73,7 +73,8 @@ function ChangePassword() {
 
       if (response.ok) {
         setSuccess("Đổi mật khẩu thành công.");
-
+        account.password = passwords.newPassword;
+        setAccount(account);
         // Điều hướng sau 2 giây
         setTimeout(() => {
           navigate("/view-profile", {

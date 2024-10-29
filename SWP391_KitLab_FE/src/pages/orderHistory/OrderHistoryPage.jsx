@@ -25,6 +25,62 @@ function OrderHistoryPage() {
     }
   }, [account, navigate]);
 
+  const fetchListOrderDetail = useCallback(
+    async (orderId) => {
+      if (!orderId) return; // Tránh gọi nếu không có orderId
+
+      try {
+        const response = await fetch(
+          `http://localhost:5056/api/OrderDetail/${orderId}`
+        );
+        const data = await response.json();
+        setListOrderDetail(data);
+
+        // Fetch product details for each kit in the order details
+        if (data.length > 0) {
+          const productResponse = await fetch(
+            `http://localhost:5056/Product/${data[0].kitId}`
+          );
+          const productData = await productResponse.json();
+          setProductDetails(productData);
+
+          const existingLabNames = JSON.parse(
+            localStorage.getItem("labNames") || "[]"
+          );
+
+          // Filter and store lab names
+          const filteredLabs = productData.labs.filter((lab) => {
+            const orderDate = new Date(
+              listOrder.find((o) => o.orderId === orderId).orderDate
+            );
+
+            const isNotDeleted =
+              !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
+            const isCreatedBeforeOrder =
+              new Date(lab.dateOfCreation) < orderDate;
+
+            // Lưu tên lab nếu không bị xóa và được tạo trước ngày đặt hàng
+            if (isNotDeleted && isCreatedBeforeOrder) {
+              return true; // Bao gồm lab này
+            }
+            return false; // Không bao gồm lab này
+          });
+
+          // Lưu tên lab đã lọc vào localStorage
+          const newLabNames = filteredLabs.map((lab) => lab.name);
+          const uniqueLabNames = Array.from(
+            new Set([...existingLabNames, ...newLabNames])
+          );
+
+          localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [listOrder]
+  );
+
   const fetchListOrder = useCallback(async (account) => {
     try {
       const response = await fetch(
@@ -33,55 +89,23 @@ function OrderHistoryPage() {
       let data = await response.json();
       data.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
       setListOrder(data);
-
-      // Fetch order details for each order
-      for (const order of data) {
-        await fetchListOrderDetail(order.orderId); // Call to fetch details for each order
-      }
     } catch (err) {
       console.log(err);
     }
   }, []);
 
   useEffect(() => {
-    fetchListOrder(getAccount());
+    const account = getAccount();
+    if (account) {
+      fetchListOrder(account);
+    }
   }, [fetchListOrder]);
 
-  async function fetchListOrderDetail(orderId) {
-    try {
-      const response = await fetch(
-        `http://localhost:5056/api/OrderDetail/${orderId}`
-      );
-      const data = await response.json();
-      setListOrderDetail(data);
-
-      // Fetch product details for each kit in the order details
-      if (data.length > 0) {
-        const productResponse = await fetch(
-          `http://localhost:5056/Product/${data[0].kitId}`
-        );
-        const productData = await productResponse.json();
-        setProductDetails(productData);
-
-        const existingLabNames = JSON.parse(
-          localStorage.getItem("labNames") || "[]"
-        );
-
-        const newLabNames = productData.labs.map((lab) => lab.name);
-        const uniqueLabNames = Array.from(
-          new Set([...existingLabNames, ...newLabNames])
-        );
-
-        localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  const handleViewOrderDetail = (orderId) => {
+  const handleViewOrderDetail = (orderId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setSelectedOrderId(orderId);
-    fetchListOrderDetail(orderId);
+    fetchListOrderDetail(orderId); // Fetch order details here
     setIsModalOpen(true);
   };
 
@@ -157,7 +181,7 @@ function OrderHistoryPage() {
                   <td>
                     <button
                       className="text-blue-500 underline"
-                      onClick={() => handleViewOrderDetail(order.orderId)}
+                      onClick={(e) => handleViewOrderDetail(order.orderId, e)}
                     >
                       Xem chi tiết đơn hàng
                     </button>
@@ -209,44 +233,33 @@ function OrderHistoryPage() {
                   <h4 className="text-lg font-bold mb-2">Labs:</h4>
                   <ul>
                     {productDetails.labs
-                      .filter(
-                        (lab) =>
+                      .filter((lab) => {
+                        const orderDate = new Date(
+                          listOrder.find(
+                            (o) => o.orderId === selectedOrderId
+                          ).orderDate
+                        );
+
+                        const isNotDeleted =
                           !lab.dateOfDeletion ||
-                          new Date(lab.dateOfDeletion) >
-                            new Date(
-                              listOrder.find(
-                                (o) => o.orderId === selectedOrderId
-                              ).orderDate
-                            )
-                      )
+                          new Date(lab.dateOfDeletion) > orderDate;
+                        const isCreatedAfterOrder =
+                          new Date(lab.dateOfCreation) < orderDate;
+
+                        return isNotDeleted && isCreatedAfterOrder;
+                      })
                       .map((lab) => (
-                        <li key={lab.labId} className="mb-2">
-                          <p className="font-bold">
-                            {lab.name}{" "}
-                            {lab.status === "Changed"
-                              ? "(Lab đã được chỉnh sửa)"
-                              : lab.status === "Deleted"
-                              ? "(Lab đã bị xóa)"
-                              : ""}
-                          </p>
-                          <p>{lab.description}</p>
-                          <Link
-                            to={lab.document}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 underline"
-                          >
-                            Xem tài liệu
-                          </Link>
+                        <li key={lab.labId} className="mb-1">
+                          {lab.name}
                         </li>
                       ))}
                   </ul>
                 </div>
               )}
             </div>
-            <div className="p-4 border-t flex justify-end">
+            <div className="flex justify-end p-4 border-t">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                 onClick={() => setIsModalOpen(false)}
               >
                 Đóng
@@ -255,7 +268,6 @@ function OrderHistoryPage() {
           </div>
         </div>
       )}
-
       <Footer />
     </div>
   );
