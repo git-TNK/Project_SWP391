@@ -25,13 +25,13 @@ namespace KLM.Repository.ModelView
 
         public int Quantity { get; set; }
 
-        public DateOnly DateOfCreation { get; set; }
+        public DateTime DateOfCreation { get; set; }
 
-        public DateOnly? DateOfDeletion { get; set; }
+        public DateTime? DateOfDeletion { get; set; }
 
         public string Status { get; set; }
 
-        public DateOnly? DateOfChange { get; set; }
+        public DateTime? DateOfChange { get; set; }
 
         public List<string> TypeNames { get; set; }
 

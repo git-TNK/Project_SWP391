@@ -177,7 +177,7 @@ public partial class Swp391Context : DbContext
                 .HasColumnName("LabID");
             entity.Property(e => e.Description)
                 .IsRequired()
-                .HasColumnType("text");
+                .HasColumnType("nvarchar(max)");
             entity.Property(e => e.Document).IsRequired();
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -321,7 +321,7 @@ public partial class Swp391Context : DbContext
                 .HasMaxLength(100);
             entity.Property(e => e.Description)
                 .IsRequired()
-                .HasColumnType("text");
+                .HasColumnType("nvarchar(max)");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(300);

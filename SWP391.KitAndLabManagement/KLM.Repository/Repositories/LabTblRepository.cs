@@ -175,7 +175,7 @@ namespace KLM.Repository.Repositories
 
 
         //update lab
-        public async Task<ValueTuple<string, string>> UpdateLab(string idToChange, string labName, string description, string documentUrl, List<string> types, DateOnly dateOfChange, bool isNewFileUpload)
+        public async Task<ValueTuple<string, string>> UpdateLab(string idToChange, string labName, string description, string documentUrl, List<string> types, DateTime dateOfChange, bool isNewFileUpload)
         {
             //get name in database base on request's sent name
             string? nameCheck = _context.Set<LabTbl>().Where(e => e.Name == $"{labName}" && e.LabId != idToChange).Select(e => e.Name).FirstOrDefault()?.ToString();

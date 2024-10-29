@@ -168,13 +168,13 @@ namespace KLM.APIService.Controllers
         public async Task<IActionResult> UpdateProfile([FromBody] EditProfileRequest request)
         {
             var listAcc = await GetAccountTbls();
-            string cleanedPhone = request.phoneNumber.Trim().Replace(" ", "");
+            //string cleanedPhone = request.phoneNumber.Trim().Replace(" ", "");
 
             // Biểu thức chính quy kiểm tra số điện thoại Việt Nam hợp lệ
-            string pattern = @"^(0[3|5|7|8|9])\d{8}$";
+            //string pattern = @"^(0[3|5|7|8|9])\d{8}$";
 
             // Kiểm tra tính hợp lệ bằng Regex
-            bool checkPhone = Regex.IsMatch(cleanedPhone, pattern);
+            //bool checkPhone = Regex.IsMatch(cleanedPhone, pattern);
 
             foreach (var account in listAcc)
             {
@@ -205,7 +205,7 @@ namespace KLM.APIService.Controllers
                 {
                     item.Password = request.newPassword;
                     _unitOfWork.AccountTblRepository.Update(item);
-                    return Ok(item);
+                    return Ok();
                 }
             }
             return BadRequest("Mật khẩu nhập không chính xác");
