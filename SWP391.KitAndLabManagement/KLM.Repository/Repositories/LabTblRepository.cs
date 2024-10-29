@@ -79,7 +79,7 @@ namespace KLM.Repository.Repositories
 
 
         //create lab
-        public async Task<string> CreateLab(string labName, string description, string documentUrl, List<string> types, DateOnly DateOfCreation)
+        public async Task<string> CreateLab(string labName, string description, string documentUrl, List<string> types, DateTime DateOfCreation)
         {
             string? nameCheck = _context.Set<LabTbl>().Where(e => e.Name == $"{labName}").Select(e => e.Name).FirstOrDefault()?.ToString();
             string labId;

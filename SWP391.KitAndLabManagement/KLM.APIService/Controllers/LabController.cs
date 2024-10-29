@@ -67,7 +67,7 @@ namespace KLM.APIService.Controllers
             string labName = request.labName;
             string description = request.description;
             List<string> types = request.labTypes;
-            DateOnly DateOfCreation = DateOnly.FromDateTime(DateTime.Today.Date);
+            DateTime DateOfCreation = DateTime.Now;
 
             string result = await _unitOfWork.LabTblRepository.CreateLab(labName, description, documentUrl, types, DateOfCreation);
 

@@ -9,8 +9,8 @@
         public string LabDescription { get; set; }
 
         public string Document { get; set; }
-
-        public DateOnly DateOfCreationLab { get; set; }
+        //Cho nay Khanh sua
+        public DateTime DateOfCreationLab { get; set; }
         //Cho nay Khanh sua
         public DateTime? DateOfDeletionLab { get; set; }
 
