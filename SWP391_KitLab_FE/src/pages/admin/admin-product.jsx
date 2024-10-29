@@ -32,6 +32,10 @@ const typeOptions = [
 const AdminProduct = () => {
   const [listProduct, setListProduct] = useState([]);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedKit, setSelectedKit] = useState(null);
+  const [modalContent, setModalContent] = useState("");
+
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
@@ -72,7 +76,7 @@ const AdminProduct = () => {
       );
       if (response.status === 200) {
         fetchProduct(); // Refresh the product list
-        setNotification({ message: `Đã xóa ${name}`, type: "err" });
+        setNotification({ message: `Đã xóa ${name}`, type: "error" });
       } else {
         throw new Error("Unexpected response status");
       }
@@ -82,6 +86,8 @@ const AdminProduct = () => {
         message: "Xóa thất bại",
         type: "error",
       });
+    } finally {
+      setModalOpen(false);
     }
   };
 
@@ -90,7 +96,7 @@ const AdminProduct = () => {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    return listProduct.filter((product) => {
+    const filtered = listProduct.filter((product) => {
       const nameMatch = product.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -100,6 +106,12 @@ const AdminProduct = () => {
           (type) => product.typeNames && product.typeNames.includes(type)
         );
       return nameMatch && typeMatch;
+    });
+
+    return [...filtered].sort((a, b) => {
+      const dateA = new Date(a.dateOfCreation);
+      const dateB = new Date(b.dateOfCreation);
+      return dateB - dateA;
     });
   }, [listProduct, searchTerm, selectedTypes]);
 
@@ -145,6 +157,62 @@ const AdminProduct = () => {
       default:
         return "Mới";
     }
+  };
+
+  const handleModalOpen = (product) => {
+    console.log(product);
+    setSelectedKit(product);
+    setModalOpen(true);
+    setModalContent("delete");
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const renderModalContent = () => {
+    if (!selectedKit) return;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
+        <div className="bg-white p-6 rounded-lg max-w-md w-full">
+          {/* <h2 className="text-xl font-bold mb-4">{title}</h2> */}
+          <div className="mb-2">
+            <p className="text-center font-bold text-red-700 text-4xl">
+              Xác nhận xóa
+            </p>
+            <p className="text-center font-bold text-red-700 text-4xl">
+              {selectedKit.name}
+            </p>
+          </div>
+          {modalContent === "delete" ? (
+            <div className="flex justify-center gap-10">
+              <button
+                onClick={() =>
+                  handleDelete(selectedKit.kitId, selectedKit.name)
+                }
+                className="bg-green-400 text-black px-4 py-2 rounded hover:bg-green-500 font-semibold "
+              >
+                Xác nhận
+              </button>
+              <button
+                onClick={handleModalClose}
+                className="bg-red-400 text-black px-4 py-2 rounded hover:bg-red-500 font-semibold"
+              >
+                Hủy bỏ
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleModalClose}
+              className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-black hover:text-white "
+            >
+              Đóng
+            </button>
+          )}
+        </div>
+      </div>
+    );
   };
 
   const ProductItem = ({ item }) => {
@@ -204,7 +272,8 @@ const AdminProduct = () => {
 
               <button
                 title="Xóa"
-                onClick={() => handleDelete(item.kitId, item.name)}
+                // onClick={() => handleDelete(item.kitId, item.name)}
+                onClick={() => handleModalOpen(item)}
                 className="p-2 bg-white rounded-full hover:bg-gray-200 transition-colors transform hover:scale-110 duration-200"
               >
                 <Trash2 className="w-6 h-6 text-gray-800" />
@@ -263,6 +332,7 @@ const AdminProduct = () => {
                 <ProductItem key={item.kitId} item={item} /> //remove || index
               ))}
             </div>
+            {modalOpen && renderModalContent()}
             {/* Pagination */}
             <div className="flex justify-center mt-8">
               {[

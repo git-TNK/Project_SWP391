@@ -14,6 +14,8 @@ function AdminAccount() {
   const [selectedAccount, setselectedAccount] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [modalContent, setModalContent] = useState("");
+
   //loading
   const [loading, setLoading] = useState(false);
 
@@ -101,10 +103,11 @@ function AdminAccount() {
           });
         }
       }
-      setLoading(false);
     } catch (err) {
-      setLoading(false);
       console.log(`Error: ${err}`);
+    } finally {
+      setLoading(false);
+      setIsModalOpen(false);
     }
   };
 
@@ -141,15 +144,6 @@ function AdminAccount() {
 
   const closeNotification = () => {
     setNotification(null);
-  };
-
-  const handleModalOpen = (account) => {
-    setselectedAccount(account);
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
   };
 
   const handleFilterClickRole = () => {
@@ -193,28 +187,84 @@ function AdminAccount() {
     }
   };
 
+  const handleModalOpen = (account, content) => {
+    setselectedAccount(account);
+    setIsModalOpen(true);
+    setModalContent(content);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   const renderModalContent = () => {
     if (!selectedAccount) return null;
 
     let title, content;
-    title = "Địa chỉ";
-    content = selectedAccount.address ? (
-      <p className="mb-4">{selectedAccount.address}</p>
-    ) : (
-      <p className="mb-4 text-gray-500 italic">Chưa có địa chỉ</p>
-    );
+    switch (modalContent) {
+      case "address":
+        title = "Địa chỉ";
+        content = <p className="mb-4">{selectedAccount.address}</p>;
+        break;
+      case "banAcc":
+        title = "";
+        content = (
+          <div className="mb-2">
+            <p className="text-center font-bold text-red-700 text-3xl">
+              Xác nhận chặn tài khoản
+            </p>
+            <p className="text-center font-bold text-red-700 text-3xl">
+              {selectedAccount.username}
+            </p>
+          </div>
+        );
+        break;
+      case "unBanAcc":
+        title = "";
+        content = (
+          <div className="mb-2">
+            <p className="text-center font-bold text-red-700 text-3xl">
+              Xác nhận gỡ chặn tài khoản
+            </p>
+            <p className="text-center font-bold text-red-700 text-3xl">
+              {selectedAccount.username}
+            </p>
+          </div>
+        );
+        break;
+      default:
+        title = "";
+        content = null;
+    }
 
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[100]">
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
           <h2 className="text-xl font-bold mb-4">{title}</h2>
           {content}
-          <button
-            onClick={handleModalClose}
-            className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-black hover:text-white"
-          >
-            Đóng
-          </button>
+          {modalContent === "address" ? (
+            <button
+              onClick={handleModalClose}
+              className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-black hover:text-white"
+            >
+              Đóng
+            </button>
+          ) : (
+            <div className="flex justify-center gap-10">
+              <button
+                onClick={() => handleBanningAcc(selectedAccount)}
+                className="bg-green-400 text-black px-4 py-2 rounded hover:bg-green-500 font-semibold"
+              >
+                Xác nhận
+              </button>
+              <button
+                onClick={handleModalClose}
+                className="bg-red-400 text-black px-4 py-2 rounded hover:bg-red-500 font-semibold"
+              >
+                Hủy bỏ
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -384,7 +434,7 @@ function AdminAccount() {
                       <td className="py-2 px-4 ">
                         {account.address ? (
                           <button
-                            onClick={() => handleModalOpen(account)}
+                            onClick={() => handleModalOpen(account, "address")}
                             className="text-blue-500 hover:text-blue-700"
                           >
                             Xem địa chỉ
@@ -423,14 +473,16 @@ function AdminAccount() {
                         {account.status === "Active" ? (
                           <button
                             className="bg-green-500 w-24 py-1 px-2  text-white rounded-lg"
-                            onClick={() => handleBanningAcc(account)}
+                            // onClick={() => handleBanningAcc(account)}
+                            onClick={() => handleModalOpen(account, "banAcc")}
                           >
                             Hoạt động
                           </button>
                         ) : (
                           <button
                             className="bg-red-500 w-24 py-1 px-2  text-white rounded-lg"
-                            onClick={() => handleBanningAcc(account)}
+                            // onClick={() => handleBanningAcc(account)}
+                            onClick={() => handleModalOpen(account, "unBanAcc")}
                           >
                             Bị chặn
                           </button>

@@ -81,18 +81,18 @@ function AdminHeader() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <NavLink to="/view-profile">
+              <button className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28">
+                {displayAccount === null ? "" : `${displayAccount.fullName}`}
+              </button>
+            </NavLink>
+
             <button
               onClick={handleLogOut}
               className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28"
             >
               <NavLink to="/">Đăng xuất</NavLink>
             </button>
-
-            <NavLink to="/view-profile">
-              <button className="rounded-lg cursor-pointer bg-gray-300 text-black font-semibold hover:bg-black hover:text-white h-10 w-28">
-                {displayAccount === null ? "" : `${displayAccount.userName}`}
-              </button>
-            </NavLink>
           </div>
         </div>
       </header>

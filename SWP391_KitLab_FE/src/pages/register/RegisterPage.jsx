@@ -36,17 +36,34 @@ function RegisterPage() {
 
   const validateForm = () => {
     const newErrors = {};
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const whitespaceRegex = /\s/;
+    const nameRegex = /^[a-zA-ZÀ-ỹ\s]+$/;
+    const isOnlyNumbers = /^\d+$/;
+    const latinOnlyRegex = /^[a-zA-Z0-9]+$/;
 
     if (!formData.userName) {
       newErrors.userName = "Tên đăng ký là bắt buộc.";
-    } else if (formData.userName.trim().length === 0) {
-      newErrors.userName = "Tên đăng ký không thể chỉ chứa khoảng trắng.";
+    } else if (whitespaceRegex.test(formData.userName)) {
+      newErrors.userName = "Tên đăng ký không thể chứa khoảng trắng.";
+    } else if (specialCharRegex.test(formData.userName)) {
+      newErrors.userName = "Tên đăng ký không được chứa ký tự đặc biệt.";
+    } else if (isOnlyNumbers.test(formData.userName)) {
+      newErrors.userName = "Tên đăng ký không được chỉ là số.";
+    } else if (formData.userName.trim().length > 49) {
+      newErrors.userName = "Tên đăng ký chỉ được dài 50 kí tự";
+    } else if (!latinOnlyRegex.test(formData.userName.trim())) {
+      newErrors.userName = "Tên đăng kí chỉ chỉ được chứa chữ cái không dấu";
+    } else if (formData.userName.trim().length < 5) {
+      newErrors.userName = "Tên đăng kí phải có ít nhất 5 kí tự";
     }
 
     if (!formData.fullName) {
       newErrors.fullName = "Họ và tên là bắt buộc.";
     } else if (formData.fullName.trim().length === 0) {
       newErrors.fullName = "Họ và tên không thể chỉ chứa khoảng trắng.";
+    } else if (!nameRegex.test(formData.fullName)) {
+      newErrors.fullName = "Họ và tên chỉ được chứa chữ cái.";
     }
 
     if (!formData.email) {
@@ -69,6 +86,8 @@ function RegisterPage() {
       newErrors.password = "Mật khẩu không thể chỉ chứa khoảng trắng.";
     } else if (formData.password.length < 6) {
       newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
+    } else if (formData.password.length > 49) {
+      newErrors.password = "Mật khẩu phải ít hơn 50 ký tự.";
     }
 
     if (!formData.confirmPassword) {
@@ -378,7 +397,6 @@ function RegisterPage() {
         </div>
       )}
 
-      <Footer />
       <FeedbackModal
         isOpen={isModalOpen}
         onClose={handleModalClose}

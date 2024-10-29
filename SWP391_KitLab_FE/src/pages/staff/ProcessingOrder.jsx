@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
 import Footer from "../../Footer";
@@ -11,12 +11,23 @@ function ProcessingOrder() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
+  const [accountList, setAccountList] = useState([]);
 
   // Fetch the list of orders from the API
   async function fetchListOrders() {
     try {
       const response = await axios.get(`http://localhost:5056/Order`);
       setListOrders(response.data);
+    } catch (err) {
+      console.error("Failed to fetch orders:", err);
+    }
+  }
+
+  //fetch list account for mapping with accountId
+  async function fetchListAccount() {
+    try {
+      const response = await axios.get(`http://localhost:5056/api/Account`);
+      setAccountList(response.data);
     } catch (err) {
       console.error("Failed to fetch orders:", err);
     }
@@ -38,8 +49,25 @@ function ProcessingOrder() {
     }
   }
 
+  const handleDisplayAccountUsername = (accId) => {
+    const account = accountList.find((acc) => acc.accountId === accId);
+    return account ? account.userName : "Unknown user";
+  };
+
+  const filteredOrder = useMemo(() => {
+    return listOrders.sort((a, b) => {
+      const dateA = new Date(a.orderDate);
+      const dateB = new Date(b.orderDate);
+      return dateB - dateA;
+    });
+  }, [listOrders]);
+
   useEffect(() => {
-    fetchListOrders();
+    const fetchData = async () => {
+      await fetchListOrders();
+      await fetchListAccount();
+    };
+    fetchData();
   }, []);
 
   async function fetchListOrderDetail(orderId) {
@@ -61,8 +89,8 @@ function ProcessingOrder() {
     }
   }
 
-  const handleViewOrderDetail = (orderId) => {
-    fetchListOrderDetail(orderId);
+  const handleViewOrderDetail = async (orderId) => {
+    await fetchListOrderDetail(orderId);
     setIsModalOpen(true);
     setSelectedOrderId(orderId);
   };
@@ -96,37 +124,52 @@ function ProcessingOrder() {
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr className="bg-indigo-500 text-white">
-                  <th className="border px-4 py-3 text-left">ID đơn hàng</th>
-                  <th className="border px-4 py-3 text-left">Tài khoản đặt</th>
-                  <th className="border px-4 py-3 text-left">Sản phẩm</th>
-                  <th className="border px-4 py-3 text-left">Tổng tiền</th>
-                  <th className="border px-4 py-3 text-left">Ngày đặt</th>
-                  <th className="border px-4 py-3 text-left">Địa chỉ</th>
-                  <th className="border px-4 py-3 text-center">Trạng thái</th>
-                  <th className="border px-4 py-3 text-center">Đã Nhận</th>
+                  <th className="border px-4 py-3 text-left w-40">
+                    ID đơn hàng
+                  </th>
+                  <th className="border px-4 py-3 text-left w-40">
+                    Tài khoản đặt
+                  </th>
+                  <th className="border px-4 py-3 text-left w-32">Sản phẩm</th>
+                  <th className="border px-4 py-3 text-left w-36">Tổng tiền</th>
+                  <th className="border px-4 py-3 text-left w-32">Ngày đặt</th>
+                  <th className="border px-4 py-3 text-left w-32">Địa chỉ</th>
+                  <th className="border px-4 py-3 text-center w-40">
+                    Trạng thái
+                  </th>
+                  <th className="border px-4 py-3 text-center w-48">Đã Nhận</th>
                 </tr>
               </thead>
               <tbody>
-                {listOrders.map((order) => (
+                {filteredOrder.map((order) => (
                   <tr
                     key={order.orderId}
                     className="hover:bg-gray-100 transition-colors duration-300"
                   >
                     <td className="border px-4 py-3">{order.orderId}</td>
-                    <td className="border px-4 py-3">{order.accountId}</td>
+                    <td className="border px-4 py-3">
+                      {handleDisplayAccountUsername(order.accountId)}
+                    </td>
                     <td className="border px-4 py-3">
                       <button
                         className="text-blue-600 hover:underline"
                         onClick={() => handleViewOrderDetail(order.orderId)}
                       >
-                        Bấm vào để xem chi tiết
+                        Chi tiết đơn
                       </button>
                     </td>
-                    <td className="border px-4 py-3">{order.price}</td>
-                    <td className="border px-4 py-3">
-                      {order.orderDate.split("T").join(" ")}
+                    <td className="border px-4 py-3 text-right">
+                      {order.price.toLocaleString()}đ
                     </td>
-                    <td className="border px-4 py-3">{order.address}</td>
+                    {order.orderDate && (
+                      <td className="border px-4 py-3">
+                        {order.orderDate.split("T")[0]}
+                      </td>
+                    )}
+
+                    <td className="border px-4 py-3" title={order.address}>
+                      <p className="w-32 truncate">{order.address}</p>
+                    </td>
                     <td className="border px-4 py-3 text-center">
                       <button
                         className={`${
@@ -194,16 +237,20 @@ function ProcessingOrder() {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="py-2 px-4 text-left">Tên Kit</th>
-                    <th className="py-2 px-4 text-left">Giá Tiền</th>
-                    <th className="py-2 px-4 text-left">Số Lượng</th>
+                    <th className="py-2 px-4 text-right">Giá Tiền</th>
+                    <th className="py-2 px-4 text-right">Số Lượng</th>
                   </tr>
                 </thead>
                 <tbody>
                   {listOrderDetail.map((detail, index) => (
                     <tr key={index} className="border-b">
                       <td className="py-2 px-4">{detail.kitName}</td>
-                      <td className="py-2 px-4">{detail.price} VND</td>
-                      <td className="py-2 px-4">{detail.kitQuantity}</td>
+                      <td className="py-2 px-4 text-right">
+                        {detail.price.toLocaleString()}đ
+                      </td>
+                      <td className="py-2 px-4 text-right">
+                        {detail.kitQuantity}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

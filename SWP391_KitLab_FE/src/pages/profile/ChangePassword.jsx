@@ -1,24 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
+import { NavLink, useNavigate } from "react-router-dom"; // Import the useNavigate hook
 import Header from "../Header";
 import Footer from "../../Footer";
+import LoadingSpinner from "../admin/loading";
+import FeedbackModal from "../admin/feedback-modal";
+import AdminHeader from "../admin/admin-header";
+import { ArrowLeft } from "lucide-react";
+import StaffHeader from "../staff/StaffHeader";
 
 function ChangePassword() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate(); // Initialize navigate hook
+  const [isLoading, setIsLoading] = useState(false);
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  //role check for page access
+  const [roleCheck, setRoleCheck] = useState(true);
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
     if (savedAccount) {
       setAccount(savedAccount);
+      setRoleCheck(false);
     }
   }, []);
 
   useEffect(() => {
-    if (account && account.role !== "Customer") {
+    if (account && roleCheck) {
       navigate("*");
     }
-  }, [account, navigate]);
+  }, [account, navigate, roleCheck]);
 
   const [passwords, setPasswords] = useState({
     accountId: "",
@@ -41,6 +54,21 @@ function ChangePassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (passwords.oldPassword.length === 0) {
+      setError("Khung mật khẩu cũ không được để trống");
+      return;
+    }
+
+    if (passwords.newPassword.length < 6) {
+      setError("Mật khẩu mới phải có ít nhất 6 kí tự");
+      return;
+    }
+
+    if (passwords.newPassword.length === 0) {
+      setError("Khung mật khẩu mới không được để trống");
+      return;
+    }
+
     // Kiểm tra mật khẩu mới và cũ giống nhau
     if (passwords.newPassword === passwords.oldPassword) {
       setError("Mật khẩu mới và cũ giống nhau.");
@@ -54,7 +82,7 @@ function ChangePassword() {
     }
 
     setError(""); // Xóa thông báo lỗi cũ
-
+    setIsLoading(true);
     try {
       const response = await fetch(
         "http://localhost:5056/api/Account/ChangePassword",
@@ -73,27 +101,64 @@ function ChangePassword() {
 
       if (response.ok) {
         setSuccess("Đổi mật khẩu thành công.");
+
         account.password = passwords.newPassword;
         setAccount(account);
+
+        setModalMessage("Đổi mật khẩu thành công.");
+        setIsSuccess(true);
+
         // Điều hướng sau 2 giây
-        setTimeout(() => {
-          navigate("/view-profile", {
-            state: { message: "Đổi mật khẩu thành công." },
-          });
-        }, 2000);
+        // setTimeout(() => {
+        //   navigate("/view-profile", {
+        //     state: { message: "Đổi mật khẩu thành công." },
+        //   });
+        // }, 2000);
       } else {
         const errorData = await response.text();
         setError(errorData || "Sai mật khẩu cũ hoặc có lỗi xảy ra.");
+        setModalMessage("Mật khẩu cũ không đúng.");
+        setIsSuccess(false);
       }
     } catch (err) {
       console.error("Error:", err);
       setError("Lỗi kết nối. Vui lòng thử lại sau.");
+      // setModalMessage("Lỗi kết nối. Vui lòng thử lại sau.");
+      // setIsSuccess(false);
+    }
+    setIsLoading(false);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    if (isSuccess) {
+      navigate("/view-profile"); // Replace '/main-page' with your actual main page route
     }
   };
 
+  if (!account) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div>
-      <Header />
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      {account.role === "Customer" ? (
+        <Header />
+      ) : (
+        <div>
+          {account.role === "Admin" ? <AdminHeader /> : <StaffHeader />}
+
+          <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
+          <NavLink
+            to={account.role === "Admin" ? "/admin/product" : "/staff"}
+            className="mt-3 flex items-center rounded-lg cursor-pointer bg-gray-300 text-black font-bold hover:bg-black hover:text-white h-8 w-56 text-base px-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span className="ml-2">Quay về trang chính</span>
+          </NavLink>
+        </div>
+      )}
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-3xl mx-auto px-4">
           <h1 className="text-3xl font-bold text-center mt-8 text-gray-800">
@@ -166,6 +231,13 @@ function ChangePassword() {
           </div>
         </div>
       </div>
+      <FeedbackModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        message={modalMessage}
+        isSuccess={isSuccess}
+      />
+      {isLoading && <LoadingSpinner />}
       <Footer />
     </div>
   );

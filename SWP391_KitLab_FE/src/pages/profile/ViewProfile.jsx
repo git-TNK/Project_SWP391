@@ -4,12 +4,29 @@ import Footer from "../../Footer";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import AdminHeader from "../admin/admin-header";
 import Sidebar from "../admin/sidebar";
-import { ArrowLeft } from "lucide-react";
+import StaffHeader from "../staff/StaffHeader";
+
+import {
+  ArrowLeft,
+  User,
+  Mail,
+  Phone,
+  Home,
+  UserCircle,
+  Lock,
+  Edit,
+  UserCheck,
+  EyeOff,
+  EyeClosed,
+  Eye,
+} from "lucide-react";
 
 function ViewProfile() {
   const [account, setAccount] = useState(null);
   const navigate = useNavigate();
-  const [roleCheck, setRoleCheck] = useState(true); //bình thêm
+  const [roleCheck, setRoleCheck] = useState(true);
+  const [passwordReveal, setPasswordReveal] = useState(false);
+  // const [passwordState, setPasswodState] = useState("hide");
 
   useEffect(() => {
     const savedAccount = JSON.parse(localStorage.getItem("account"));
@@ -19,57 +36,48 @@ function ViewProfile() {
     }
   }, []);
 
-  //Bình đã đổi để có thể cho staff và admin vô xem profile và edit
   useEffect(() => {
-    console.log("empty");
     if (account && roleCheck) {
       navigate("*");
     }
   }, [roleCheck, account, navigate]);
 
-  // Chỉ render giao diện khi account đã được lấy
   if (!account) {
-    return <div>Loading...</div>; // Hoặc có thể hiển thị spinner hoặc một thông báo khác
+    return <div>Loading...</div>;
   }
+
+  const handleViewPassword = () => {
+    if (passwordReveal === true) {
+      setPasswordReveal(false);
+    } else {
+      setPasswordReveal(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Thêm logic, nếu customer thì header của customer, còn admin + staff thì header admin */}
       {account.role === "Customer" ? (
         <Header />
       ) : (
         <div>
-          <AdminHeader />
+          {account.role === "Admin" ? <AdminHeader /> : <StaffHeader />}
+
           <hr className="w-full h-px border-0 bg-[#0a0a0a]" />
           <NavLink
             to={account.role === "Admin" ? "/admin/product" : "/staff"}
-            className={
-              "mt-3 flex rounded-lg cursor-pointer bg-gray-300 text-black font-bold hover:bg-black hover:text-white h-8 w-48 text-base"
-            }
+            className="mt-3 flex items-center rounded-lg cursor-pointer bg-gray-300 text-black font-bold hover:bg-black hover:text-white h-8 w-56 text-base px-2"
           >
-            <ArrowLeft width={"25px"} height={"25px"} className="pt-2" />
-            <span className="pt-1">Quay về trang chính</span>
+            <ArrowLeft className="h-5 w-5" />
+            <span className="ml-2">Quay về trang chính</span>
           </NavLink>
         </div>
       )}
 
-      <div className="flex-grow flex items-center justify-center pb-10">
+      <div className="pt-6 flex-grow flex items-center justify-center pb-10">
         <div className="bg-white text-black rounded-xl p-8 shadow-md w-full max-w-lg">
           <div className="flex flex-col items-center mb-6">
             <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-gray-600"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
+              <UserCircle className="h-16 w-16 text-gray-600" />
             </div>
             <h2 className="text-2xl font-bold">{account.fullName}</h2>
           </div>
@@ -78,20 +86,48 @@ function ViewProfile() {
             {/* Name */}
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5.121 17.804A4 4 0 018 16h8a4 4 0 012.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                <UserCheck className="h-6 w-6 text-gray-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Tên tài khoản</p>
+                <p className="font-bold">{account.userName}</p>
+              </div>
+            </div>
+
+            {/* Name */}
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
+                <Lock className="h-6 w-6 text-gray-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Mật khẩu</p>
+                {passwordReveal === true ? (
+                  <div className="flex gap-2 w-96">
+                    <p
+                      className="font-bold truncate"
+                      title={`${account.password}`}
+                    >
+                      {account.password}
+                    </p>
+                    <button onClick={() => handleViewPassword()}>
+                      <Eye className="h-6 w-6 text-gray-600" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2 w-96">
+                    <p>******</p>
+                    <button onClick={() => handleViewPassword()}>
+                      <EyeClosed className="h-6 w-6 text-gray-600" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Name */}
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
+                <User className="h-6 w-6 text-gray-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Họ và tên</p>
@@ -102,19 +138,7 @@ function ViewProfile() {
             {/* Email */}
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-600"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 4h16v16H4z" fill="none" stroke="#000" />
-                  <path d="M22 6L12 13 2 6" stroke="#000" />
-                </svg>
+                <Mail className="h-6 w-6 text-gray-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Email</p>
@@ -125,18 +149,7 @@ function ViewProfile() {
             {/* Phone Number */}
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-600"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M22 16.92V20a2 2 0 01-2.18 2A19.72 19.72 0 012 4.18 2 2 0 014 2h3.09a2 2 0 012 1.72 12.45 12.45 0 00.65 2.81 2 2 0 01-.45 2.11L7.15 10.85a16 16 0 008 8l2.2-2.2a2 2 0 012.11-.45 12.45 12.45 0 002.81.65 2 2 0 011.72 2.03z" />
-                </svg>
+                <Phone className="h-6 w-6 text-gray-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Số điện thoại</p>
@@ -147,20 +160,7 @@ function ViewProfile() {
             {/* Address */}
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.94 2.94a1.5 1.5 0 012.12 0l7 7a1.5 1.5 0 01.44 1.06V19.5A1.5 1.5 0 0119 21h-2a1.5 1.5 0 01-1.5-1.5v-3a1.5 1.5 0 00-1.5-1.5h-6A1.5 1.5 0 006 16.5v3A1.5 1.5 0 014.5 21h-2A1.5 1.5 0 011 19.5v-8.5a1.5 1.5 0 01.44-1.06l7-7z"
-                  />
-                </svg>
+                <Home className="h-6 w-6 text-gray-600" />
               </div>
               <div>
                 <p className="text-sm text-gray-500">Địa chỉ</p>
@@ -169,13 +169,20 @@ function ViewProfile() {
             </div>
           </div>
 
-          <button className="mt-6 bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full">
-            <Link to="/changepassword">Đổi mật khẩu</Link>
-          </button>
+          <NavLink to="/changepassword">
+            <button className="mt-6 bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full flex items-center justify-center">
+              <Lock className="h-5 w-5 mr-2" />
+              Đổi mật khẩu
+            </button>
+          </NavLink>
 
-          <button className="mt-6 bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full">
-            <Link to="/edit-profile">Cập nhật Thông tin</Link>
-          </button>
+          {/* edit profile */}
+          {/* <NavLink to="/edit-profile">
+            <button className="mt-6 bg-black hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg w-full flex items-center justify-center">
+              <Edit className="h-5 w-5 mr-2" />
+              Cập nhật Thông tin
+            </button>
+          </NavLink> */}
         </div>
       </div>
 

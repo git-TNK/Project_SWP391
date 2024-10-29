@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function StaffHeader() {
   const [account, setAccount] = useState(null);
@@ -15,7 +15,8 @@ function StaffHeader() {
       setAccount(savedAccount);
     }
     if (savedAccount && savedAccount.role !== "Staff") {
-      navigate("*");
+      //cho url trang 404 dễ nhìn hơn
+      navigate("/*");
     }
   }, [navigate]);
 
@@ -49,11 +50,15 @@ function StaffHeader() {
         </div>
 
         {/* Thông tin tài khoản và Đăng xuất */}
-        <div className="flex items-center space-x-2">
-          <button className="px-4 py-1 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
-            {account ? account.fullName : <img src="" alt="Avatar" />}
-          </button>
-          <span className="text-gray-400">hoặc</span>
+        {/* Bình thêm gap-3 và xóa hoặc */}
+        <div className="flex items-center space-x-2 gap-3">
+          {/* Bình thêm navlink đến link view profile khi bấm vô tên */}
+          <NavLink to="/view-profile">
+            <button className="px-4 py-1 bg-gray-700 rounded hover:bg-gray-600 transition-colors">
+              {account ? account.fullName : <img src="" alt="Avatar" />}
+            </button>
+          </NavLink>
+          {/* <span className="text-gray-400">hoặc</span> */}
           <button
             className="px-4 py-1 bg-gray-700 rounded hover:bg-gray-600 transition-colors"
             onClick={handleLogout}
