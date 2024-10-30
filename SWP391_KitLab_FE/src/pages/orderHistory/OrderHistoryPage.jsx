@@ -250,7 +250,17 @@ function OrderHistoryPage() {
                       })
                       .map((lab) => (
                         <li key={lab.labId} className="mb-1">
-                          {lab.name}
+                          <span>{lab.name}</span>
+                          {lab.document && (
+                            <a
+                              href={lab.document}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-2 text-blue-500 underline"
+                            >
+                              Xem tài liệu
+                            </a>
+                          )}
                         </li>
                       ))}
                   </ul>
