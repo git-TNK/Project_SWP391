@@ -71,6 +71,13 @@ namespace KLM.APIService.Controllers
 
             string questionId = "Q" + (new Random().Next(000, 999));
             List<QuestionTbl> listQuestionByAcc = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(acccountId);
+            bool checkId = false;
+            do
+            {
+                checkId = false;
+                checkId = listQuestionByAcc.Select(q => q.QuestionId.Equals(questionId)).FirstOrDefault();
+                questionId = "Q" + (new Random().Next(000, 999));
+            } while (checkId);
             if (listQuestionByAcc.Any())
             {
                 List<DateTime> listQuestionDateByAcc = listQuestionByAcc.Select(x => x.DateOfQuestion).ToList();
@@ -86,10 +93,6 @@ namespace KLM.APIService.Controllers
                                 return BadRequest("Bạn đã hết lượt hỏi");
                             }
                             minTurn = x.Turn - 1;
-                        }
-                        if (x.QuestionId.Equals(questionId))
-                        {
-                            questionId = "Q" + (new Random().Next(000, 999));
                         }
                     }
                 }
