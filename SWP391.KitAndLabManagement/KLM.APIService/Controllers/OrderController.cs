@@ -31,13 +31,20 @@ namespace KLM.APIService.Controllers
             List<OrderTbl> listCheckOrderId = await GetOrder();
             OrderTbl newOrder = new OrderTbl();
             newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
-            foreach (var x in listCheckOrderId)
+            bool checkDuplicateOrdID;
+            do
             {
-                if (x.OrderId.Equals(newOrder.OrderId))
+                checkDuplicateOrdID = false;
+                foreach (var item in listCheckOrderId)
                 {
-                    newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
+                    if (item.OrderId.Equals(newOrder.OrderId))
+                    {
+                        newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
+                        checkDuplicateOrdID = true;
+                        break;
+                    }
                 }
-            }
+            } while (checkDuplicateOrdID);
             newOrder.AccountId = accountId;
             newOrder.Note = note;
             newOrder.Address = address;
