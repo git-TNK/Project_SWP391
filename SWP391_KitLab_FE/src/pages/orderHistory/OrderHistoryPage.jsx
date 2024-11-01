@@ -10,6 +10,8 @@ function OrderHistoryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
+  const [allLabs, setAllLabs] = useState([]);
+  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -125,11 +127,94 @@ function OrderHistoryPage() {
     }
   }
 
+  // New function to fetch all labs
+  const fetchAllLabs = useCallback(async () => {
+    try {
+      const labs = new Set(); // Use Set to hold unique lab names
+      for (const order of listOrder) {
+        const response = await fetch(
+          `http://localhost:5056/api/OrderDetail/${order.orderId}`
+        );
+        const orderDetails = await response.json();
+
+        for (const detail of orderDetails) {
+          const productResponse = await fetch(
+            `http://localhost:5056/Product/${detail.kitId}`
+          );
+          const productData = await productResponse.json();
+
+          productData.labs.forEach((lab) => {
+            const orderDate = new Date(order.orderDate);
+            const isNotDeleted =
+              !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
+            const isCreatedBeforeOrder =
+              new Date(lab.dateOfCreation) < orderDate;
+
+            // Only add valid labs' names to the Set
+            if (isNotDeleted && isCreatedBeforeOrder) {
+              labs.add(lab.name); // Add lab name directly to ensure uniqueness
+            }
+          });
+        }
+      }
+
+      // Convert Set back to array of unique lab names
+      const uniqueLabNames = Array.from(labs);
+      localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
+
+      setAllLabs(uniqueLabNames); // Set unique lab names for display
+      setIsLabModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching labs:", error);
+    }
+  }, [listOrder]);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Lịch sử đặt hàng</h2>
+        <button
+          onClick={fetchAllLabs}
+          className="bg-gray-200 p-2 rounded text-center text-lg mt-4"
+        >
+          Xem các bài lab
+        </button>
+
+        {/* Lab Modal */}
+        {isLabModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg shadow-lg w-3/4 md:w-1/2">
+              <div className="flex justify-between items-center p-4 border-b">
+                <h3 className="text-lg font-bold">Tất cả các bài lab</h3>
+                <button
+                  className="text-gray-500 hover:text-gray-800"
+                  onClick={() => setIsLabModalOpen(false)}
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto max-h-96">
+                <ul>
+                  {allLabs.map((labName, index) => (
+                    <li key={index} className="mb-1">
+                      <span>{labName}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex justify-end p-4 border-t">
+                <button
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                  onClick={() => setIsLabModalOpen(false)}
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
             <thead className="bg-gray-100">
