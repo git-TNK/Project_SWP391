@@ -256,7 +256,7 @@ function ProcessingOrder() {
                 </tbody>
               </table>
 
-              {productDetails && (
+              {/* {productDetails && (
                 <div className="mt-6">
                   <h4 className="text-lg font-bold mb-2">Labs:</h4>
                   <ul>
@@ -283,7 +283,7 @@ function ProcessingOrder() {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
             </div>
             <div className="p-4 border-t flex justify-end">
               <button

@@ -102,8 +102,11 @@ function ChangePassword() {
       if (response.ok) {
         setSuccess("Đổi mật khẩu thành công.");
 
-        account.password = passwords.newPassword;
-        setAccount(account);
+        // account.password = passwords.newPassword;
+        // setAccount(account);
+        const updatedAccount = JSON.parse(localStorage.getItem("account"));
+        updatedAccount.password = passwords.newPassword;
+        localStorage.setItem("account", JSON.stringify(updatedAccount));
 
         setModalMessage("Đổi mật khẩu thành công.");
         setIsSuccess(true);

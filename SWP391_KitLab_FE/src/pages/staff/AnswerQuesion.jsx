@@ -56,6 +56,24 @@ function AnswerQuestion() {
     }
   };
 
+  const getLabNameFromLink = (url) => {
+    const parts = url.split("/");
+    const fileNameWithParams = parts[parts.length - 1];
+    const fileName = fileNameWithParams.split("?")[0];
+
+    // Decode the filename to handle any URL encoding
+    const decodedFileName = decodeURIComponent(fileName);
+
+    // Remove the timestamp if it exists (assuming it's separated by an underscore)
+    const nameWithoutTimestamp = decodedFileName.split("_")[0];
+
+    const finalName = nameWithoutTimestamp.split("/").pop();
+
+    const nameWithoutFileType = finalName.split(".")[0];
+
+    return nameWithoutFileType;
+  };
+
   // Chọn câu hỏi
   const handleSelectQuestion = (question) => {
     setSelectedQuestion(question);
@@ -84,7 +102,7 @@ function AnswerQuestion() {
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr className="bg-indigo-500 text-white">
-                  <th className="border px-4 py-3 text-left">ID Tài Khoản</th>
+                  <th className="border pl-4 py-3 text-left">ID Tài Khoản</th>
                   <th className="border px-4 py-3 text-left">Câu Hỏi</th>
                   <th className="border px-4 py-3 text-left">Tên Bài Lab</th>
                   <th className="border px-4 py-3 text-left">File Đính Kèm</th>
@@ -99,9 +117,17 @@ function AnswerQuestion() {
                       key={rowIndex}
                       className="hover:bg-gray-100 transition-colors duration-300"
                     >
-                      <td className="border px-4 py-3">{row.accountId}</td>
-                      <td className="border px-4 py-3">{row.question}</td>
-                      <td className="border px-4 py-3">{row.labName}</td>
+                      <td className="border pl-4 py-3">{row.accountId}</td>
+                      <td className="border px-4 py-3">
+                        <p className="w-80 truncate" title={row.question}>
+                          {row.question}
+                        </p>
+                      </td>
+                      <td className="border px-4 py-3">
+                        <p className="w-44 truncate" title={row.labName}>
+                          {row.labName}
+                        </p>
+                      </td>
                       <td className="border px-4 py-3">
                         {" "}
                         <a
@@ -109,9 +135,9 @@ function AnswerQuestion() {
                           className="text-blue-500 hover:text-blue-800"
                           target="_blank"
                           rel="noopener noreferrer"
-                          title={row.labName}
+                          title={getLabNameFromLink(row.attachedFile)}
                         >
-                          Link của lab
+                          File của câu hỏi
                         </a>{" "}
                       </td>
                       <td className="border px-4 py-3 text-center">

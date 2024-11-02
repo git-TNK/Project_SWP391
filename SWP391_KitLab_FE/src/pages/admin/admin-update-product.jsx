@@ -8,7 +8,7 @@ import FeedbackModal from "./feedback-modal";
 import LoadingSpinner from "./loading";
 import axios from "axios";
 
-const brandOptions = ["Arduino", "Rasberry pi", "Nanode"];
+const brandOptions = ["Arduino", "Rasberry pi", "KEYESTUDIO", "OSOYOO"];
 const typeOptions = [
   "Wifi",
   "Wireless",
@@ -294,6 +294,7 @@ function UpdateProduct() {
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
                       min="1"
+                      max="100000"
                       onWheel={(e) => e.target.blur()}
                     />
                     {errors.quantity && (
@@ -314,6 +315,7 @@ function UpdateProduct() {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       min="1000"
+                      max="10000000"
                       onWheel={(e) => e.target.blur()}
                     />
                     {errors.price && (
@@ -329,7 +331,7 @@ function UpdateProduct() {
                     {/* Chọn hãng */}
                     <div>
                       <p className="font-bold mb-2">Hãng</p>
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
                         {brandOptions.map((option) => (
                           <button
                             key={option}

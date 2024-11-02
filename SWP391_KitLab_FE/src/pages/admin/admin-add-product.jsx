@@ -8,7 +8,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import LoadingSpinner from "./loading";
 import axios from "axios";
 
-const brandOptions = ["Arduino", "Rasberry pi", "Nanode"];
+const brandOptions = ["Arduino", "Rasberry pi", "KEYESTUDIO", "OSOYOO"];
 const typeOptions = [
   "Wifi",
   "Wireless",
@@ -263,6 +263,7 @@ function AddProduct() {
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
                       min="1"
+                      max="100000"
                       onWheel={(e) => e.target.blur()}
                     />
                     {errors.quantity && (
@@ -281,6 +282,7 @@ function AddProduct() {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       min="1000"
+                      max="100000000"
                       onWheel={(e) => e.target.blur()}
                     />
                     {errors.price && (
@@ -296,7 +298,7 @@ function AddProduct() {
                     {/* Hãng */}
                     <div>
                       <p className="font-bold mb-2">Hãng</p>
-                      <div className="flex gap-2 mb-4">
+                      <div className="flex flex-wrap gap-2 mb-4">
                         {brandOptions.map((option) => (
                           <button
                             key={option}

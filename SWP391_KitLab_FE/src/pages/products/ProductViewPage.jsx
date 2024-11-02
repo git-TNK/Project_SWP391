@@ -115,7 +115,7 @@ function ProductViewPage() {
       <div className="flex p-4">
         <aside className="w-64 p-4 bg-white shadow-lg rounded-lg mr-6">
           <p className="w-full bg-black text-white p-3 mb-4 hover:bg-gray-800 transition-colors duration-200 text-center font-bold rounded-lg">
-            Danh mục sản phẩm
+            Các hãng sản phẩm
           </p>
           <ul className="space-y-2">
             {brands.map((brand, index) => (
@@ -158,7 +158,7 @@ function ProductViewPage() {
                     <div className="p-4 flex flex-col flex-grow">
                       <p className="text-lg font-semibold mb-2">{item.name}</p>
                       <p className="text-red-600 font-bold mb-4">
-                        {item.price.toLocaleString()} VND
+                        {item.price.toLocaleString()} đ
                       </p>
                       <button className="mt-auto w-full bg-gray-200 text-black py-2 px-4 rounded hover:bg-black hover:text-white transition duration-300 font-medium">
                         MUA HÀNG

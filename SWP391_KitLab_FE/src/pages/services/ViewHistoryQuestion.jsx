@@ -88,7 +88,7 @@ function ViewHistoryQuestion() {
       <Header />
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">
-          Danh Sách Câu Hỏi Và Trả Lời:
+          Danh Sách Câu Hỏi Và Trả Lời
         </h2>
 
         {/* Hiển thị lượt hỏi còn lại */}
@@ -115,8 +115,16 @@ function ViewHistoryQuestion() {
                 const answer = findAnswerByQuestionId(q.questionId);
                 return (
                   <tr key={index} className="border-b">
-                    <td className="px-4 py-2">{q.question}</td>
-                    <td className="px-4 py-2">{q.labName}</td>
+                    <td className="px-4 py-2">
+                      <p className="w-32 truncate" title={q.question}>
+                        {q.question}
+                      </p>
+                    </td>
+                    <td className="px-4 py-2">
+                      <p className="w-20 truncate" title={q.labName}>
+                        {q.labName}
+                      </p>
+                    </td>
                     <td className="px-4 py-2">
                       <a
                         href={q.attachedFile}
@@ -128,7 +136,12 @@ function ViewHistoryQuestion() {
                       </a>
                     </td>
                     <td className="px-4 py-2">
-                      {answer?.answer || "Chưa có câu trả lời"}
+                      <p
+                        className="w-32 truncate"
+                        title={answer?.answer || "Chưa có câu trả lời"}
+                      >
+                        {answer?.answer || "Chưa có câu trả lời"}
+                      </p>
                     </td>
                     <td className="px-4 py-2">
                       {answer?.attachedFile ? (
