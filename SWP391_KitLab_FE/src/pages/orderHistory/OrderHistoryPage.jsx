@@ -29,7 +29,7 @@ function OrderHistoryPage() {
 
   const fetchListOrderDetail = useCallback(
     async (orderId) => {
-      if (!orderId) return; // Tránh gọi nếu không có orderId
+      if (!orderId) return;
 
       try {
         const response = await fetch(
@@ -38,7 +38,6 @@ function OrderHistoryPage() {
         const data = await response.json();
         setListOrderDetail(data);
 
-        // Fetch product details for each kit in the order details
         if (data.length > 0) {
           const productResponse = await fetch(
             `http://localhost:5056/Product/${data[0].kitId}`
@@ -46,35 +45,30 @@ function OrderHistoryPage() {
           const productData = await productResponse.json();
           setProductDetails(productData);
 
-          const existingLabNames = JSON.parse(
-            localStorage.getItem("labNames") || "[]"
+          const existingLabNames = new Set(
+            JSON.parse(localStorage.getItem("labNames") || "[]")
           );
 
-          // Filter and store lab names
           const filteredLabs = productData.labs.filter((lab) => {
             const orderDate = new Date(
               listOrder.find((o) => o.orderId === orderId).orderDate
             );
-
             const isNotDeleted =
               !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
             const isCreatedBeforeOrder =
               new Date(lab.dateOfCreation) < orderDate;
 
-            // Lưu tên lab nếu không bị xóa và được tạo trước ngày đặt hàng
-            if (isNotDeleted && isCreatedBeforeOrder) {
-              return true; // Bao gồm lab này
-            }
-            return false; // Không bao gồm lab này
+            return isNotDeleted && isCreatedBeforeOrder;
           });
 
-          // Lưu tên lab đã lọc vào localStorage
-          const newLabNames = filteredLabs.map((lab) => lab.name);
-          const uniqueLabNames = Array.from(
-            new Set([...existingLabNames, ...newLabNames])
-          );
+          // Add only unique lab names
+          filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
 
-          localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
+          // Save unique lab names back to localStorage
+          localStorage.setItem(
+            "labNames",
+            JSON.stringify([...existingLabNames])
+          );
         }
       } catch (err) {
         console.log(err);
@@ -130,7 +124,8 @@ function OrderHistoryPage() {
   // New function to fetch all labs
   const fetchAllLabs = useCallback(async () => {
     try {
-      const labs = new Set(); // Use Set to hold unique lab names
+      const labs = new Set();
+
       for (const order of listOrder) {
         const response = await fetch(
           `http://localhost:5056/api/OrderDetail/${order.orderId}`
@@ -150,19 +145,18 @@ function OrderHistoryPage() {
             const isCreatedBeforeOrder =
               new Date(lab.dateOfCreation) < orderDate;
 
-            // Only add valid labs' names to the Set
             if (isNotDeleted && isCreatedBeforeOrder) {
-              labs.add(lab.name); // Add lab name directly to ensure uniqueness
+              labs.add(JSON.stringify(lab)); // Convert lab to string to ensure uniqueness
             }
           });
         }
       }
 
-      // Convert Set back to array of unique lab names
-      const uniqueLabNames = Array.from(labs);
+      // Convert the Set to an array of lab objects
+      const uniqueLabNames = Array.from(labs).map((lab) => JSON.parse(lab));
       localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
 
-      setAllLabs(uniqueLabNames); // Set unique lab names for display
+      setAllLabs(uniqueLabNames);
       setIsLabModalOpen(true);
     } catch (error) {
       console.error("Error fetching labs:", error);
@@ -194,15 +188,29 @@ function OrderHistoryPage() {
                   &times;
                 </button>
               </div>
-              <div className="p-4 overflow-y-auto max-h-96">
+              <div className="p-4 overflow-y-auto max-h-96 bg-gray-100 rounded-lg shadow-md border border-gray-200">
                 <ul>
-                  {allLabs.map((labName, index) => (
-                    <li key={index} className="mb-1">
-                      <span>{labName}</span>
+                  {allLabs.map((lab, index) => (
+                    <li
+                      key={index}
+                      className="flex justify-between items-center p-2 bg-white hover:bg-gray-50 rounded-lg shadow-sm transition-all duration-200 mb-2 last:mb-0"
+                    >
+                      <span className="text-gray-800 font-medium">
+                        {lab.name}
+                      </span>
+                      <a
+                        href={lab.document}
+                        className="text-blue-500 hover:text-blue-700 underline transition-colors duration-200"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Xem bài lab
+                      </a>
                     </li>
                   ))}
                 </ul>
               </div>
+
               <div className="flex justify-end p-4 border-t">
                 <button
                   className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"

@@ -104,7 +104,7 @@ function ServicePage() {
               <option value="">Chọn bài lab</option>
               {savedLabNames.map((labName, index) => (
                 <option key={index} value={labName}>
-                  {labName}
+                  {labName.name || labName}
                 </option>
               ))}
             </select>
