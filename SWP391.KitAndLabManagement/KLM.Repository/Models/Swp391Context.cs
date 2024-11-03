@@ -263,8 +263,8 @@ public partial class Swp391Context : DbContext
                 .HasColumnName("OrderID");
             entity.Property(e => e.KitName)
                 .IsRequired()
-                .HasMaxLength(100);
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+                .HasMaxLength(300);
+            entity.Property(e => e.Price).HasColumnType("decimal(20, 2)");
 
             entity.HasOne(d => d.Kit).WithMany(p => p.OrderDetailTbls)
                 .HasForeignKey(d => d.KitId)
@@ -294,7 +294,7 @@ public partial class Swp391Context : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
             entity.Property(e => e.Note).HasMaxLength(100);
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.Price).HasColumnType("decimal(20, 2)");
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(20);
@@ -326,7 +326,7 @@ public partial class Swp391Context : DbContext
                 .IsRequired()
                 .HasMaxLength(300);
             entity.Property(e => e.Picture).IsRequired();
-            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.Price).HasColumnType("decimal(20, 2)");
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(20);

@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Config\swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Update="Config\swp391-2004-firebase-adminsdk-q3a4s-64003a309b.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

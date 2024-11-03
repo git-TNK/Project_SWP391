@@ -69,7 +69,10 @@ namespace KLM.APIService.Controllers
                 documentUrl = uploadUrl;
             }
 
-            string questionId = "Q" + (new Random().Next(000, 999));
+            //string questionId = "Q" + (new Random().Next(000, 999));
+            string? questionIdNew;
+            QuestionTbl? idCheck;
+
             List<QuestionTbl> listQuestionByAcc = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(acccountId);
             if (listQuestionByAcc.Any())
             {
@@ -87,14 +90,21 @@ namespace KLM.APIService.Controllers
                             }
                             minTurn = x.Turn - 1;
                         }
-                        if (x.QuestionId.Equals(questionId))
-                        {
-                            questionId = "Q" + (new Random().Next(000, 999));
-                        }
+                        //if (x.QuestionId.Equals(questionId))
+                        //{
+                        //    questionId = "Q" + (new Random().Next(000, 999));
+                        //}
                     }
                 }
+
+                do
+                {
+                    questionIdNew = "Q" + (new Random().Next(000, 999));
+                    idCheck = _unitOfWork.QuestionTblRepository.GetById(questionIdNew);
+                } while (idCheck != null);
+
                 QuestionTbl result = new QuestionTbl();
-                result.QuestionId = questionId;
+                result.QuestionId = questionIdNew; //đổi từ questionId thành questionIdNew
                 result.AccountId = acccountId;
                 result.Turn = minTurn;
                 result.Question = question;
@@ -107,8 +117,15 @@ namespace KLM.APIService.Controllers
             }//Lan dau tien hoi
             else
             {
+                do
+                {
+                    questionIdNew = "Q" + (new Random().Next(000, 999));
+                    idCheck = _unitOfWork.QuestionTblRepository.GetById(questionIdNew);
+                } while (idCheck != null);
+
+
                 QuestionTbl result = new QuestionTbl();
-                result.QuestionId = questionId;
+                result.QuestionId = questionIdNew; //đổi từ questionId thành questionIdNew
                 result.AccountId = acccountId;
                 result.Turn = productBuying * 2 - 1;
                 result.Question = question;

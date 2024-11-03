@@ -26,7 +26,7 @@ namespace KLM.APIService
         {
             var firebaseConfig = configuration.GetSection("Firebase");
             var bucketName = firebaseConfig["StorageBucket"];
-            var credentialPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "swp391-2004-firebase-adminsdk-q3a4s-e95d2d073c.json");
+            var credentialPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "swp391-2004-firebase-adminsdk-q3a4s-64003a309b.json");
 
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
@@ -34,7 +34,7 @@ namespace KLM.APIService
             _storageClient = StorageClient.Create();
             _bucketName = bucketName;
 
-            //forgot lol
+
             var databaseUrl = firebaseConfig["RealtimeDatabase"];
             _firebaseClient = new FirebaseClient(databaseUrl);
         }

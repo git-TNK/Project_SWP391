@@ -30,14 +30,26 @@ namespace KLM.APIService.Controllers
         {
             List<OrderTbl> listCheckOrderId = await GetOrder();
             OrderTbl newOrder = new OrderTbl();
-            newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
-            foreach (var x in listCheckOrderId)
+            string? orderId; //bình thêm vô
+            OrderTbl? idCheck;
+
+            //newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
+            //foreach (var x in listCheckOrderId)
+            //{
+            //    if (x.OrderId.Equals(newOrder.OrderId))
+            //    {
+            //        newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
+            //    }
+            //}
+
+            //bình thêm vô
+            do
             {
-                if (x.OrderId.Equals(newOrder.OrderId))
-                {
-                    newOrder.OrderId = "ORD" + (new Random().Next(000, 999));
-                }
-            }
+                orderId = "ORD" + (new Random().Next(000, 999));
+                idCheck = _unitOfWork.OrderTblRepository.GetById(orderId);
+            } while (idCheck != null);
+
+            newOrder.OrderId = orderId;
             newOrder.AccountId = accountId;
             newOrder.Note = note;
             newOrder.Address = address;
