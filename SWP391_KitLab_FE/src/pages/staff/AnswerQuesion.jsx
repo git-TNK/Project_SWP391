@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffHeader from "./StaffHeader";
 import StaffSlideBar from "./StaffSlideBar";
@@ -74,6 +74,14 @@ function AnswerQuestion() {
     return nameWithoutFileType;
   };
 
+  const filteredQuestion = useMemo(() => {
+    return listQuestion.sort((a, b) => {
+      const dateA = new Date(a.dateOfQuestion);
+      const dateB = new Date(b.dateOfQuestion);
+      return dateB - dateA;
+    });
+  }, [listQuestion]);
+
   // Chọn câu hỏi
   const handleSelectQuestion = (question) => {
     setSelectedQuestion(question);
@@ -110,11 +118,11 @@ function AnswerQuestion() {
                 </tr>
               </thead>
               <tbody>
-                {listQuestion
+                {filteredQuestion
                   .filter((row) => row.status === "Active")
                   .map((row, rowIndex) => (
                     <tr
-                      key={rowIndex}
+                      key={row.questionId}
                       className="hover:bg-gray-100 transition-colors duration-300"
                     >
                       <td className="border pl-4 py-3">{row.accountId}</td>

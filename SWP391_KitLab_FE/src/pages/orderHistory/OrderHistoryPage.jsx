@@ -125,6 +125,7 @@ function OrderHistoryPage() {
   const fetchAllLabs = useCallback(async () => {
     try {
       const labs = new Set();
+      const labNames = new Set();
 
       for (const order of listOrder) {
         const response = await fetch(
@@ -147,16 +148,18 @@ function OrderHistoryPage() {
 
             if (isNotDeleted && isCreatedBeforeOrder) {
               labs.add(JSON.stringify(lab)); // Convert lab to string to ensure uniqueness
+              labNames.add(lab.name);
             }
           });
         }
       }
 
       // Convert the Set to an array of lab objects
-      const uniqueLabNames = Array.from(labs).map((lab) => JSON.parse(lab));
+      const uniqueLabNames = Array.from(labNames);
+      const uniqueLabShow = Array.from(labs).map((lab) => JSON.parse(lab));
       localStorage.setItem("labNames", JSON.stringify(uniqueLabNames));
 
-      setAllLabs(uniqueLabNames);
+      setAllLabs(uniqueLabShow);
       setIsLabModalOpen(true);
     } catch (error) {
       console.error("Error fetching labs:", error);

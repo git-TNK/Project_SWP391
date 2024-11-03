@@ -57,7 +57,7 @@ function AddProduct() {
       reader.onload = (e) => setPicturePreview(e.target.result);
       reader.readAsDataURL(file);
     } else {
-      alert("Please upload a valid image file");
+      alert("Chỉ được chọn ảnh");
     }
   };
 

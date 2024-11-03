@@ -101,11 +101,13 @@ function UpdateProduct() {
   //Xử lý up ảnh
   const handlePictureUpload = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && file.type.startsWith("image/")) {
       setNewPicture(file);
       const reader = new FileReader();
       reader.onload = (e) => setPicturePreview(e.target.result);
       reader.readAsDataURL(file);
+    } else {
+      alert("Chỉ được chọn ảnh");
     }
   };
 
