@@ -229,8 +229,8 @@ function OrderHistoryPage() {
               <tr>
                 <th className="py-2 px-4 text-left">Mã đơn hàng</th>
                 <th className="py-2 px-4 text-left">Trạng thái</th>
-                <th className="py-2 px-4 text-left">Tổng tiền hàng</th>
-                <th className="py-2 px-4 text-left">Ngày đặt hàng</th>
+                <th className="py-2 px-4 text-right">Tổng tiền hàng</th>
+                <th className="py-2 px-4 text-right">Ngày đặt hàng</th>
                 <th className="py-2 px-4 text-left">Xác nhận đã nhận hàng</th>
                 <th className="py-2 px-4 text-left">Xem chi tiết đơn hàng</th>
               </tr>
@@ -256,15 +256,19 @@ function OrderHistoryPage() {
                         : "Đang vận chuyển"}
                     </span>
                   </td>
-                  <td className="py-2 px-4">{order.price} đ</td>
-                  <td className="py-2 px-4">{order.orderDate.split("T", 1)}</td>
+                  <td className="py-2 px-4 text-right">
+                    {order.price.toLocaleString()} đ
+                  </td>
+                  <td className="py-2 px-4 text-right">
+                    {order.orderDate.split("T", 1)}
+                  </td>
                   <td>
                     <button
                       className={`${
                         order.status === "Shipping"
                           ? "bg-green-100 text-green-800"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      } py-1 px-2 rounded-full text-sm`}
+                      } py-1 px-2 rounded-full text-sm ml-4`}
                       disabled={order.status !== "Shipping"}
                       onClick={() => handleConfirmReceived(order.orderId)}
                     >
@@ -273,7 +277,7 @@ function OrderHistoryPage() {
                   </td>
                   <td>
                     <button
-                      className="text-blue-500 underline"
+                      className="text-blue-500 underline pl-4"
                       onClick={(e) => handleViewOrderDetail(order.orderId, e)}
                     >
                       Xem chi tiết đơn hàng
@@ -306,16 +310,24 @@ function OrderHistoryPage() {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="py-2 px-4 text-left">Tên Kit</th>
-                    <th className="py-2 px-4 text-left">Giá Tiền</th>
-                    <th className="py-2 px-4 text-left">Số Lượng</th>
+                    <th className="py-2 px-4 text-right">Giá Tiền</th>
+                    <th className="py-2 px-4 text-right">Số Lượng</th>
                   </tr>
                 </thead>
                 <tbody>
                   {listOrderDetail.map((detail, index) => (
                     <tr key={index} className="border-b">
-                      <td className="py-2 px-4">{detail.kitName}</td>
-                      <td className="py-2 px-4">{detail.price} đ</td>
-                      <td className="py-2 px-4">{detail.kitQuantity}</td>
+                      <td className="py-2 px-4">
+                        <p className="w-96 truncate" title={detail.kitName}>
+                          {detail.kitName}
+                        </p>
+                      </td>
+                      <td className="py-2 px-4 text-right">
+                        {detail.price.toLocaleString()} đ
+                      </td>
+                      <td className="py-2 px-4 text-right">
+                        {detail.kitQuantity.toLocaleString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -351,7 +363,7 @@ function OrderHistoryPage() {
                               rel="noopener noreferrer"
                               className="ml-2 text-blue-500 underline"
                             >
-                              Xem tài liệu
+                              <p className="underlined">Xem tài liệu</p>
                             </a>
                           )}
                         </li>

@@ -245,7 +245,7 @@ const AdminProduct = () => {
             </div>
             <h3 className="text-lg font-semibold truncate">{item.name}</h3>
             <p className="text-gray-600 mt-auto">
-              {item.price.toLocaleString()} VND
+              {item.price.toLocaleString()} đ
             </p>
             <div
               className={`absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center space-x-4 transition-opacity duration-300 ${
@@ -327,9 +327,9 @@ const AdminProduct = () => {
             </div>
 
             {/* Product grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {currentProducts.map((item) => (
-                <ProductItem key={item.kitId} item={item} /> //remove || index
+                <ProductItem key={item.kitId} item={item} />
               ))}
             </div>
             {modalOpen && renderModalContent()}

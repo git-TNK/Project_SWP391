@@ -101,7 +101,7 @@ function AdminViewProduct() {
                   <p className="text-gray-700 mb-4">{product.description}</p>
                   <h3 className="font-semibold mb-2">Giá:</h3>
                   <p className="text-2xl font-bold text-indigo-600 mb-4">
-                    {product.price.toLocaleString()} VND
+                    {product.price.toLocaleString()} đ
                   </p>
                   <div className="mb-4">
                     <p className="text-sm text-gray-600">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../../Footer";
@@ -46,6 +46,10 @@ function ProductDetails() {
 
     fetchProductDetails();
   }, [id]);
+
+  const filteredLabs = useMemo(() => {
+    return labList.filter((lab) => lab.status != "Deleted");
+  }, [labList]);
 
   // Placeholder action for "Mua hàng" button
   const handleBuyNow = () => {
@@ -113,8 +117,8 @@ function ProductDetails() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex lg:flex-row gap-8">
           <div
-            className="w-1/2 h-[400px] flex-shrink-0 sticky top-8"
-            style={{ position: "sticky", alignSelf: "flex-start" }}
+            className="w-1/2 h-[400px] flex-shrink-0 top-8"
+            // style={{ position: "sticky", alignSelf: "flex-start" }}
           >
             <img
               className="w-full h-full object-contain rounded-lg shadow-md"
@@ -126,7 +130,7 @@ function ProductDetails() {
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
             <p className="text-red-600 font-bold text-2xl mb-4">
-              {product.price.toLocaleString()} VND
+              {product.price.toLocaleString()} đ
             </p>
 
             <div className="mb-4">
@@ -159,10 +163,10 @@ function ProductDetails() {
 
             <div className="mb-4">
               <span className="font-semibold">Danh sách Labs: </span>
-              {labList.length > 0 ? (
+              {filteredLabs.length > 0 ? (
                 <ul className="list-none pl-0">
-                  {labList
-                    .filter((lab) => lab.status !== "Deleted") // Lọc các lab có trạng thái khác "Deleted"
+                  {filteredLabs
+                    // .filter((lab) => lab.status !== "Deleted") // Lọc các lab có trạng thái khác "Deleted"
                     .map((lab, index) => (
                       <li key={index} className="flex items-start mb-2">
                         <span className="text-2xl mr-2 leading-none">•</span>

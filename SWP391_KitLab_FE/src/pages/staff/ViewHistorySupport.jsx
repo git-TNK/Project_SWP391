@@ -21,6 +21,24 @@ function ViewHistorySupport() {
     fetchListAnswers();
   }, []);
 
+  const getLabNameFromLink = (url) => {
+    const parts = url.split("/");
+    const fileNameWithParams = parts[parts.length - 1];
+    const fileName = fileNameWithParams.split("?")[0];
+
+    // Decode the filename to handle any URL encoding
+    const decodedFileName = decodeURIComponent(fileName);
+
+    // Remove the timestamp if it exists (assuming it's separated by an underscore)
+    const nameWithoutTimestamp = decodedFileName.split("_")[0];
+
+    const finalName = nameWithoutTimestamp.split("/").pop();
+
+    const nameWithoutFileType = finalName.split(".")[0];
+
+    return nameWithoutFileType;
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* StaffHeader at the top */}
@@ -39,7 +57,7 @@ function ViewHistorySupport() {
             <table className="min-w-full bg-white border border-gray-300">
               <thead>
                 <tr className="bg-indigo-500 text-white">
-                  <th className="border px-4 py-3 text-left">ID Tài Khoản</th>
+                  <th className="border pl-4 py-3 text-left">ID Tài Khoản</th>
                   <th className="border px-4 py-3 text-left">Câu Trả Lời</th>
                   <th className="border px-4 py-3 text-left">Tên Bài Lab</th>
                   <th className="border px-4 py-3 text-left">File Đính Kèm</th>
@@ -53,32 +71,45 @@ function ViewHistorySupport() {
                     key={rowIndex}
                     className="hover:bg-gray-100 transition-colors duration-300"
                   >
-                    <td className="border px-4 py-3">{row.accountId}</td>
-                    <td className="border px-4 py-3">{row.answer}</td>
+                    <td className="border pl-4 py-3">{row.accountId}</td>
                     <td className="border px-4 py-3">
-                      <button className="text-black-600">
-                        {row.labName}
-                      </button>
+                      <span className="w-48 truncate" title={row.answer}>
+                        {row.answer}
+                      </span>
                     </td>
-                    <td className="border px-4 py-3"> <a href={row.attachedFile}
+                    <td className="border px-4 py-3">
+                      <span className="w-32 truncate" title={row.labName}>
+                        {row.labName}
+                      </span>
+                    </td>
+                    <td className="border px-4 py-3">
+                      {row.attachedFile !== null ? (
+                        <a
+                          href={row.attachedFile}
                           className="text-blue-500 hover:text-blue-800"
                           target="_blank"
                           rel="noopener noreferrer"
-                          title={(row.labName)}
-                          >
-                          Link của lab  
-                          </a></td>
+                          title={getLabNameFromLink(row.attachedFile)}
+                        >
+                          File trả lời
+                        </a>
+                      ) : (
+                        <span>-</span>
+                      )}
+                    </td>
                     <td className="border px-4 py-3">{row.dateOfAnswer}</td>
                     <td className="border px-4 py-3 text-center">
-                      <button
+                      <span
                         className={`${
                           row.status === "Pending"
                             ? "bg-red-500"
                             : "bg-green-500"
                         } text-white font-bold py-2 px-4 rounded-full shadow-lg transition-all duration-300`}
                       >
-                        {row.status === "Pending" ? "Chưa Trả Lời" : "Đã Trả Lời"}
-                      </button>
+                        {row.status === "Pending"
+                          ? "Chưa Trả Lời"
+                          : "Đã Trả Lời"}
+                      </span>
                     </td>
                   </tr>
                 ))}
