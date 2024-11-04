@@ -6,6 +6,8 @@ import Header from "../Header";
 import Footer from "../../Footer";
 import LoadingSpinner from "../admin/loading";
 import { NavLink } from "react-router-dom";
+import { database } from "../../../firebase-config";
+import { ref, onChildAdded } from "firebase/database";
 
 function TransferMoneyPage() {
   const [paymentCheck, setPaymentCheck] = useState(null);
@@ -16,41 +18,68 @@ function TransferMoneyPage() {
   const navigate = useNavigate();
   const account = JSON.parse(localStorage.getItem("account"));
 
-  const fetchListOrder = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5056/Order/${account.accountId}`
-      );
-      setListOrder(response.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const fetchListOrder = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:5056/Order/${account.accountId}`
+  //     );
+  //     setListOrder(response.data);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
-  const fetchResult = async () => {
-    try {
-      const response = await fetch("http://localhost:5056/Order/QrResponse");
-      const responseText = await response.text();
-      console.log(responseText);
-      setPaymentCheck(responseText);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // const fetchResult = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:5056/Order/QrResponse");
+  //     const responseText = await response.text();
+  //     console.log(responseText);
+  //     setPaymentCheck(responseText);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
-  const handleOnClick = () => {
-    // setIsSuccess(true);
-    if (isSuccess) {
-      navigate("/");
-    } else {
-      fetchResult();
-      setLoading(true);
-    }
-    //clear gio hang
-    if (isSuccess) {
-      sessionStorage.clear("cart");
-    }
-  };
+  // const handleOnClick = () => {
+  //   // setIsSuccess(true);
+  //   //clear gio hang
+  //   if (isSuccess) {
+  //     sessionStorage.clear("cart");
+  //   }
+
+  //   if (isSuccess) {
+  //     navigate("/");
+  //   } else {
+  //     fetchResult();
+  //     setLoading(true);
+  //   }
+  // };
+
+  // Add this useEffect after your other useEffects
+  useEffect(() => {
+    const transactionsRef = ref(database, "transactions"); // adjust path if needed
+
+    const unsubscribe = onChildAdded(transactionsRef, async (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // When new transaction data appears
+        setLoading(true);
+        try {
+          const response = await fetch(
+            "http://localhost:5056/Order/QrResponse"
+          );
+          const responseText = await response.text();
+          console.log(responseText);
+          setPaymentCheck(responseText);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
+
+    // Cleanup listener when component unmounts
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (paymentCheck !== null) {
@@ -59,13 +88,18 @@ function TransferMoneyPage() {
         setPaymentCheck(null);
         setLoading(false);
         setIsSuccess(true);
+        sessionStorage.clear("cart");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       } else {
         setNotification({ message: "Thanh toán thất bại", type: "error" });
         setPaymentCheck(null);
         setLoading(false);
       }
     }
-  }, [paymentCheck]);
+  }, [paymentCheck, navigate]);
 
   const closeNotification = () => {
     setNotification(null);
@@ -227,17 +261,16 @@ function TransferMoneyPage() {
         <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg">
           <h1 className="text-2xl font-bold text-center p-3">QR Thanh toán</h1>
           <h1 className="text-sm font-bold text-center text-red-500">
-            LƯU Ý: PHẢI BẤM XÁC NHẬN SAU KHI THANH TOÁN THÀNH CÔNG MỚI NHẬN ĐƯỢC
-            LAB
+            Vui lòng đợi hệ thống tự động xác nhận sau khi thanh toán thành công
           </h1>
           <div className="flex flex-col items-center p-4">
             <img className="w-3/5 h-3/5" src={urlQr} alt="QR Code" />
-            <button
+            {/* <button
               onClick={handleOnClick}
               className="font-bold mt-4 px-4 py-2 bg-gray-300 text-black rounded hover:bg-black hover:text-white transition duration-500"
             >
               {isSuccess ? "Quay về trang chủ" : "Xác nhận"}
-            </button>
+            </button> */}
           </div>
         </div>
       </main>
