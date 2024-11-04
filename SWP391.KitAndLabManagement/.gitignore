@@ -44,3 +44,7 @@ artifacts/
 
 
 **/Config/*.json
+
+
+**/appsettings.json
+**/appsettings.Development.json
