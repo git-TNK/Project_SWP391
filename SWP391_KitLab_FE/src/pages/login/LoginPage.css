@@ -1,0 +1,41 @@
+/* Custom styles for login form */
+.custom-login-box {
+  width: 360px;
+}
+
+.custom-login-title {
+  position: relative;
+  top: -10px; /* Adjusting the title upwards */
+}
+
+.custom-user-box {
+  position: relative;
+}
+
+.custom-user-box label {
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  background-color: #fff;
+  padding: 0 5px;
+}
+
+.custom-user-box input {
+  transition: border-color 0.3s;
+}
+
+.custom-user-box input:focus {
+  border-color: #007bff;
+}
+
+.custom-forgot-password:hover {
+  text-decoration: underline;
+}
+
+.custom-login-button {
+  transition: background-color 0.3s;
+}
+
+.custom-login-button:hover {
+  background-color: #333;
+}
