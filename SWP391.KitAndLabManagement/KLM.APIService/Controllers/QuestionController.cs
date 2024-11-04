@@ -62,7 +62,7 @@ namespace KLM.APIService.Controllers
                     productBuying += item.KitQuantity;
                 }
             }
-            //======
+            
             using (var stream = request.File.OpenReadStream())
             {
                 var uploadUrl = await _firebaseStorageService.UploadPDFAsyncQuestion(stream, request.File.FileName, request.File.ContentType);
@@ -74,6 +74,7 @@ namespace KLM.APIService.Controllers
             QuestionTbl? idCheck;
 
             List<QuestionTbl> listQuestionByAcc = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(acccountId);
+
             //bool checkId = false;
             //do
             //{
@@ -81,6 +82,7 @@ namespace KLM.APIService.Controllers
             //    checkId = listQuestionByAcc.Select(q => q.QuestionId.Equals(questionId)).FirstOrDefault();
             //    questionId = "Q" + (new Random().Next(000, 999));
             //} while (checkId);
+
             if (listQuestionByAcc.Any())
             {
                 List<DateTime> listQuestionDateByAcc = listQuestionByAcc.Select(x => x.DateOfQuestion).ToList();

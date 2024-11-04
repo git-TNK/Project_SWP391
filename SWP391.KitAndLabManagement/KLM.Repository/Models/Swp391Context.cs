@@ -22,8 +22,6 @@ public partial class Swp391Context : DbContext
 
     public virtual DbSet<AnswerTbl> AnswerTbls { get; set; }
 
-    public virtual DbSet<AvailableLabTbl> AvailableLabTbls { get; set; }
-
     public virtual DbSet<KtypeTbl> KtypeTbls { get; set; }
 
     public virtual DbSet<LabTbl> LabTbls { get; set; }
@@ -101,9 +99,6 @@ public partial class Swp391Context : DbContext
                 .IsRequired()
                 .HasMaxLength(6)
                 .HasColumnName("AccountID");
-            entity.Property(e => e.Answer)
-                .IsRequired()
-                .HasColumnType("nvarchar(max)");
             entity.Property(e => e.LabName)
                 .IsRequired()
                 .HasMaxLength(300);
@@ -124,28 +119,6 @@ public partial class Swp391Context : DbContext
                 .HasForeignKey<AnswerTbl>(d => d.QuestionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Answer_TB__Quest__7F2BE32F");
-        });
-
-        modelBuilder.Entity<AvailableLabTbl>(entity =>
-        {
-            entity.HasKey(e => new { e.LabId, e.OrderId }).HasName("PK__Availabl__018472808FE8CC9F");
-
-            entity.ToTable("AvailableLab_TBL");
-
-            entity.Property(e => e.LabId)
-                .HasMaxLength(6)
-                .HasColumnName("LabID");
-            entity.Property(e => e.OrderId)
-                .HasMaxLength(6)
-                .HasColumnName("OrderID");
-            entity.Property(e => e.LabName)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            entity.HasOne(d => d.Order).WithMany(p => p.AvailableLabTbls)
-                .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Available__Order__4AB81AF0");
         });
 
         modelBuilder.Entity<KtypeTbl>(entity =>
@@ -175,9 +148,10 @@ public partial class Swp391Context : DbContext
             entity.Property(e => e.LabId)
                 .HasMaxLength(6)
                 .HasColumnName("LabID");
-            entity.Property(e => e.Description)
-                .IsRequired()
-                .HasColumnType("nvarchar(max)");
+            entity.Property(e => e.DateOfChangeLab).HasColumnType("datetime");
+            entity.Property(e => e.DateOfCreation).HasColumnType("datetime");
+            entity.Property(e => e.DateOfDeletion).HasColumnType("datetime");
+            entity.Property(e => e.Description).IsRequired();
             entity.Property(e => e.Document).IsRequired();
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -294,7 +268,9 @@ public partial class Swp391Context : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
             entity.Property(e => e.Note).HasMaxLength(100);
+            entity.Property(e => e.OrderDate).HasColumnType("datetime");
             entity.Property(e => e.Price).HasColumnType("decimal(20, 2)");
+            entity.Property(e => e.ReceiveDate).HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(20);
@@ -319,9 +295,10 @@ public partial class Swp391Context : DbContext
             entity.Property(e => e.Brand)
                 .IsRequired()
                 .HasMaxLength(100);
-            entity.Property(e => e.Description)
-                .IsRequired()
-                .HasColumnType("nvarchar(max)");
+            entity.Property(e => e.DateOfChange).HasColumnType("datetime");
+            entity.Property(e => e.DateOfCreation).HasColumnType("datetime");
+            entity.Property(e => e.DateOfDeletion).HasColumnType("datetime");
+            entity.Property(e => e.Description).IsRequired();
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(300);
@@ -368,12 +345,10 @@ public partial class Swp391Context : DbContext
                 .IsRequired()
                 .HasMaxLength(6)
                 .HasColumnName("AccountID");
+            entity.Property(e => e.DateOfQuestion).HasColumnType("datetime");
             entity.Property(e => e.LabName)
                 .IsRequired()
                 .HasMaxLength(100);
-            entity.Property(e => e.Question)
-                .IsRequired()
-                .HasColumnType("nvarchar(max)");
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(20);

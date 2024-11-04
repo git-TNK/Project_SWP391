@@ -26,7 +26,5 @@ public partial class OrderTbl
 
     public virtual AccountTbl Account { get; set; }
 
-    public virtual ICollection<AvailableLabTbl> AvailableLabTbls { get; set; } = new List<AvailableLabTbl>();
-
     public virtual ICollection<OrderDetailTbl> OrderDetailTbls { get; set; } = new List<OrderDetailTbl>();
 }

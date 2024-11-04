@@ -30,17 +30,9 @@ public partial class ProductKitTbl
 
     public DateTime? DateOfChange { get; set; }
 
-    //[JsonIgnore]
-
     public virtual ICollection<OrderDetailTbl> OrderDetailTbls { get; set; } = new List<OrderDetailTbl>();
-
-    //[JsonIgnore]
-
-    public virtual ICollection<LabTbl> Labs { get; set; } = new List<LabTbl>();
-
-    //[JsonIgnore]
 
     public virtual ICollection<KtypeTbl> Ktypes { get; set; } = new List<KtypeTbl>();
 
-
+    public virtual ICollection<LabTbl> Labs { get; set; } = new List<LabTbl>();
 }
