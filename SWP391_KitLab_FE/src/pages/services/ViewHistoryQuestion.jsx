@@ -137,7 +137,7 @@ function ViewHistoryQuestion() {
                     </td>
                     <td className="px-4 py-2">
                       <p
-                        className="w-32 truncate"
+                        className="w-40 truncate"
                         title={answer?.answer || "Chưa có câu trả lời"}
                       >
                         {answer?.answer || "Chưa có câu trả lời"}
