@@ -61,7 +61,10 @@ function CartPage() {
           const newQuantity = productCart.quantity + change;
 
           if (newQuantity > productInDb.quantity) {
-            setNotification({ message: "Vượt quá hàng tồn kho!", type: "err" });
+            setNotification({
+              message: "Vượt quá hàng tồn kho!",
+              type: "error",
+            });
             return productCart;
           }
           return { ...productCart, quantity: Math.max(1, newQuantity) };

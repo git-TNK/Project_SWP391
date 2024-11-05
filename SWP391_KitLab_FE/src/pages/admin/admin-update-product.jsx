@@ -317,7 +317,7 @@ function UpdateProduct() {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                       min="1000"
-                      max="10000000"
+                      max="100000000"
                       onWheel={(e) => e.target.blur()}
                     />
                     {errors.price && (

@@ -71,7 +71,7 @@ function ProductDetails() {
       } else {
         setNotification({
           message: `Bạn đã chọn quá số lượng tồn kho`,
-          type: "err",
+          type: "error",
         });
       }
     } else {
@@ -85,7 +85,7 @@ function ProductDetails() {
       } else {
         setNotification({
           message: `Sản phẩm hiện tại không còn hàng trong kho`,
-          type: "err",
+          type: "error",
         });
       }
     }
