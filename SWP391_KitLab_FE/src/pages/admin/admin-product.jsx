@@ -38,7 +38,7 @@ const AdminProduct = () => {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 12;
+  const productsPerPage = 8;
 
   //search bar
   const [searchTerm, setSearchTerm] = useState("");

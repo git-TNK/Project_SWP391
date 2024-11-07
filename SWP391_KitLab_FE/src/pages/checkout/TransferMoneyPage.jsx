@@ -41,18 +41,19 @@ function TransferMoneyPage() {
   // };
 
   // const handleOnClick = () => {
-  //   // setIsSuccess(true);
+  //   setIsSuccess(true);
+  //   sessionStorage.clear("cart");
   //   //clear gio hang
-  //   if (isSuccess) {
-  //     sessionStorage.clear("cart");
-  //   }
+  //   // if (isSuccess) {
 
-  //   if (isSuccess) {
-  //     navigate("/");
-  //   } else {
-  //     fetchResult();
-  //     setLoading(true);
-  //   }
+  //   // }
+
+  //   // if (isSuccess) {
+  //   //   navigate("/");
+  //   // } else {
+  //   //   fetchResult();
+  //   //   setLoading(true);
+  //   // }
   // };
 
   // Listener firebase database realtime, mỗi khi có transaction mới là nó check

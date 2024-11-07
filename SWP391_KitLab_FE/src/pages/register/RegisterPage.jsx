@@ -50,7 +50,7 @@ function RegisterPage() {
       newErrors.userName = "Tên đăng ký không được chứa ký tự đặc biệt.";
     } else if (isOnlyNumbers.test(formData.userName)) {
       newErrors.userName = "Tên đăng ký không được chỉ là số.";
-    } else if (formData.userName.trim().length > 49) {
+    } else if (formData.userName.trim().length > 50) {
       newErrors.userName = "Tên đăng ký chỉ được dài 50 kí tự";
     } else if (!latinOnlyRegex.test(formData.userName.trim())) {
       newErrors.userName = "Tên đăng kí chỉ chỉ được chứa chữ cái không dấu";
