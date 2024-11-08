@@ -140,6 +140,8 @@ namespace KLM.Repository.Repositories
                 idCheck = _context.Set<ProductKitTbl>().Where(e => e.KitId == $"{kitId}").Select(e => e.KitId).FirstOrDefault()?.ToString();
             }
             while (!string.IsNullOrWhiteSpace(idCheck));
+
+
             
 
             //check existed kit name
