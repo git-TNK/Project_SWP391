@@ -67,14 +67,14 @@ namespace KLM.APIService.Controllers
             }
 
             // Cập nhật lượt câu hỏi
-            List<QuestionTbl> listQuestion = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(accounId);
-            if (listQuestion != null && listQuestion.Any())
-            {
-                var latestQuestionCreate = listQuestion.Max(q => q.DateOfQuestion);
-                var latestQuestionItem = listQuestion.First(q => q.DateOfQuestion.Equals(latestQuestionCreate));
-                latestQuestionItem.Turn += kitQuantity * 2;
-                _unitOfWork.QuestionTblRepository.Update(latestQuestionItem);
-            }
+            //List<QuestionTbl> listQuestion = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(accounId);
+            //if (listQuestion != null && listQuestion.Any())
+            //{
+            //    var latestQuestionCreate = listQuestion.Max(q => q.DateOfQuestion);
+            //    var latestQuestionItem = listQuestion.First(q => q.DateOfQuestion.Equals(latestQuestionCreate));
+            //    latestQuestionItem.Turn += kitQuantity * 2;
+            //    _unitOfWork.QuestionTblRepository.Update(latestQuestionItem);
+            //}
 
             return Ok(orderDetail);
         }

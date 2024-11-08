@@ -42,19 +42,36 @@ namespace KLM.APIService.Controllers
             int minTurn = 0;
             //Lay so luong sp da mua
             int productBuying = 0;
+
+
             List<OrderTbl> listOrder = await _unitOfWork.OrderTblRepository.GetAllOrderTblByAccountId(acccountId);
             List<OrderDetailTbl> listOrderDetail = new List<OrderDetailTbl>();
             List<OrderDetailTbl> listAllOrderDetails = await _unitOfWork.OrderDetailsRepository.GetAllAsync();
+
+            List<QuestionTbl> listQuestionByAcc = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(acccountId);
+            DateTime? lastQuestionDate = null;
+            if (listQuestionByAcc.Any())
+            {
+                lastQuestionDate = listQuestionByAcc.Max(q => q.DateOfQuestion);
+            }
+
             foreach (var x in listOrder)
             {
-                foreach (var item in listAllOrderDetails)
+                if(lastQuestionDate == null || x.OrderDate > lastQuestionDate)
                 {
-                    if (x.OrderId.Equals(item.OrderId))
+
+                    foreach (var item in listAllOrderDetails)
                     {
-                        listOrderDetail.Add(item);
+                        if (x.OrderId.Equals(item.OrderId))
+                        {
+                            listOrderDetail.Add(item);
+                        }
                     }
                 }
+
             }
+
+
             if (listOrderDetail.Any())
             {
                 foreach (var item in listOrderDetail)
@@ -69,19 +86,11 @@ namespace KLM.APIService.Controllers
                 documentUrl = uploadUrl;
             }
 
-            //string questionId = "Q" + (new Random().Next(000, 999));
+            
             string? questionIdNew;
             QuestionTbl? idCheck;
 
-            List<QuestionTbl> listQuestionByAcc = await _unitOfWork.QuestionTblRepository.GetQuestionByAccountId(acccountId);
 
-            //bool checkId = false;
-            //do
-            //{
-            //    checkId = false;
-            //    checkId = listQuestionByAcc.Select(q => q.QuestionId.Equals(questionId)).FirstOrDefault();
-            //    questionId = "Q" + (new Random().Next(000, 999));
-            //} while (checkId);
 
             if (listQuestionByAcc.Any())
             {
@@ -93,16 +102,21 @@ namespace KLM.APIService.Controllers
                     {
                         if (x.DateOfQuestion.Equals(dateOfQuestionNewest))
                         {
-                            if (x.Turn <= 0)
+                            if (x.Turn <= 0 && productBuying == 0)
                             {
                                 return BadRequest("Bạn đã hết lượt hỏi");
                             }
-                            minTurn = x.Turn - 1;
+                            //minTurn = x.Turn - 1;
+                            if (productBuying > 0)
+                            {
+                                minTurn = x.Turn + (productBuying * 2) - 1;
+                            }
+                            else
+                            {
+                                minTurn = x.Turn - 1;
+                            }
                         }
-                        //if (x.QuestionId.Equals(questionId))
-                        //{
-                        //    questionId = "Q" + (new Random().Next(000, 999));
-                        //}
+                        
                     }
                 }
 
