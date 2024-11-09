@@ -39,32 +39,34 @@ function OrderHistoryPage() {
         setListOrderDetail(data);
 
         if (data.length > 0) {
-          const productResponse = await fetch(
-            `http://localhost:5056/Product/${data[0].kitId}`
-          );
-          const productData = await productResponse.json();
-          setProductDetails(productData);
-
           const existingLabNames = new Set(
             JSON.parse(localStorage.getItem("labNames") || "[]")
           );
-
-          const filteredLabs = productData.labs.filter((lab) => {
-            const orderDate = new Date(
-              listOrder.find((o) => o.orderId === orderId).orderDate
+          const orderDate = new Date(
+            listOrder.find((o) => o.orderId === orderId).orderDate
+          );
+          for (const item of data) {
+            const productResponse = await fetch(
+              `http://localhost:5056/Product/${item.kitId}`
             );
-            const isNotDeleted =
-              !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
-            const isCreatedBeforeOrder =
-              new Date(lab.dateOfCreation) < orderDate;
+            const productData = await productResponse.json();
+            setProductDetails(productData);
 
-            return isNotDeleted && isCreatedBeforeOrder;
-          });
+            // Lọc các lab theo các điều kiện đã cho
+            const filteredLabs = productData.labs.filter((lab) => {
+              const isNotDeleted =
+                !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
+              const isCreatedBeforeOrder =
+                new Date(lab.dateOfCreation) < orderDate;
 
-          // Add only unique lab names
-          filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
+              return isNotDeleted && isCreatedBeforeOrder;
+            });
 
-          // Save unique lab names back to localStorage
+            // Thêm các tên lab duy nhất
+            filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
+          }
+
+          // Lưu tên lab duy nhất vào localStorage
           localStorage.setItem(
             "labNames",
             JSON.stringify([...existingLabNames])
