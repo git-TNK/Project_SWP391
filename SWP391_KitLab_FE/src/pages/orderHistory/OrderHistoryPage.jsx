@@ -9,7 +9,7 @@ function OrderHistoryPage() {
   const [listOrder, setListOrder] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const [productDetails, setProductDetails] = useState([]);
+  // const [productDetails, setProductDetails] = useState([]);
   const [allLabs, setAllLabs] = useState([]);
   const [isLabModalOpen, setIsLabModalOpen] = useState(false);
 
@@ -27,62 +27,59 @@ function OrderHistoryPage() {
     }
   }, [account, navigate]);
 
-  const fetchListOrderDetail = useCallback(
-    async (orderId) => {
-      if (!orderId) return;
+  const fetchListOrderDetail = useCallback(async (orderId) => {
+    if (!orderId) return;
 
-      try {
-        const response = await fetch(
-          `http://localhost:5056/api/OrderDetail/${orderId}`
-        );
-        const data = await response.json();
-        setListOrderDetail(data);
+    try {
+      const response = await fetch(
+        `http://localhost:5056/api/OrderDetail/${orderId}`
+      );
+      const data = await response.json();
+      setListOrderDetail(data);
 
-        if (data.length > 0) {
-          const existingLabNames = new Set(
-            JSON.parse(localStorage.getItem("labNames") || "[]")
-          );
-          const orderDate = new Date(
-            listOrder.find((o) => o.orderId === orderId).orderDate
-          );
+      // if (data.length > 0) {
+      //   const existingLabNames = new Set(
+      //     JSON.parse(localStorage.getItem("labNames") || "[]")
+      //   );
+      //   const orderDate = new Date(
+      //     listOrder.find((o) => o.orderId === orderId).orderDate
+      //   );
 
-          // Changed: Fetch all products at once using Promise.all
-          const products = await Promise.all(
-            data.map(async (item) => {
-              const productResponse = await fetch(
-                `http://localhost:5056/Product/${item.kitId}`
-              );
-              return productResponse.json();
-            })
-          );
+      //   // Changed: Fetch all products at once using Promise.all
+      //   const products = await Promise.all(
+      //     data.map(async (item) => {
+      //       const productResponse = await fetch(
+      //         `http://localhost:5056/Product/${item.kitId}`
+      //       );
+      //       return productResponse.json();
+      //     })
+      //   );
 
-          // Store all products
-          setProductDetails(products);
+      //   // Store all products
+      //   setProductDetails(products);
 
-          // Update labNames
-          products.forEach((product) => {
-            const filteredLabs = product.labs.filter((lab) => {
-              const isNotDeleted =
-                !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
-              const isCreatedBeforeOrder =
-                new Date(lab.dateOfCreation) < orderDate;
+      //   // Update labNames
+      //   products.forEach((product) => {
+      //     const filteredLabs = product.labs.filter((lab) => {
+      //       const isNotDeleted =
+      //         !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
+      //       const isCreatedBeforeOrder =
+      //         new Date(lab.dateOfCreation) < orderDate;
 
-              return isNotDeleted && isCreatedBeforeOrder;
-            });
-            filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
-          });
+      //       return isNotDeleted && isCreatedBeforeOrder;
+      //     });
+      //     filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
+      //   });
 
-          localStorage.setItem(
-            "labNames",
-            JSON.stringify([...existingLabNames])
-          );
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    [listOrder]
-  );
+      //   localStorage.setItem(
+      //     "labNames",
+      //     JSON.stringify([...existingLabNames])
+      //   );
+      // }
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   const fetchListOrder = useCallback(async (account) => {
     try {
@@ -110,6 +107,16 @@ function OrderHistoryPage() {
     setSelectedOrderId(orderId);
     fetchListOrderDetail(orderId); // Fetch order details here
     setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setListOrderDetail([]); // Clear order details when closing
+  };
+
+  const handleCloseLabModal = () => {
+    setIsLabModalOpen(false);
+    setAllLabs([]); // Clear labs when closing
   };
 
   async function handleConfirmReceived(orderId) {
@@ -193,14 +200,14 @@ function OrderHistoryPage() {
                 <h3 className="text-lg font-bold">Tất cả các bài lab</h3>
                 <button
                   className="text-gray-500 hover:text-gray-800"
-                  onClick={() => setIsLabModalOpen(false)}
+                  onClick={handleCloseLabModal}
                 >
                   &times;
                 </button>
               </div>
               <div className="p-4 overflow-y-auto max-h-96 bg-gray-100 rounded-lg shadow-md border border-gray-200">
                 <ul>
-                  {allLabs.map((lab, index) => (
+                  {(allLabs || []).map((lab, index) => (
                     <li
                       key={index}
                       className="flex justify-between items-center p-2 bg-white hover:bg-gray-50 rounded-lg shadow-sm transition-all duration-200 mb-2 last:mb-0"
@@ -224,7 +231,7 @@ function OrderHistoryPage() {
               <div className="flex justify-end p-4 border-t">
                 <button
                   className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                  onClick={() => setIsLabModalOpen(false)}
+                  onClick={handleCloseLabModal}
                 >
                   Đóng
                 </button>
@@ -246,7 +253,7 @@ function OrderHistoryPage() {
               </tr>
             </thead>
             <tbody>
-              {listOrder.map((order, index) => (
+              {(listOrder || []).map((order, index) => (
                 <tr key={index} className="border-b">
                   <td className="py-2 px-4">{order.orderId}</td>
                   <td className="py-2 px-4">
@@ -310,7 +317,7 @@ function OrderHistoryPage() {
               </h3>
               <button
                 className="text-gray-500 hover:text-gray-800"
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
               >
                 &times;
               </button>
@@ -325,7 +332,7 @@ function OrderHistoryPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {listOrderDetail.map((detail, index) => (
+                  {(listOrderDetail || []).map((detail, index) => (
                     <tr key={index} className="border-b">
                       <td className="py-2 px-4">
                         <p className="w-96 truncate" title={detail.kitName}>
@@ -343,7 +350,7 @@ function OrderHistoryPage() {
                 </tbody>
               </table>
 
-              {productDetails.length > 0 && (
+              {/* {productDetails.length > 0 && (
                 <div className="mt-6">
                   <h4 className="text-lg font-bold mb-2">Labs:</h4>
                   {(() => {
@@ -412,12 +419,12 @@ function OrderHistoryPage() {
                     );
                   })()}
                 </div>
-              )}
+              )} */}
             </div>
             <div className="flex justify-end p-4 border-t">
               <button
                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
               >
                 Đóng
               </button>
