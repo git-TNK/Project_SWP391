@@ -9,7 +9,7 @@ function OrderHistoryPage() {
   const [listOrder, setListOrder] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const [productDetails, setProductDetails] = useState(null);
+  const [productDetails, setProductDetails] = useState([]);
   const [allLabs, setAllLabs] = useState([]);
   const [isLabModalOpen, setIsLabModalOpen] = useState(false);
 
@@ -39,32 +39,39 @@ function OrderHistoryPage() {
         setListOrderDetail(data);
 
         if (data.length > 0) {
-          const productResponse = await fetch(
-            `http://localhost:5056/Product/${data[0].kitId}`
-          );
-          const productData = await productResponse.json();
-          setProductDetails(productData);
-
           const existingLabNames = new Set(
             JSON.parse(localStorage.getItem("labNames") || "[]")
           );
+          const orderDate = new Date(
+            listOrder.find((o) => o.orderId === orderId).orderDate
+          );
 
-          const filteredLabs = productData.labs.filter((lab) => {
-            const orderDate = new Date(
-              listOrder.find((o) => o.orderId === orderId).orderDate
-            );
-            const isNotDeleted =
-              !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
-            const isCreatedBeforeOrder =
-              new Date(lab.dateOfCreation) < orderDate;
+          // Changed: Fetch all products at once using Promise.all
+          const products = await Promise.all(
+            data.map(async (item) => {
+              const productResponse = await fetch(
+                `http://localhost:5056/Product/${item.kitId}`
+              );
+              return productResponse.json();
+            })
+          );
 
-            return isNotDeleted && isCreatedBeforeOrder;
+          // Store all products
+          setProductDetails(products);
+
+          // Update labNames
+          products.forEach((product) => {
+            const filteredLabs = product.labs.filter((lab) => {
+              const isNotDeleted =
+                !lab.dateOfDeletion || new Date(lab.dateOfDeletion) > orderDate;
+              const isCreatedBeforeOrder =
+                new Date(lab.dateOfCreation) < orderDate;
+
+              return isNotDeleted && isCreatedBeforeOrder;
+            });
+            filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
           });
 
-          // Add only unique lab names
-          filteredLabs.forEach((lab) => existingLabNames.add(lab.name));
-
-          // Save unique lab names back to localStorage
           localStorage.setItem(
             "labNames",
             JSON.stringify([...existingLabNames])
@@ -336,12 +343,17 @@ function OrderHistoryPage() {
                 </tbody>
               </table>
 
-              {productDetails && (
+              {productDetails.length > 0 && (
                 <div className="mt-6">
                   <h4 className="text-lg font-bold mb-2">Labs:</h4>
-                  <ul>
-                    {productDetails.labs
-                      .filter((lab) => {
+                  {(() => {
+                    // Create a Set to store unique labs based on labId
+                    const uniqueLabs = new Set();
+                    const labsByProduct = new Map(); // Map to group labs by product name
+
+                    // Collect and organize labs by product
+                    productDetails.forEach((product) => {
+                      const filteredLabs = product.labs.filter((lab) => {
                         const orderDate = new Date(
                           listOrder.find(
                             (o) => o.orderId === selectedOrderId
@@ -351,27 +363,54 @@ function OrderHistoryPage() {
                         const isNotDeleted =
                           !lab.dateOfDeletion ||
                           new Date(lab.dateOfDeletion) > orderDate;
-                        const isCreatedAfterOrder =
+                        const isCreatedBeforeOrder =
                           new Date(lab.dateOfCreation) < orderDate;
 
-                        return isNotDeleted && isCreatedAfterOrder;
-                      })
-                      .map((lab) => (
-                        <li key={lab.labId} className="mb-1">
-                          <span>{lab.name}</span>
-                          {lab.document && (
-                            <a
-                              href={lab.document}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="ml-2 text-blue-500 underline"
-                            >
-                              <p className="underlined">Xem tài liệu</p>
-                            </a>
-                          )}
-                        </li>
-                      ))}
-                  </ul>
+                        return isNotDeleted && isCreatedBeforeOrder;
+                      });
+
+                      // Only add unique labs
+                      filteredLabs.forEach((lab) => {
+                        if (!uniqueLabs.has(lab.labId)) {
+                          uniqueLabs.add(lab.labId);
+                          if (!labsByProduct.has(product.name)) {
+                            labsByProduct.set(product.name, []);
+                          }
+                          labsByProduct.get(product.name).push(lab);
+                        }
+                      });
+                    });
+
+                    // Convert Map to Array for rendering
+                    const productEntries = Array.from(labsByProduct.entries());
+
+                    // Return the organized labs list
+                    return (
+                      <div>
+                        {productEntries.map(([productName, labs]) => (
+                          <div key={productName} className="mb-4">
+                            <ul>
+                              {labs.map((lab) => (
+                                <li key={lab.labId} className="mb-2">
+                                  <div>{lab.name}</div>
+                                  {lab.document && (
+                                    <a
+                                      href={lab.document}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-500 hover:text-blue-700"
+                                    >
+                                      Xem tài liệu
+                                    </a>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </div>

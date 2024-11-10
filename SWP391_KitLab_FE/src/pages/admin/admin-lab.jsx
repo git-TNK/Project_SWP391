@@ -44,7 +44,7 @@ function AdminLab() {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const labPerpage = 12;
+  const labPerpage = 4;
 
   //notification
   const [notification, setNotification] = useState(null);

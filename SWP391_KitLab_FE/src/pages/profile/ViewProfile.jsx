@@ -158,7 +158,7 @@ function ViewProfile() {
             </div>
 
             {/* Address */}
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-4">
                 <Home className="h-6 w-6 text-gray-600" />
               </div>
@@ -166,7 +166,7 @@ function ViewProfile() {
                 <p className="text-sm text-gray-500">Địa chỉ</p>
                 <p className="font-bold">{account.address}</p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <NavLink to="/changepassword">

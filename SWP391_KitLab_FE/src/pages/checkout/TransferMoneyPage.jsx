@@ -41,28 +41,29 @@ function TransferMoneyPage() {
   // };
 
   // const handleOnClick = () => {
-  //   // setIsSuccess(true);
+  //   setIsSuccess(true);
+  //   sessionStorage.clear("cart");
   //   //clear gio hang
-  //   if (isSuccess) {
-  //     sessionStorage.clear("cart");
-  //   }
+  //   // if (isSuccess) {
 
-  //   if (isSuccess) {
-  //     navigate("/");
-  //   } else {
-  //     fetchResult();
-  //     setLoading(true);
-  //   }
+  //   // }
+
+  //   // if (isSuccess) {
+  //   //   navigate("/");
+  //   // } else {
+  //   //   fetchResult();
+  //   //   setLoading(true);
+  //   // }
   // };
 
-  // Add this useEffect after your other useEffects
+  // Listener firebase database realtime, mỗi khi có transaction mới là nó check
   useEffect(() => {
-    const transactionsRef = ref(database, "transactions"); // adjust path if needed
+    const transactionsRef = ref(database, "transactions"); // path của cái đó trong realtime
 
     const unsubscribe = onChildAdded(transactionsRef, async (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // When new transaction data appears
+        // khi có transaction mới.
         setLoading(true);
         try {
           const response = await fetch(

@@ -78,7 +78,7 @@ function AnswerQuestion() {
     return listQuestion.sort((a, b) => {
       const dateA = new Date(a.dateOfQuestion);
       const dateB = new Date(b.dateOfQuestion);
-      return dateB - dateA;
+      return dateA - dateB;
     });
   }, [listQuestion]);
 

@@ -64,6 +64,11 @@ function ChangePassword() {
       return;
     }
 
+    if (passwords.newPassword.length > 50) {
+      setError("Mật khẩu mới không được quá 50 kí tự");
+      return;
+    }
+
     if (passwords.newPassword.length === 0) {
       setError("Khung mật khẩu mới không được để trống");
       return;

@@ -399,7 +399,7 @@ function AdminAccount() {
                     <th className="py-3 px-4 text-left">Họ tên</th>
                     <th className="py-3 px-4 text-center">Số điện thoại</th>
                     <th className="py-3 px-4 text-left">Email</th>
-                    <th className="py-3 px-4 text-left">Địa chỉ</th>
+                    {/* <th className="py-3 px-4 text-left">Địa chỉ</th> */}
                     <th className="py-3 px-4 text-center">Chức vụ</th>
                     <th className="py-3 px-4 text-center">Trạng thái</th>
                   </tr>
@@ -431,7 +431,7 @@ function AdminAccount() {
                       <td title={account.email} className="py-2 px-4 ">
                         <p className="truncate w-32">{account.email}</p>
                       </td>
-                      <td className="py-2 px-4 ">
+                      {/* <td className="py-2 px-4 ">
                         {account.address ? (
                           <button
                             onClick={() => handleModalOpen(account, "address")}
@@ -442,7 +442,7 @@ function AdminAccount() {
                         ) : (
                           <span className="text-gray-400">-</span>
                         )}
-                      </td>
+                      </td> */}
 
                       <td className="py-2 px-4 text-center">
                         {account.role === "Staff" ? (

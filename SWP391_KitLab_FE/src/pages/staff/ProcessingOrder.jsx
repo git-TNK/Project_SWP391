@@ -54,11 +54,16 @@ function ProcessingOrder() {
     return account ? account.userName : "Unknown user";
   };
 
+  const handleDisplayPhoneNumber = (accId) => {
+    const phoneNum = accountList.find((acc) => acc.accountId === accId);
+    return phoneNum ? phoneNum.phoneNumber : "Unknown phone";
+  };
+
   const filteredOrder = useMemo(() => {
     return listOrders.sort((a, b) => {
       const dateA = new Date(a.orderDate);
       const dateB = new Date(b.orderDate);
-      return dateB - dateA;
+      return dateA - dateB;
     });
   }, [listOrders]);
 
@@ -130,6 +135,9 @@ function ProcessingOrder() {
                   <th className="border px-4 py-3 text-left w-40">
                     Tài khoản đặt
                   </th>
+                  <th className="border px-4 py-3 text-left w-40">
+                    Số điện thoại
+                  </th>
                   <th className="border px-4 py-3 text-left w-32">Sản phẩm</th>
                   <th className="border px-4 py-3 text-left w-36">Tổng tiền</th>
                   <th className="border px-4 py-3 text-left w-32">Ngày đặt</th>
@@ -149,6 +157,9 @@ function ProcessingOrder() {
                     <td className="border px-4 py-3">{order.orderId}</td>
                     <td className="border px-4 py-3">
                       {handleDisplayAccountUsername(order.accountId)}
+                    </td>
+                    <td className="border px-4 py-3">
+                      {handleDisplayPhoneNumber(order.accountId)}
                     </td>
                     <td className="border px-4 py-3">
                       <button
@@ -185,9 +196,9 @@ function ProcessingOrder() {
                         }
                       >
                         {order.status === "Shipping"
-                          ? "Đang giao hàng"
+                          ? "Đang giao"
                           : order.status === "Done"
-                          ? "Giao hàng thành công"
+                          ? "Giao thành công"
                           : "Xác nhận"}
                       </button>
                     </td>
@@ -205,7 +216,7 @@ function ProcessingOrder() {
                         }
                       >
                         {order.status === "Shipping"
-                          ? "Xác nhận đã nhận hàng"
+                          ? "Đã nhận hàng"
                           : order.status === "Done"
                           ? "Đã nhận được hàng"
                           : "Chưa nhận được hàng"}
